@@ -7,7 +7,7 @@ and Geographic Information Systems. The package has the potential to contribute 
 projects and to crowd sourcing. It is a new version and replaces the previous version (buildenh_v1.4).The package
 has been renamed because other topographic objects than buildings may also be processed. 
 
-A detailed description of the package 'topomap_v1.4.2' and an installation guide are located in the directory '/docs'. 
+A description of the package 'buildenh' and an installation guide are located in the directory '/docs'. 
 All R scripts are in the /R directory. Supporting scripts may be found in the 'support' directory and solutions (tables) 
 for special objects (buildings) of examples may be seen in the directory 'data'. The package is started by the script
 'startup_topomap_v1.4.2.R'.  
