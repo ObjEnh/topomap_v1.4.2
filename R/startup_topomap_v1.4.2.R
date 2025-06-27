@@ -1,6 +1,6 @@
 cat("start of software package 'topomap' ","\n")
 v_nr = "1.4.2" #version number of the program package
-cat("name of first script:",paste("startup_topomap_v",v_nr,".R", sep=""),"\n")
+cat("name of the script:",paste("startup_topomap_v",v_nr,".R", sep=""),"\n")
 #description: script starts the package 'buildenh'
 #examples: extracted buildings from land cover maps derived by classification programs
 #data: ISPRS test "Vaihingen": orthoimage of areas #1, #7, #4 (ISPRS Semantic Labeling Contest-results)
