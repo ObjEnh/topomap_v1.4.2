@@ -487,7 +487,7 @@ print(B4[1:10,])
 
 #derivation of point clouds for first 10 lines
 #stop("check device")
-#X11()
+
 vec <- 1 : 10
 
 for (n1 in vec) {
@@ -1992,8 +1992,8 @@ if (cas == "nonortho_only_RDP") {
   lines(simplified_lines_cor, col = "red", lty = 1, lwd=2,asp=1)
   simplified_lines <- simplified_lines_cor
   simplified_lines
-  i=52 #i=index in simplified lines of first scale-point
-  j=33 ##i=index in simplified lines of second scale-point
+  i=52 #i=index in simplified lines of first scale-point b221
+  j=33 ##i=index in simplified lines of second scale-point b221
   points(simplified_lines$x[i],simplified_lines$y[i],
          pch=20,col=("brown"),cex=1,asp=1)
   points(simplified_lines$x[j],simplified_lines$y[j],
@@ -2031,8 +2031,8 @@ if (cas == "nonortho_only_RDP") {
   simplified_lines
   plot(simplified_lines, col = "red", pch=3, cex=1, main=paste("b ",bnr2,"- RDP-result", sep=("")), asp=1)
   points(simplified_lines$x,simplified_lines$y, type="l", col="blue", lwd=2, lty=1,asp=1)
-  i=52 #i=index in simplified lines of first scale-point
-  j=33 ##i=index in simplified lines of second scale-point
+  i=52 #i=index in simplified lines of first scale-point, b221
+  j=33 ##i=index in simplified lines of second scale-point, b221
   points(simplified_lines$x[i],simplified_lines$y[i],
          pch=20,col=("brown"),cex=1.5,asp=1)
   points(simplified_lines$x[j],simplified_lines$y[j],
@@ -2056,46 +2056,47 @@ if (cas == "nonortho_only_RDP") {
   #digitizing by means of 'locator()' works in 
   #native window correctly
   #place native window out side RStudio panes
-  cat("manual measurement of two pixels on ref_line","\n")
+  cat("manual measurement of two pixels with extreme x-coordinates","\n")
   dev.list()
   dev.set(4)
   xy1 <- locator(1)
   print(xy1)
   
-  #points(locator(2), pch = 19, col = "blue")
-  #x11 <- xy$x[1] #coordinates of pc3 of selected ref-line
-  x11 <- xy1$x[1]
-  #y11 <- xy$y[1]
-  y11 <- xy1$y[1]
-  points(x11,y11, pch = 19, col = "blue")
+  #coordinates of pc3 of selected ref-line
+  x_11 <- xy1$x[1]
+  
+  y_11 <- xy1$y[1]
+  points(x_11,y_11, pch = 19, col = "blue")
   #
   xy2 <- locator(1)
   print(xy2)
   
-  x22 <- xy2$x[1]
-  y22 <- xy2$y[1]
-  points(x22,y22, pch = 19, col = "blue")
+  x_22 <- xy2$x[1]
+  y_22 <- xy2$y[1]
+  points(x_22,y_22, pch = 19, col = "blue")
   
   #calculation of transformation parameters using ref-line
-  #stop("select i")
-  i=52 # 1.vertex for scaling (to be changed)
-  j=33
+  stop("select i")
+  i=52 # 1.vertex for scaling (to be changed) b221
+  j=33 # 2.vertex for scaling (to be changed) b221
+  #=31 # 1.vertex for scaling (to be changed) b14
+  #j=5 # 2.vertex for scaling (to be changed) b14
   x1=simplified_lines$x[i] # simplified_lines coordinates vertex i
   y1=simplified_lines$y[i] #change to img-system
   x2=simplified_lines$x[j] # simplified_lines coordinates vertex i+1
   y2=simplified_lines$y[j] ##change to img-system
   
   trans_param <- function() { 
-    dX <- (x22 - x11)
-    dY <- (y22 - y11)
+    dX <- (x_22 - x_11)
+    dY <- (y_22 - y_11)
     dx <- (x2 - x1)
     dy <- (y2 - y1)
     N <- dx^2 + dy^2
     #
     a1 <- (dx*dX + dy*dY)/N
     b1 <- (dx*dY - dy*dX)/N
-    a0 <- x11 - a1*x1 + b1*y1
-    b0 <- y11 - b1*x1 - a1*y1
+    a0 <- x_11 - a1*x1 + b1*y1
+    b0 <- y_11 - b1*x1 - a1*y1
     #
     tr_lat <- c(a0,b0)
     D <- matrix(nrow=2, ncol=2)
