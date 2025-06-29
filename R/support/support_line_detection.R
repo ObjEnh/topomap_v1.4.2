@@ -1,7 +1,7 @@
 ## name of script: support_line_detection.R
 ##purpose: detection of lines for special cases
 ##ISPRS data (areas #1 and #7 with DT classification training by ISPRS orthoimage #26; #4)
-##instruction: please activate function 'locator' where it is needed
+##instruction: please activate external graphical window when using function 'locator()'
 ##author: Joachim Höhle
 ##GNU General Public License (GPL)
 
@@ -18,6 +18,7 @@
 ## 9.calculation of ro_ind using theta_index and one measured point
 ## 10.plot of detected non-ortho-line onto enlarged orthoimage
 ## 11.calculation of angle (center of object to new center of segment)
+## 12.search of index for coordinate
 ################################################################################
 
 ## 1. improving the ro-range in Hough-space
@@ -770,7 +771,7 @@ if (is.finite(a)) {
 
 #end of script ## 10.
 
-##11, calculation of angle (center of object to new center of segment)
+## 11. calculation of angle (center of object to new center of segment)
 
 #center of object/building
 xc <- plotPar[1]
@@ -786,8 +787,37 @@ b13_angle_df3$alpha[i2] <- alpha #correction
 b13_angle_df3
 
 #end of ## 11. calculation of angle (center of object to new center of segment)
-################################################################################
 
+##12.search of index for coordinate
+
+#search index for max(simplified_lines_cor$x)
+length(simplified_lines_cor$x)
+vec <- 1:length(simplified_lines_cor$x)
+round(xy1$x[1])
+round(xy1$y[1])
+
+min(simplified_lines_cor$x)
+max(simplified_lines_cor$x)
+
+
+
+for (i in vec) {
+  
+  if (simplified_lines_cor$x[i] == max(simplified_lines_cor$x)) {
+    cat("i= ", i, "\n")
+  }
+  
+}
+
+for (i in vec) {
+  
+  if (simplified_lines_cor$x[i] == min(simplified_lines_cor$x)) {
+    cat("i= ", i, "\n")
+  }
+  
+}
+
+# end of ##12.search of index for coordinate
 
 ##end of support_line_detection.R
 ################################################################################
