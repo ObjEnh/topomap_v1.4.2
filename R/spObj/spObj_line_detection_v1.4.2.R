@@ -367,7 +367,6 @@ if (Img_name == "ISPRS4_DLR10") {
     lines(simplified_lines, col = "green", lty = 1, lwd=2)
     simplified_lines_cor <- simplified_lines[-40,]
     simplified_lines_cor
-    par("usr")
   } #end b14 - "cor_img"
   
   ##b15
