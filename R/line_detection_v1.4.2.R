@@ -1992,8 +1992,8 @@ if (cas == "nonortho_only_RDP") {
   lines(simplified_lines_cor, col = "red", lty = 1, lwd=2,asp=1)
   simplified_lines <- simplified_lines_cor
   simplified_lines
-  i=52 #i=index in simplified lines of first scale-point b221
-  j=33 ##i=index in simplified lines of second scale-point b221
+  #i=52 #i=index in simplified lines of first scale-point b221
+  #j=33 ##i=index in simplified lines of second scale-point b221
   points(simplified_lines$x[i],simplified_lines$y[i],
          pch=20,col=("brown"),cex=1,asp=1)
   points(simplified_lines$x[j],simplified_lines$y[j],
@@ -2029,10 +2029,11 @@ if (cas == "nonortho_only") {
 if (cas == "nonortho_only_RDP") {
   #transformation
   simplified_lines
+  dev.set(2)
   plot(simplified_lines, col = "red", pch=3, cex=1, main=paste("b ",bnr2,"- RDP-result", sep=("")), asp=1)
   points(simplified_lines$x,simplified_lines$y, type="l", col="blue", lwd=2, lty=1,asp=1)
-  i=52 #i=index in simplified lines of first scale-point, b221
-  j=33 ##i=index in simplified lines of second scale-point, b221
+  i=31 #i=index in simplified lines of first scale-point, b221
+  j=5 ##i=index in simplified lines of second scale-point, b221
   points(simplified_lines$x[i],simplified_lines$y[i],
          pch=20,col=("brown"),cex=1.5,asp=1)
   points(simplified_lines$x[j],simplified_lines$y[j],
@@ -2040,7 +2041,8 @@ if (cas == "nonortho_only_RDP") {
   ##transformation into xy-system
   
   #plot of pc3 in extern window
-  windows()  # Opens native graphics window
+  #windows()  # Opens native graphics window
+  dev.set(4)
   par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
   x <- xc
   y <- yc
@@ -2056,7 +2058,7 @@ if (cas == "nonortho_only_RDP") {
   #digitizing by means of 'locator()' works in 
   #native window correctly
   #place native window out side RStudio panes
-  cat("manual measurement of two pixels with extreme x-coordinates","\n")
+  cat("manual measurement of two pixels with extreme y-coordinates","\n")
   dev.list()
   dev.set(4)
   xy1 <- locator(1)
@@ -2076,11 +2078,11 @@ if (cas == "nonortho_only_RDP") {
   points(x_22,y_22, pch = 19, col = "blue")
   
   #calculation of transformation parameters using ref-line
-  stop("select i")
-  i=52 # 1.vertex for scaling (to be changed) b221
-  j=33 # 2.vertex for scaling (to be changed) b221
-  #=31 # 1.vertex for scaling (to be changed) b14
-  #j=5 # 2.vertex for scaling (to be changed) b14
+  #stop("stop: select indices i, j") #use support_line_detection.R #12
+  #i=52 # 1.vertex for scaling (to be changed) b221
+  #j=33 # 2.vertex for scaling (to be changed) b221
+  i=31 # 1.vertex for scaling (to be changed) b14
+  j=5 # 2.vertex for scaling (to be changed) b14
   x1=simplified_lines$x[i] # simplified_lines coordinates vertex i
   y1=simplified_lines$y[i] #change to img-system
   x2=simplified_lines$x[j] # simplified_lines coordinates vertex i+1
@@ -2132,7 +2134,7 @@ if (cas == "nonortho_only_RDP") {
   y <- pts9[2,1]
   x
   y
-  y <- -y #sign change for plotting in extern window
+  y <- -y #sign change for plotting in external window
   #dev.set(6)
   points(x,y,pch=20, cex=2,asp=1, col="green") #plot of two scale points
   
@@ -2181,37 +2183,40 @@ if (cas == "nonortho_only_RDP") {
   n_siml2 <- length(simplified_lines_complete_trans$x)
   
   intsec_linepair_vertex_coord <- matrix(nrow=n_siml2, ncol=4)
-  intsec_linepair_vertex_coord[,2]  <- 1 : n_siml2
+  intsec_linepair_vertex_coord[,2]  <- 1 : (n_siml2)
   intsec_linepair_vertex_coord[,3] <- simplified_lines_complete_trans[,1]
   intsec_linepair_vertex_coord[,4] <- -simplified_lines_complete_trans[,2]
-  intsec_linepair_vertex_coord
+  #n_vertex <- length(intsec_linepair_vertex_coord[,2])
+  #intsec_linepair_vertex_coord[n_vertex+1,] <- intsec_linepair_vertex_coord[1,]
+  #intsec_linepair_vertex_coord
+  intsec_linepair_vertex_coord2 <- rbind(intsec_linepair_vertex_coord,intsec_linepair_vertex_coord[1,])
   setwd(home_dir)
   f5 <- paste("./results/",Img_name,"/RDP/","b",bnr2,"_intsec_linepair_vertex_coord.txt",sep="")
-  write.table(intsec_linepair_vertex_coord,f5)
+  write.table(intsec_linepair_vertex_coord2,f5)
   cat("table with line-pairs,vertex/corner-number,coordinates(x,y)","\n")
-  print(intsec_linepair_vertex_coord)
+  print(intsec_linepair_vertex_coord2)
   
   #coordinates of building in img_uds
   display(img_uds,"raster")
-  points(intsec_linepair_vertex_coord[,3]-orig_x,
-         intsec_linepair_vertex_coord[,4]-orig_y,type ="l",lty=1,lwd=2,col="white")
+  points(intsec_linepair_vertex_coord2[,3]-orig_x,
+         intsec_linepair_vertex_coord2[,4]-orig_y,type ="l",lty=1,lwd=2,col="white")
   
   #setwd(home_dir)
   #f5 <- paste("./results/",Img_name,"/RDP/","b",bnr2,"_intsec_linepair_vertex_coord_img.txt",sep="")
   #write.table(intsec_linepair_vertex_coord,f5)
   
   #coordinates of building in img
-  intsec_linepair_vertex_coord2 <- intsec_linepair_vertex_coord
-  intsec_linepair_vertex_coord2[,3] <- round(intsec_linepair_vertex_coord[,3])
-  intsec_linepair_vertex_coord2[,4] <- round(intsec_linepair_vertex_coord[,4])
-  intsec_linepair_vertex_coord2
+  # intsec_linepair_vertex_coord2 <- intsec_linepair_vertex_coord
+  # intsec_linepair_vertex_coord2[,3] <- round(intsec_linepair_vertex_coord[,3])
+  # intsec_linepair_vertex_coord2[,4] <- round(intsec_linepair_vertex_coord[,4])
+  # intsec_linepair_vertex_coord2
   display(img_ref,"raster")
   #dev.set(4)
   points(intsec_linepair_vertex_coord2[,3],intsec_linepair_vertex_coord2[,4],type ="l",lty=1,lwd=2,col="white")
   #
-  setwd(home_dir)
-  f5 <- paste("./results/",Img_name,"/RDP/","b",bnr2,"_intsec_linepair_vertex_coord_img.txt",sep="")
-  write.table(intsec_linepair_vertex_coord2,f5)
+  # setwd(home_dir)
+  # f5 <- paste("./results/",Img_name,"/RDP/","b",bnr2,"_intsec_linepair_vertex_coord_img.txt",sep="")
+  # write.table(intsec_linepair_vertex_coord2,f5)
   #
   dev.list()
 
