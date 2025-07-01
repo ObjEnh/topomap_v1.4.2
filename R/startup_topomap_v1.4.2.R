@@ -10,6 +10,7 @@ cat("name of the script:",paste("startup_topomap_v",v_nr,".R", sep=""),"\n")
 #Observations and Geoinformation 95(2021) 102237; https://doi.org/10.1016/j.jag.2020.102237
 #instructions: use given examples for getting acquainted with the programs/scripts
 #instructions: change directories for input 
+#instructions: set parameter for automatic processing (line #126)
 #instructions: input project title 
 #instructions: save your home directory
 #instructions: select orthoimage (line #68)
@@ -120,7 +121,10 @@ if (Img_name == "ISPRS4_DLR10") { #classification result: DLR10
   OrgGtsFilename <- "GTS_top_mosaic_09cm_area4_600x813.tif" #pixel size on ground=0.28305m
 } #end of orthoimage "ISPRS4"
 
+##setting of parameters
 proc_mode <- "NA" #mode of processing
+n_long_PCs <- 1 #number of pixel clouds (PCs) 
+#to be displayed for selecting the reference line 
 
 ## install packages if required
 # install.packages('EBImage')
