@@ -505,9 +505,9 @@ r_max2 <- 1.1 * r_max
 plot(xc,-yc,pch=3,cex=1.5,col="red",asp=1,xlim=c(xc-r_max2,xc+r_max2),ylim=c(-(yc+r_max2),-(yc-r_max2)),main=paste("b ",bnr2,sep=(""))) #large scale
 points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="green")
 
-##plot of first 10 point clouds (PC) of Hough-transform
+##plot of first point clouds (n_long_PCs) of Hough-transform
 cat("choose a reference line from the 10 longest lines","\n") 
-vec <- 1 : 10
+vec <- 1 : n_long_PCs #can be changed
 
 for (n1 in vec) {
   readline("press 'enter' to display next line ")
@@ -978,7 +978,8 @@ if (proc_mode != "demo") {
   ty <- as.integer(ty)
 }
 
-cas <- switch(ty,"extr_wd", "4_long", "100_all", "100_all+nonortho", "nonortho_only", "nonortho_only_RDP" )
+cas <- switch(ty,"extr_wd","4_long","100_all",
+        "100_all+nonortho","nonortho_only","nonortho_only_RDP")
 cat("case= ", cas, "\n")
 ###########################################################################################################
 
@@ -1727,6 +1728,14 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
         lnr_det5 <- B5_6R4$lnr
     } #end if
     
+    #parameter for the determination of sequence of lines
+    min_pixel <- min(B5_6R4$n_pixel)
+    bn_PC <- nrow(B5_6R4)
+    with_northo <- sum(B5_6R4$ortho)/length(B5_6R4$ortho)
+    n_ortholines2 <- length(lnr_det5)
+    bn_PC <- n_ortholines2
+    soph=0 #sequence is difficult to determine
+    
   } 
 } #end case= "100_all + nonortho"
 ################################################################################
@@ -1925,10 +1934,10 @@ if (cas == "nonortho_only") {
   row.names(B5_6) <- 1 : nrow(B5_6)
   
   #parameter for determination of line-sequence
-  min_pixel <- min(B5_6$n_pixel)
-  bn_PC <- nrow(B5_6)
-  with_northo <- sum(B5_6$ortho)/length(B5_6$ortho)
-  soph <- 1 #sequence is difficult to determine
+  #min_pixel <- min(B5_6$n_pixel)
+  # bn_PC <- nrow(B5_6)
+  # with_northo <- sum(B5_6$ortho)/length(B5_6$ortho)
+  # soph <- 1 #sequence is difficult to determine
   
   #output of cas="nonortho_only"
   setwd(home_dir)
@@ -2043,7 +2052,7 @@ if (cas == "nonortho_only_RDP") {
   #plot of pc3 in extern window
   #dev.list()
   windows()  # Opens external graphics window
-  dev.set(4)
+  #dev.set(4)
   par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
   x <- xc
   y <- yc
@@ -2200,313 +2209,316 @@ if (cas == "nonortho_only_RDP") {
   source(paste("plot_results_on_references_v",v_nr,".R",sep=""))
 } #end of case = "nonortho_only_RDP"  
 
-
-##to be used for cases #1 - #4
-row.names(B5_6) <- 1 : length(B5_6$lnr)
-lnr_det7 <- B5_6$lnr
-lnr_det7
-
-##derivation of PCs and plotting of detected line segments
-theta<-seq(0,175, by=theta_step)
-theta_rad <- theta/omega
-
-##plot of selected lines
-par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
-par('usr')
-x <- xc
-y <- yc
-r_max2 <- 1.1 * r_max
-mar <- 30 #to be changed with r_max2
-
-plot(x,-y, pch=3, cex=2, col="red", asp=1, xlim=c(xc - r_max2,xc + r_max2),
-     ylim=c(-(yc + r_max2),-(yc - r_max2)), ann = TRUE, axes = TRUE,
-     main=paste("b ",bnr2, sep=("")))
-points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="red")
-points(xc-mar,-(yc+mar), pch=3, asp=1, cex=1, col="green")
-points(xc+mar,-(yc+mar), pch=3, asp=1, cex=1, col="green")
-points(xc-mar,-(yc-mar), pch=3, asp=1, cex=1, col="green")
-points(xc+mar,-(yc-mar), pch=3, asp=1, cex=1, col="green")
-
-#loop PC plotting
-lnr_det7
-n_lnr7 <- length(lnr_det7)
-centers_PC <- matrix(nrow=n_lnr7, ncol=4)
-centers_PC[,] <- 0
-centers_PC
-vec <- 1 : n_lnr7
-
-#loop
-for (n in vec) {
-  #browser()
-  lnr <- lnr_det7[n]
-  cat("lnr= ",lnr,"\n")
-  PC_seg_P_nP <- PC_segment_4(lnr) #call of function
-  P <- PC_seg_P_nP[[1]]
-  n_P <- PC_seg_P_nP[[2]]
-  P <- as.data.frame(P)
-  names(P) <- c("idx","x","y")
-  P_red <- reduce_pointset(P) #new
-  head(P_red)
-  x_m <- mean(P_red[,2])
-  y_m <- mean(-P_red[,3])
-  points(x_m, y_m, pch=20, asp=1, cex=1.5, col="green")
-  centers_PC[n,1] <- lnr
-  centers_PC[n,2] <- x_m
-  centers_PC[n,3] <- y_m
-  centers_PC[n,4] <- n_P
-} #end of for-loop
-
-centers_PC
-
-#plot of approximate lines onto graph
-n_9 <- length(B5_6$lnr)
-len <- 1 : n_9
-B5_6
-row.names(B5_6) <- 1 : n_9
-B5_6$ortho <- 0
-
-#loop for plotting onto graph
-for (n1 in len) {
-  browser() #observation of lines
-  cat("PC_nr=", B5_6$lnr[n1], "\n")
-  theta_angle <- B5_6$theta_angle[n1]
-  theta_math <- (180 - theta_angle) #theta of oriented line
-  x <- centers_PC[n1,2]
-  y <- centers_PC[n1,3]
-  p2<- round(x * cos(theta_math/omega) + y * sin(theta_math/omega))
-  cat("p2= ",p2,"\n")
-  a <- -1/tan(theta_math/omega)
-  b <- round(p2/sin(theta_math/omega))
-  coef = c(b,a)
-
-  if (is.finite(a)) {
-    abline(coef, col="red", lty=1, lwd=2, asp=1)
-  }
-
-} # end loop n1
-
-##plot approximate lines onto orthoimage (large scale)
-B5_6
-par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
-display(img_uds, method = "raster")
-
-#display(img_uds, method = "browser")
-points(xc-orig_x,yc-orig_y,pch=3, asp=1, cex=1.3, col="blue")
-points(as.integer(pc3$col-orig_x), as.integer(pc3$row-orig_y), pch=20, asp=1, cex=0.3, col="green")
-
-#plot approximate lines onto orthoimage (small and large scale)
-len
-orig_x
-orig_y
-
-#display orthoimage at small scale
-display(img_ref,method = "raster")
-#display(img_ref,method = "browser")
-points(pc3$col, pc3$row, pch=20, asp=1, cex=0.5, col="green")
-points(xc, yc, pch=3, asp=1, cex=1.5, col="red")
-
-#window
-fr <- matrix(nrow=5, ncol=2)
-orig_y <- abs(orig_y)
-fr[1,1] <- orig_x
-fr[1,2] <- orig_y
-fr[2,1] <- wind_x
-fr[2,2] <- orig_y
-fr[3,1] <- wind_x
-fr[3,2] <- wind_y
-fr[4,1] <- orig_x
-fr[4,2] <- wind_y
-fr[5,1] <- orig_x
-fr[5,2] <- orig_y
-#
-lines(fr, type="l", asp=1, lwd=2, lty=1, col="yellow")
-
-#loop
-len
-for (n1 in len) {
-  cat("PC_nr=", B5_6$lnr[n1], "\n")
-  theta_angle <- B5_6$theta_angle[n1]
-  theta_math <- (180 - theta_angle) #theta of oriented line
-  x <- centers_PC[n1,2]
-  y <- centers_PC[n1,3]
-  p2<- round(x * cos(theta_math/omega) + y * sin(theta_math/omega))
-  a <- -1/tan(theta_math/omega)
-  b <- round(p2/sin(theta_math/omega))
-  #change to image-system
-  a <- (-a)
-  b <- (-b)
-  #plot
-  coef <- c(b,a)
-
-  if (is.finite(a)) {
-    abline(coef, col="blue", lty=1, lwd=2, asp=1)
-  }
-
-} #end for-loop (small scale)
-
-##plot approximate lines onto orthoimage (large scale)  
-display(img_uds, method = "raster")
-#display(img_uds, method = "browser")
-points(xc-orig_x,yc-orig_y,pch=3, asp=1, cex=1.3, col="red")
-points(as.integer(pc3$col-orig_x), as.integer(pc3$row-orig_y), pch=20, asp=1, cex=0.3, col="green")
-
-#instruction: for selecting lines -> activate browser-mode 
-
-# loop
-for (n1 in len) {
-  #browser()
-  cat("PC_nr=", B5_6$lnr[n1], "\n")
-  theta_angle <- B5_6$theta_angle[n1]
-  theta_math <- (180 - theta_angle) #theta of oriented line
-  x <- centers_PC[n1,2]
-  y <- centers_PC[n1,3]
-  points(x-orig_x,-(y-orig_y_math),pch=18, asp=1, cex=1.3, col="red")
+if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" ||
+  cas == "100_all+nonortho") {
+  row.names(B5_6) <- 1 : length(B5_6$lnr)
+  lnr_det7 <- B5_6$lnr
+  lnr_det7
   
-  #calculation of p2 in math-system with oriented line
-  p2 <- round(x*cos(theta_math/omega) + y*sin(theta_math/omega)) #math-system
+  ##derivation of PCs and plotting of detected line segments
+  theta<-seq(0,175, by=theta_step)
+  theta_rad <- theta/omega
   
-  a <- -1/tan(theta_math/omega)
-  b <- round(p2/sin(theta_math/omega))
+  ##plot of selected lines
+  par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
+  par('usr')
+  x <- xc
+  y <- yc
+  r_max2 <- 1.1 * r_max
+  mar <- 30 #to be changed with r_max2
   
-  #calculation of intercept for image extract (math_system)
-  y1_math <- a * orig_x + b
-  y1_math <- round(y1_math) #change to math-system
-  orig_y_math <- (-orig_y) #change to math_system
-  b2 <- y1_math - orig_y_math
+  plot(x,-y, pch=3, cex=2, col="red", asp=1, xlim=c(xc - r_max2,xc + r_max2),
+       ylim=c(-(yc + r_max2),-(yc - r_max2)), ann = TRUE, axes = TRUE,
+       main=paste("b ",bnr2, sep=("")))
+  points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="red")
+  points(xc-mar,-(yc+mar), pch=3, asp=1, cex=1, col="green")
+  points(xc+mar,-(yc+mar), pch=3, asp=1, cex=1, col="green")
+  points(xc-mar,-(yc-mar), pch=3, asp=1, cex=1, col="green")
+  points(xc+mar,-(yc-mar), pch=3, asp=1, cex=1, col="green")
   
-  #change to img-system
-  a_img <- (-a)
-  b2_img <- (-b2)
+  #loop PC plotting
+  lnr_det7
+  n_lnr7 <- length(lnr_det7)
+  centers_PC <- matrix(nrow=n_lnr7, ncol=4)
+  centers_PC[,] <- 0
+  centers_PC
+  vec <- 1 : n_lnr7
   
-  # plot
-  coef2 <- c(b2_img,a_img)
+  #loop
+  for (n in vec) {
+    #browser()
+    lnr <- lnr_det7[n]
+    cat("lnr= ",lnr,"\n")
+    PC_seg_P_nP <- PC_segment_4(lnr) #call of function
+    P <- PC_seg_P_nP[[1]]
+    n_P <- PC_seg_P_nP[[2]]
+    P <- as.data.frame(P)
+    names(P) <- c("idx","x","y")
+    P_red <- reduce_pointset(P) #new
+    head(P_red)
+    x_m <- mean(P_red[,2])
+    y_m <- mean(-P_red[,3])
+    points(x_m, y_m, pch=20, asp=1, cex=1.5, col="green")
+    centers_PC[n,1] <- lnr
+    centers_PC[n,2] <- x_m
+    centers_PC[n,3] <- y_m
+    centers_PC[n,4] <- n_P
+  } #end of for-loop
   
-  if (is.finite(a)) {
-    abline(coef2, col="red", lty=1, lwd=2, asp=1)
-  }  else {
-    ro_l1 <- B4$ro_pixel[lnr]
-    ro_l2 <- ro_l1 + ro_1
-    ro_l3 <- round(ro_l2 - orig_x)
-    lines(c(ro_l3,ro_l3),c(0, (wind_y - orig_y)),col="white")
-  } #end if-else
-
-} #end of loop n1
-#end of plot (large scale)
-
-#output of unsorted lines
-bnr2
-setwd(home_dir)
-f3 <- paste("./data/",Img_name,"/unsorted_lines_b",bnr2,".txt",sep="")
-B5_6
-write.table(B5_6,f3)
-
-#storage in a list (all_lines)
-n_lnr <- nrow(B5_6)
-PC_nr <- B5_6$lnr[1:n_lnr]
-n_PC <- n_lnr
-vec_x <- 1 : n_PC
-
-##general solution for list
-all_lines <- list()
-
-for (i in vec_x) {
-  all_lines[[i]] <- "PC"
-}
-
-##solution for x PCs
-
-for (i in vec_x) {
-  all_lines[i] <- paste("P",i,sep="")
-}
-
-##loop for reading all point clusters (PCs)
-par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
-x <- xc
-y <- yc
-r_max2 <- 1.1*r_max
-plot(x,-y, pch=3, cex=2, col="red", asp=1, 
-     xlim=c(xc-r_max2,xc+r_max2), ylim=c(-(yc+r_max2),-(yc-r_max2)), 
-     main=paste("b ",bnr2, sep=("")), axes=TRUE) #large scale
-points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="orange")
-cat("line numbers (not in correct sequence):","\n")
-print(PC_nr)
-palette2 <- c("brown","red","gray","darkgreen","blue","magenta","black","cyan",
-              "brown","red","gray","darkgreen","blue", "magenta", "black", "cyan","brown","red")
-setwd(home_dir)
-k=1
-
-#loop
-for (i in PC_nr){
-  lnr <- i
-  cat("lnr=",lnr,"\n")
-  #browser() #to be removed
-  fname=paste("./data/",Img_name,"/b",bnr2,"_",lnr,".txt", sep="")
-  P0 <- read.table(fname, col.names=c("idx","x","y"))
-  nrow <- nrow(P0)
-  cat("nrow=",nrow,"\n")
-  P0_red <- reduce_pointset(P0) #correction for gaps using histogram analysis
-  nrow <- length(P0_red$idx)
-  all_lines[[k]] <- P0_red
-  points(P0_red[,2],-P0_red[,3], pch='.', asp=1, cex=2, col=palette2[k])
-  #points(P0_red[,2],-P0_red[,3], pch='.', asp=1, cex=2, col="green")
-  k=k+1
-} #end loop
-
-## convert 'all_lines' (matrix) to 'all_PC' (list)
-all_PC <- all_lines
-names_PC <- list()
-n_PC <- length(PC_nr)
-vec_x <- 1 : n_PC
-
-for (i in vec_x) {
-  names_PC[[i]] <- "PCN"
-}
-
-#loop
-k=1
-
-for (i in PC_nr) {
-  na_PC<-paste("PC_",PC_nr[k],sep="")
-  name_PC <- as.name(na_PC)
-  names_PC[[k]] <- name_PC
-  k <- k+1
-} #end of for-loop
-
-names_PC
-names(all_PC) <- names_PC
-
-##plot image detail
-display(img_uds, method = "raster")
-n_x <- length(PC_nr)
-vec_y <- 1 : n_x
-
-#loop
-for (i in vec_y) {
-  cat("i=",i,"\n")
-  points((all_PC[[i]]$x - orig_x),(all_PC[[i]]$y - orig_y), 
-         pch='.', asp=1, cex=2, col = "green")
+  centers_PC
+  
+  #plot of approximate lines onto graph
+  n_9 <- length(B5_6$lnr)
+  len <- 1 : n_9
+  B5_6
+  row.names(B5_6) <- 1 : n_9
+  B5_6$ortho <- 0
+  
+  #loop for plotting onto graph
+  for (n1 in len) {
+    browser() #observation of lines
+    cat("PC_nr=", B5_6$lnr[n1], "\n")
+    theta_angle <- B5_6$theta_angle[n1]
+    theta_math <- (180 - theta_angle) #theta of oriented line
+    x <- centers_PC[n1,2]
+    y <- centers_PC[n1,3]
+    p2<- round(x * cos(theta_math/omega) + y * sin(theta_math/omega))
+    cat("p2= ",p2,"\n")
+    a <- -1/tan(theta_math/omega)
+    b <- round(p2/sin(theta_math/omega))
+    coef = c(b,a)
+  
+    if (is.finite(a)) {
+      abline(coef, col="red", lty=1, lwd=2, asp=1)
+    }
+  
+  } # end loop n1
+  
+  ##plot approximate lines onto orthoimage (large scale)
+  B5_6
+  par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
+  display(img_uds, method = "raster")
+  
+  #display(img_uds, method = "browser")
+  points(xc-orig_x,yc-orig_y,pch=3, asp=1, cex=1.3, col="blue")
+  points(as.integer(pc3$col-orig_x), as.integer(pc3$row-orig_y), pch=20, asp=1, cex=0.3, col="green")
+  
+  #plot approximate lines onto orthoimage (small and large scale)
+  len
+  orig_x
+  orig_y
+  
+  #display orthoimage at small scale
+  display(img_ref,method = "raster")
+  #display(img_ref,method = "browser")
+  points(pc3$col, pc3$row, pch=20, asp=1, cex=0.5, col="green")
+  points(xc, yc, pch=3, asp=1, cex=1.5, col="red")
+  
+  #window
+  fr <- matrix(nrow=5, ncol=2)
+  orig_y <- abs(orig_y)
+  fr[1,1] <- orig_x
+  fr[1,2] <- orig_y
+  fr[2,1] <- wind_x
+  fr[2,2] <- orig_y
+  fr[3,1] <- wind_x
+  fr[3,2] <- wind_y
+  fr[4,1] <- orig_x
+  fr[4,2] <- wind_y
+  fr[5,1] <- orig_x
+  fr[5,2] <- orig_y
+  #
+  lines(fr, type="l", asp=1, lwd=2, lty=1, col="yellow")
+  
+  #loop
+  len
+  for (n1 in len) {
+    cat("PC_nr=", B5_6$lnr[n1], "\n")
+    theta_angle <- B5_6$theta_angle[n1]
+    theta_math <- (180 - theta_angle) #theta of oriented line
+    x <- centers_PC[n1,2]
+    y <- centers_PC[n1,3]
+    p2<- round(x * cos(theta_math/omega) + y * sin(theta_math/omega))
+    a <- -1/tan(theta_math/omega)
+    b <- round(p2/sin(theta_math/omega))
+    #change to image-system
+    a <- (-a)
+    b <- (-b)
+    #plot
+    coef <- c(b,a)
+  
+    if (is.finite(a)) {
+      abline(coef, col="blue", lty=1, lwd=2, asp=1)
+    }
+  
+  } #end for-loop (small scale)
+  
+  ##plot approximate lines onto orthoimage (large scale)  
+  display(img_uds, method = "raster")
+  #display(img_uds, method = "browser")
   points(xc-orig_x,yc-orig_y,pch=3, asp=1, cex=1.3, col="red")
-  x <- centers_PC[i,2]
-  y <- centers_PC[i,3]
-  points(x-orig_x,-(y-orig_y_math),pch=18, asp=1, cex=1.3, col="red")
-} #end for-loop
+  points(as.integer(pc3$col-orig_x), as.integer(pc3$row-orig_y), pch=20, asp=1, cex=0.3, col="green")
+  
+  #instruction: for selecting lines -> activate browser-mode 
+  
+  # loop
+  for (n1 in len) {
+    #browser()
+    cat("PC_nr=", B5_6$lnr[n1], "\n")
+    theta_angle <- B5_6$theta_angle[n1]
+    theta_math <- (180 - theta_angle) #theta of oriented line
+    x <- centers_PC[n1,2]
+    y <- centers_PC[n1,3]
+    points(x-orig_x,-(y-orig_y_math),pch=18, asp=1, cex=1.3, col="red")
+    
+    #calculation of p2 in math-system with oriented line
+    p2 <- round(x*cos(theta_math/omega) + y*sin(theta_math/omega)) #math-system
+    
+    a <- -1/tan(theta_math/omega)
+    b <- round(p2/sin(theta_math/omega))
+    
+    #calculation of intercept for image extract (math_system)
+    y1_math <- a * orig_x + b
+    y1_math <- round(y1_math) #change to math-system
+    orig_y_math <- (-orig_y) #change to math_system
+    b2 <- y1_math - orig_y_math
+    
+    #change to img-system
+    a_img <- (-a)
+    b2_img <- (-b2)
+    
+    # plot
+    coef2 <- c(b2_img,a_img)
+    
+    if (is.finite(a)) {
+      abline(coef2, col="red", lty=1, lwd=2, asp=1)
+    }  else {
+      ro_l1 <- B4$ro_pixel[lnr]
+      ro_l2 <- ro_l1 + ro_1
+      ro_l3 <- round(ro_l2 - orig_x)
+      lines(c(ro_l3,ro_l3),c(0, (wind_y - orig_y)),col="white")
+    } #end if-else
+  
+  } #end of loop n1
+  #end of plot (large scale)
+  
+  #output of unsorted lines
+  bnr2
+  setwd(home_dir)
+  f3 <- paste("./data/",Img_name,"/unsorted_lines_b",bnr2,".txt",sep="")
+  B5_6
+  write.table(B5_6,f3)
+  
+  #storage in a list (all_lines)
+  n_lnr <- nrow(B5_6)
+  PC_nr <- B5_6$lnr[1:n_lnr]
+  n_PC <- n_lnr
+  vec_x <- 1 : n_PC
+  
+  ##general solution for list
+  all_lines <- list()
+  
+  for (i in vec_x) {
+    all_lines[[i]] <- "PC"
+  }
+  
+  ##solution for x PCs
+  
+  for (i in vec_x) {
+    all_lines[i] <- paste("P",i,sep="")
+  }
+  
+  ##loop for reading all point clusters (PCs)
+  par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
+  x <- xc
+  y <- yc
+  r_max2 <- 1.1*r_max
+  plot(x,-y, pch=3, cex=2, col="red", asp=1, 
+       xlim=c(xc-r_max2,xc+r_max2), ylim=c(-(yc+r_max2),-(yc-r_max2)), 
+       main=paste("b ",bnr2, sep=("")), axes=TRUE) #large scale
+  points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="orange")
+  cat("line numbers (not in correct sequence):","\n")
+  print(PC_nr)
+  palette2 <- c("brown","red","gray","darkgreen","blue","magenta","black","cyan",
+                "brown","red","gray","darkgreen","blue", "magenta", "black", "cyan","brown","red")
+  setwd(home_dir)
+  k=1
+  
+  #loop
+  for (i in PC_nr){
+    lnr <- i
+    cat("lnr=",lnr,"\n")
+    #browser() #to be removed
+    fname=paste("./data/",Img_name,"/b",bnr2,"_",lnr,".txt", sep="")
+    P0 <- read.table(fname, col.names=c("idx","x","y"))
+    nrow <- nrow(P0)
+    cat("nrow=",nrow,"\n")
+    P0_red <- reduce_pointset(P0) #correction for gaps using histogram analysis
+    nrow <- length(P0_red$idx)
+    all_lines[[k]] <- P0_red
+    points(P0_red[,2],-P0_red[,3], pch='.', asp=1, cex=2, col=palette2[k])
+    #points(P0_red[,2],-P0_red[,3], pch='.', asp=1, cex=2, col="green")
+    k=k+1
+  } #end loop
+  
+  ## convert 'all_lines' (matrix) to 'all_PC' (list)
+  all_PC <- all_lines
+  names_PC <- list()
+  n_PC <- length(PC_nr)
+  vec_x <- 1 : n_PC
+  
+  for (i in vec_x) {
+    names_PC[[i]] <- "PCN"
+  }
+  
+  #loop
+  k=1
+  
+  for (i in PC_nr) {
+    na_PC<-paste("PC_",PC_nr[k],sep="")
+    name_PC <- as.name(na_PC)
+    names_PC[[k]] <- name_PC
+    k <- k+1
+  } #end of for-loop
+  
+  names_PC
+  names(all_PC) <- names_PC
+  
+  ##plot image detail
+  display(img_uds, method = "raster")
+  n_x <- length(PC_nr)
+  vec_y <- 1 : n_x
+  
+  #loop
+  for (i in vec_y) {
+    cat("i=",i,"\n")
+    points((all_PC[[i]]$x - orig_x),(all_PC[[i]]$y - orig_y), 
+           pch='.', asp=1, cex=2, col = "green")
+    points(xc-orig_x,yc-orig_y,pch=3, asp=1, cex=1.3, col="red")
+    x <- centers_PC[i,2]
+    y <- centers_PC[i,3]
+    points(x-orig_x,-(y-orig_y_math),pch=18, asp=1, cex=1.3, col="red")
+  } #end for-loop
+  
+  # end of check plot
+  
+  ##output of files of individual PCs
+  
+  #loop
+  setwd(home_dir)
+  
+  for (i in vec_y) {
+    fname8 <- paste("./data/",Img_name,"/all_PC$PC_nr",PC_nr[i],".txt",sep="")
+    write.table(all_PC[[i]], fname8)
+  } #end loop output of list PC_all
+  
+  all_PC
+  
+  cat("end of script 'line-detection.R' - continue with 'sequence_of_lines.R' ","\n")
+  cat("####################################################################","\n")
+  setwd(home_dir2)
+  source(paste("sequence_of_lines_v",v_nr,".R",sep=""))
+} #end all cases except 'nonortho_only' and 'nonortho_only_RDP'   
 
-# end of check plot
-
-##output of files of individual PCs
-
-#loop
-setwd(home_dir)
-
-for (i in vec_y) {
-  fname8 <- paste("./data/",Img_name,"/all_PC$PC_nr",PC_nr[i],".txt",sep="")
-  write.table(all_PC[[i]], fname8)
-} #end loop output of list PC_all
-
-all_PC
-cat("end of script 'line-detection.R' - continue with 'sequence_of_lines.R' ","\n")
-cat("####################################################################","\n")
-setwd(home_dir2)
-source(paste("sequence_of_lines_v",v_nr,".R",sep=""))
 ################################################################################
 
