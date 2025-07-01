@@ -312,11 +312,11 @@ if (cas == "nonortho_only_RDP") {
   
   #input of table with line-pair, vertex-number and final coordinates (x,y)
   setwd(home_dir)
-  f5 <- paste("./results/",Img_name,"/RDP/b",bnr2,"_intsec_linepair_vertex_coord.txt",sep="")
-  intsec_linepair_vertex_coord <- read.table(f5)
-  names(intsec_linepair_vertex_coord) <- c("line_pair","vertex_nr","x","y")
+  f5 <- paste("./results/",Img_name,"/RDP/b",bnr2,"_intsec_linepair_vertex_coord2.txt",sep="")
+  intsec_linepair_vertex_coord2 <- read.table(f5)
+  names(intsec_linepair_vertex_coord2) <- c("line_pair","vertex_nr","x","y")
   cat("table with line-pairs,vertex/corner-number,coordinates(x,y)","\n")
-  print(intsec_linepair_vertex_coord)
+  print(intsec_linepair_vertex_coord2)
   
   #plot graph (small scale)
   par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
@@ -324,8 +324,8 @@ if (cas == "nonortho_only_RDP") {
   y=0
   plot(x,y, pch=3, cex=1.5,  cex.axis = 1.2, cex.lab=1.5, col="red", asp=1, xlim=c(1,600), ylim=c(-813,-1),
        axes = TRUE, ann = T, frame.plot = TRUE, main = paste("building #", bnr2," of image '",Img_name,"'",sep = ""))
-  #points(intsec_linepair_vertex_coord2$x,-intsec_linepair_vertex_coord2$y,type="p", col="red", pch=20, cex=1)
-  points(intsec_linepair_vertex_coord$x,-intsec_linepair_vertex_coord$y, type="l", col="green", lty=1, lwd=2)
+  points(intsec_linepair_vertex_coord2$x,-intsec_linepair_vertex_coord2$y,type="p", col="red", pch=20, cex=1)
+  points(intsec_linepair_vertex_coord2$x,-intsec_linepair_vertex_coord2$y, type="l", col="green", lty=1, lwd=2)
   
   
   #plot graph (large) scale)
@@ -341,11 +341,11 @@ if (cas == "nonortho_only_RDP") {
        main=paste("b ",bnr2, sep=("")))
   #points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="red")
   #points(intsec_linepair_vertex_coord2$x,intsec_linepair_vertex_coord2$y,type="p", col="black", pch=20, cex=1,asp=1)
-  points(intsec_linepair_vertex_coord$x,-intsec_linepair_vertex_coord$y,type="l", col="blue", lty=1, lwd=2, asp=1)
+  points(intsec_linepair_vertex_coord2$x,-intsec_linepair_vertex_coord2$y,type="l", col="blue", lty=1, lwd=2, asp=1)
   
   ##
   #plot onto orthoimage (small) scale)
-  f5 <- paste("./results/",Img_name,"/RDP/b",bnr2,"_intsec_linepair_vertex_coord_img.txt",sep="")
+  f5 <- paste("./results/",Img_name,"/RDP/b",bnr2,"_intsec_linepair_vertex_coord2.txt",sep="")
   intsec_linepair_vertex_coord2 <- read.table(f5)
   names(intsec_linepair_vertex_coord2) <- c("line_pair","vertex_nr","x","y")
   cat("table with line-pairs,vertex/corner-number,coordinates(x,y)","\n")
@@ -358,8 +358,8 @@ if (cas == "nonortho_only_RDP") {
   
   #plot onto orthoimage (large scale)
   display(img_uds,method = "raster")
-  lines(intsec_linepair_vertex_coord[,3]-orig_x, 
-        (intsec_linepair_vertex_coord[,4]-orig_y),col="white",asp=1,type="l",lwd=2,lty=1)
+  lines(intsec_linepair_vertex_coord2[,3]-orig_x, 
+        (intsec_linepair_vertex_coord2[,4]-orig_y),col="white",asp=1,type="l",lwd=2,lty=1)
   
   # #plot vertex numbers
   # n_x <- length(intsec_linepair_vertex_coord$x)
@@ -398,10 +398,10 @@ if (cas == "nonortho_only_RDP") {
     setwd(OrgGtsPathname)
     img_GTS <- readImage(OrgGtsFilename)
     display(img_GTS, method="raster")
-    lines(intsec_linepair_vertex_coord[,3], intsec_linepair_vertex_coord[,4],col="red",asp=1,type="l",lwd=2,lty=1)
+    lines(intsec_linepair_vertex_coord2[,3], intsec_linepair_vertex_coord2[,4],col="red",asp=1,type="l",lwd=2,lty=1)
     GTS_uds <- img_GTS[orig_x:wind_x, orig_y:wind_y, 1:3]
     display(GTS_uds, method="raster")
-    lines(intsec_linepair_vertex_coord[,3]-orig_x,intsec_linepair_vertex_coord[,4]-orig_y,col="red",asp=1,type="l",lwd=2,lty=1)
+    lines(intsec_linepair_vertex_coord2[,3]-orig_x,intsec_linepair_vertex_coord2[,4]-orig_y,col="red",asp=1,type="l",lwd=2,lty=1)
   } #end if answ="Y")
   
   cat("Test on agreement with the Ground Truth","\n")
