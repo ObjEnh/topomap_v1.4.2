@@ -1904,7 +1904,7 @@ if (cas == "nonortho_only") {
       B5_6
       p_pos <- "cor_det"
       setwd(home_dir2)
-      source(paste("./spObj/spObj_line_detection_v",v_nr,".R",sep = "")) #case: non-orthogonal lines only
+      source(paste("./spObj/spObj_line_detection_v",v_nr,".R",sep = "")) #case: nonortho_only
       B5_6R4
       lnr_det5 <- B5_6R4$lnr
     } #end if
@@ -1934,10 +1934,10 @@ if (cas == "nonortho_only") {
   row.names(B5_6) <- 1 : nrow(B5_6)
   
   #parameter for determination of line-sequence
-  #min_pixel <- min(B5_6$n_pixel)
-  # bn_PC <- nrow(B5_6)
-  # with_northo <- sum(B5_6$ortho)/length(B5_6$ortho)
-  # soph <- 1 #sequence is difficult to determine
+  min_pixel <- min(B5_6$n_pixel)
+  bn_PC <- nrow(B5_6)
+  with_northo <- sum(B5_6$ortho)/length(B5_6$ortho)
+  soph <- 1 #sequence is difficult to determine
   
   #output of cas="nonortho_only"
   setwd(home_dir)
@@ -2210,7 +2210,7 @@ if (cas == "nonortho_only_RDP") {
 } #end of case = "nonortho_only_RDP"  
 
 if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" ||
-  cas == "100_all+nonortho") {
+  cas == "100_all+nonortho" || cas == "nonortho_only") {
   row.names(B5_6) <- 1 : length(B5_6$lnr)
   lnr_det7 <- B5_6$lnr
   lnr_det7
