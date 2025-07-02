@@ -797,7 +797,7 @@ if (sek == "bdr_follow") {
   points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.2, col="cyan") # original pointcloud for building
 
   for (i in vec_y) {
-    #browser()
+    browser()
     cat("nr_center= ",b13_angle_df2$nr_center[i],"\n")
     points(b13_angle_df2$x_centre[i],-b13_angle_df2$y_centre[i], asp=1, pch=20,col="blue", cex=1.5)
   }
@@ -927,7 +927,7 @@ if (sek == "bdr_follow") {
   for (i in vec) { 
     readline("press 'enter' to display next midpoint ")
     cat("index=", i, "point_number= ", b13_angle_df3$nr_center[i],"\n")
-    points(b13_angle_df3$x_centre[i],-b13_angle_df3$y_centre[i], asp=1, pch=20,col="green", cex=1.5)  
+    points(b13_angle_df3$x_centre[i],-b13_angle_df3$y_centre[i], asp=1, pch=20,col="red", cex=1.5)  
   }
   
   
