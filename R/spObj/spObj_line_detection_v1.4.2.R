@@ -328,8 +328,36 @@ if (Img_name == "ISPRS4_DLR10") {
 ##b14
 #cas='nonortho_only'
   
-  if (bnr2 == 14 && p_pos == "cor_det") {
+  if (bnr2 == 14 && cas == "nonortho_only" && p_pos == "cor_det") {
     cat("p_pos= ", p_pos, "\n")
+    
+    ##
+    cat("p_pos= ", p_pos, "\n")
+    plot(W$'4', col="white")  #black building
+    w = W$'4'
+    plot(w)
+    out_poly <- as.polygonal(w) #conversion to polygons
+    plot(out_poly)
+    out_poly_df <- as.data.frame(out_poly)
+    n_pt <- length(out_poly_df$x)
+    y3 <- 1 : n_pt
+    x_v <- round(out_poly_df$x)
+    y_v <- round(out_poly_df$y)
+    
+    #loop
+    for (i in y3) {
+      points(x_v[i], y_v[i], pch=16, col="red", cex=0.2) #points from edge
+    }
+    
+    x_v
+    y_v
+    plot(x_v,y_v,type = "l", asp=1)
+    lines(x_v,y_v,col="red", lty=2, asp=1)
+    
+    
+    
+    ##
+    
     B5_6
     B5_6R4 <- B5_6
     B5_6R4[1:n_z,8] <- 0
@@ -338,10 +366,11 @@ if (Img_name == "ISPRS4_DLR10") {
     n_ortholines2=0
     n_total = n_nonortholines2 
   } #end b14 - "cor_det"
+# end bnr2=14, cas ="nonortho_only", p_pos="cor_det" 
+
+##cas='nonortho_only_RDP'
   
-#cas='nonortho_only_RDP'
-  
-  if (bnr2 == 14 && p_pos == "cor_img") {
+  if (bnr2 == 14 && cas == "nonortho_only_RDP" && p_pos == "cor_img") {
     cat("p_pos= ", p_pos, "\n")
     plot(W$'4', col="white")  #black building
     w = W$'4'
@@ -372,7 +401,7 @@ if (Img_name == "ISPRS4_DLR10") {
     i=31 # 1.vertex for scaling (to be changed) 
     j=5 # 2.vertex for scaling (to be changed) 
     
-  } #end b14 - "cor_img"
+  } #end b14 - "nonortho_only_RDP" - "cor_img"
   
   ##b15
   #cas='100_all'
