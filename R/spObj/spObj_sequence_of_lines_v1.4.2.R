@@ -408,13 +408,13 @@ if (Img_name == "ISPRS4_DLR10") {
     #or with angle by 'support_sequence_of_lines.R', #9
     #stop("manual action required")
     b13_angle_df2
-    b13_angle_df2[4,1:4] <- c(30,NA,232,323) #lnr=30,midpoint is manually determined
-    b13_angle_df2[5,1:4] <- c(420,NA,221,348) #lnr=420,midpoint is manually determined
-    b13_angle_df2[7,1:4] <- c(336,NA,186,384) #lnr=336,midpoint is manually determined
+    b13_angle_df2[12,1:4] <- c(30,NA,232,323)  #lnr=30,midpoint is manually determined
+    b13_angle_df2[11,1:4] <- c(420,NA,221,348) #lnr=420,midpoint is manually determined
+    b13_angle_df2[9,1:4] <- c(336,NA,186,384) #lnr=336,midpoint is manually determined
     b13_angle_df2[8,1:4] <- c(466,NA,162,389) #lnr=466,midpoint is manually determined
-    b13_angle_df2[9,1:4] <- c(275,NA,176,425) #lnr=275,midpoint is manually determined
-    b13_angle_df2[10,1:4] <- c(19,NA,190,427) #lnr=19,midpoint is manually determined
-    b13_angle_df2[13,1:4] <- c(8,NA,278,330) #lnr=8,midpoint is manually determined
+    b13_angle_df2[7,1:4] <- c(275,NA,176,425) #lnr=275,midpoint is manually determined
+    b13_angle_df2[6,1:4] <- c(19,NA,190,427) #lnr=19,midpoint is manually determined
+    b13_angle_df2[3,1:4] <- c(8,NA,274,327)  #lnr=8,midpoint is manually determined
     b13_angle_df3 <- b13_angle_df2
     b13_angle_df3
   } #end b14 - "cor_pos"
