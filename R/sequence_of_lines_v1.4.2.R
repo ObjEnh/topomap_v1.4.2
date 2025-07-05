@@ -73,6 +73,11 @@ accSample3_new3$class3 <- pred3
 accSample3_new3$class3
 accSample3_new3
 pred4 <- as.numeric(pred3) 
+
+if (n_nonortholines2 == n_total) {
+  pred4=3
+}
+
 cat("suggested (predicted) method (meth) for determination of line-sequence_DT= ", pred4,"\n")
 cat("1: Mpts(midpoints+angle), 2: Mpts+dist(midpoints+distance), 3: bdr_follow (boundry following)","\n")
 
@@ -88,6 +93,7 @@ if (Img_name == "ISPRS4" && proc_mode == "demo") {
 if (Img_name == "ISPRS4_DLR10" && proc_mode == "demo") {
   meth <- 1
 }
+
 
 if (proc_mode != "demo") {
   meth <- readline("type number for method for determination of line-sequence: ") #manual input of method
