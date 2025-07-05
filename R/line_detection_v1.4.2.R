@@ -1761,7 +1761,7 @@ if (cas == "nonortho_only") {
       proc_mode == "auto" ||
       proc_mode == "obj_wise") {
     
-    vec <- 1 : 26 #max 25 additional lines
+    vec <- 1 : 26 #max 25 additional lines (subject of change)
     n_nonortholines2 <- 0
     
     #loop
