@@ -506,7 +506,7 @@ plot(xc,-yc,pch=3,cex=1.5,col="red",asp=1,xlim=c(xc-r_max2,xc+r_max2),ylim=c(-(y
 points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="green")
 
 ##plot of first point clouds (n_long_PCs) of Hough-transform
-cat("choose a reference line from the 10 longest lines","\n") 
+cat("choose a reference line from the selected number of longest lines","\n") 
 vec <- 1 : n_long_PCs #can be changed
 
 for (n1 in vec) {
