@@ -123,8 +123,8 @@ if (Img_name == "ISPRS4_DLR10") { #classification result: DLR10
 
 ##setting of parameters
 proc_mode <- "NA" #mode of processing
-n_long_PCs <- 1 #number of pixel clouds (PCs) 
-#to be displayed for selecting the reference line 
+n_long_PCs <- 1 # default, number of pixel clouds (PCs) 
+#to be displayed for selecting the reference line for buildings with orthogonal sides 
 
 ## install packages if required
 # install.packages('EBImage')
