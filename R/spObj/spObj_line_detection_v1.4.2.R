@@ -330,36 +330,9 @@ if (Img_name == "ISPRS4_DLR10") {
   
   if (bnr2 == 14 && cas == "nonortho_only" && p_pos == "cor_det") {
     cat("p_pos= ", p_pos, "\n")
-    
-    ##
-    cat("p_pos= ", p_pos, "\n")
-    plot(W$'4', col="white")  #black building
-    w = W$'4'
-    plot(w)
-    out_poly <- as.polygonal(w) #conversion to polygons
-    plot(out_poly)
-    out_poly_df <- as.data.frame(out_poly)
-    n_pt <- length(out_poly_df$x)
-    y3 <- 1 : n_pt
-    x_v <- round(out_poly_df$x)
-    y_v <- round(out_poly_df$y)
-    
-    #loop
-    for (i in y3) {
-      points(x_v[i], y_v[i], pch=16, col="red", cex=0.2) #points from edge
-    }
-    
-    x_v
-    y_v
-    plot(x_v,y_v,type = "l", asp=1)
-    lines(x_v,y_v,col="red", lty=2, asp=1)
-    
-    
-    
-    ##
-    
     B5_6
     B5_6R4 <- B5_6
+    n_z <- nrow(B5_6R4)
     B5_6R4[1:n_z,8] <- 0
     colnames(B5_6R4)[8]="ortho"
     n_nonortholines2 <- length(B5_6R4[,1])
