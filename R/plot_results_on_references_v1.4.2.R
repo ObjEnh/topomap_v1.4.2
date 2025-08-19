@@ -469,17 +469,17 @@ if (cas == "nonortho_only_RDP") {
       dev.off(3)
       dev.off(4)
       cat("end of program 'plot_results_on_references.R'","\n")
-      cat("end of program package 'buildenh'","\n")
+      cat("end of software package 'topomap'","\n")
     }
     
   } #end if answ2 = "N"
   
-  cat("end of script package 'buildenh' ","\n") 
+  cat("end of software package 'topomap' ","\n") 
 } #end of case="nonortho_only_RDP"
 
 #end of program 'plot_results_on_references.R'
 ################################################################################
 
-##end of package 'buildenh'
+##end of package 'topomap'
 ################################################################################
 
