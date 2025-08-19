@@ -1136,6 +1136,9 @@ if (cas == "extr_wd") {
   min_pixel <- bn_pixel
   with_northo <- 1 #it is assumed that all angles are theta_ref or alph_ref
   soph <- 0 #default (determination of sequence is easy)
+  n_nonortholines=0
+  n_nonortholines2=0
+  n_total=4
   
 } #end case="extr_wd"
 ################################################################################
@@ -1522,6 +1525,9 @@ if (cas == "100_all") {
   n_ortholines2 <- length(lnr_det5)
   bn_PC <- n_ortholines2
   soph=1 #sequence is difficult to determine
+  n_nonortholines=0
+  n_nonortholines2=0
+  n_total=bn_PC
 } #end case="100_all"
 ###########################################################################
 
@@ -2036,6 +2042,7 @@ if (cas == "nonortho_only") {
 }
 
 if (cas == "nonortho_only_RDP") {
+  #stop("continue step by step")
   #transformation
   simplified_lines
   dev.set(2)
