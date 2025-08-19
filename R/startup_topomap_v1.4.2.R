@@ -129,7 +129,7 @@ n_long_PCs <- 1 # default, number of pixel clouds (PCs)
 ## install packages if required
 # install.packages('EBImage')
 # if (!require("BiocManager", quietly = TRUE))
-#   install.packages("BiocManager")
+# install.packages("BiocManager")
 # BiocManager::install("EBImage")
 # install.packages('spatstat')
 # install.packages('tiff')
