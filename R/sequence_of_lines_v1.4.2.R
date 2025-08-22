@@ -798,7 +798,7 @@ if (sek == "bdr_follow") {
   b13_angle_df2 <- b13_angle_df2[1: n_x,] #new
 
   #plot of midpoints
-  plot(xc,-yc, pch=3, cex=2, col="red", asp=1, xlim=c(xc - r_max2,xc + r_max2), ylim=c(-(yc + r_max2),-(yc - r_max2)),
+  plot(xc,-yc, pch=3, cex=2, col="blue", asp=1, xlim=c(xc - r_max2,xc + r_max2), ylim=c(-(yc + r_max2),-(yc - r_max2)),
     main=paste("b ",bnr2, sep=(""),collapse=NULL)) #large scale
   points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.2, col="cyan") # original pointcloud for building
 
