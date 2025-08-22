@@ -14,9 +14,7 @@ cat("start of program 'plot_results_on_references.R'","\n")
 #large scale
 #cases=1,2,3,4,5
 
-if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" || cas == "100_all+nonortho" 
-    || cas == "nonortho_only") { 
-
+if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" || cas == "100_all+nonortho") { 
   setwd(home_dir)
   f5 <- paste("./results/",Img_name,"/b",bnr2,"_intsec_linepair_vertex_coord.txt",sep="")
   intsec_linepair_vertex_coord2 <- read.table(f5)
@@ -302,8 +300,172 @@ if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" || cas == "100_all+n
   } #end if answ2 = "N"
 
   cat("end of program package 'buildenh' ","\n") 
-} #end of cases=1,2,3,4,5
+} #end of cases=1,2,3,4
 
+if (cas == "nonortho_only") {
+  setwd(home_dir)
+  f5 <- paste("./results/",Img_name,"/man","/b",bnr2,"_intsec_linepair_vertex_coord2.txt",sep="")
+  intsec_linepair_vertex_coord2 <- read.table(f5)
+  names(intsec_linepair_vertex_coord2) <- c("line_pair","vertex_nr","x","y")
+  cat("table with line-pairs,vertex/corner-number,coordinates(x,y)","\n")
+  print(intsec_linepair_vertex_coord2)
+  intsec_linepair_vertex_coord2
+  
+  #plot graph (small scale)
+  par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
+  x=0
+  y=0
+  plot(x,y, pch=3, cex=1.5,  cex.axis = 1.2, cex.lab=1.5, col="red", asp=1, xlim=c(1,600), ylim=c(-813,-1),
+       axes = TRUE, ann = T, frame.plot = TRUE, main = paste("building #", bnr2," of image '",Img_name,"'",sep = ""))
+  points(intsec_linepair_vertex_coord2$x,intsec_linepair_vertex_coord2$y,type="p", col="red", pch=20, cex=1)
+  points(intsec_linepair_vertex_coord2$x,intsec_linepair_vertex_coord2$y, type="l", col="green", lty=1, lwd=2)
+  #
+
+  #plot graph (large) scale)
+  dev.list()
+  dev.set(2)
+  par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
+  x <- xc
+  y <- yc
+  r_max2 <- 1.1 * r_max
+  #
+  plot(x,-y, pch=3, cex=2, col="red", asp=1, xlim=c(xc - r_max2,xc + r_max2),
+       ylim=c(-(yc + r_max2),-(yc - r_max2)), ann = TRUE, axes = TRUE,
+       main=paste("b ",bnr2, sep=("")))
+  #points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="red")
+  #points(intsec_linepair_vertex_coord2$x,intsec_linepair_vertex_coord2$y,type="p", col="black", pch=20, cex=1,asp=1)
+  points(intsec_linepair_vertex_coord2$x,intsec_linepair_vertex_coord2$y,type="l", col="blue", lty=1, lwd=2, asp=1)
+  #
+  
+  #plot onto orthoimage (small) scale)
+  f5 <- paste("./results/",Img_name,"/man/b",bnr2,"_intsec_linepair_vertex_coord2.txt",sep="")
+  intsec_linepair_vertex_coord2 <- read.table(f5)
+  names(intsec_linepair_vertex_coord2) <- c("line_pair","vertex_nr","x","y")
+  cat("table with line-pairs,vertex/corner-number,coordinates(x,y)","\n")
+  print(intsec_linepair_vertex_coord2)
+  setwd(OrgImgPathname)
+  img_ref <- readImage(OrgImgFilename)
+  display(img_ref, method = "raster")
+  lines(intsec_linepair_vertex_coord2[,3], 
+        (-intsec_linepair_vertex_coord2[,4]),col="white",asp=1,type="l",lwd=2,lty=1)
+  
+  #plot onto orthoimage (large scale)
+  display(img_uds,method = "raster")
+  lines(intsec_linepair_vertex_coord2[,3]-orig_x, 
+        (-intsec_linepair_vertex_coord2[,4]-orig_y),col="white",asp=1,type="l",lwd=2,lty=1)
+  
+  # #plot vertex numbers
+  # n_x <- length(intsec_linepair_vertex_coord$x)
+  # intsec_linepair_vertex_coord[n_x,2] <- 1
+  # 
+  # vec_y <- 1 : n_x
+  # 
+  # for (i in vec_y) {
+  #   #browser()
+  #   cat("i=",i,"\n")
+  #   text(intsec_linepair_vertex_coord[i,3]-orig_x,(intsec_linepair_vertex_coord[i,4]-orig_y),
+  #        labels = intsec_linepair_vertex_coord[i,2],
+  #        pos=2, offset = 0.7, cex = 1, col = "white")
+  # } #end for-loop
+  
+  #end of plot of outline with vertexes-numbers onto enlarged orthoimage
+  
+  
+  cat("does the result agree with the orthoimage (large scale)?","\n")
+  
+  if (proc_mode == "demo") {
+    cat("if demo - type Y ","\n")
+  }
+  
+  answ <- readline ("type Y or N: ")
+  
+  if (answ == "N") {
+    cat ("start again with this object and select other values for 'cas' and/or 'epsilon' ","\n")
+    setwd(home_dir2)
+    source(paste("extract_single_building_v",v_nr,".R",sep = ""))  
+  }
+  
+  if (answ == "Y") {
+    
+    #plot onto Ground Truth (GT)
+    setwd(OrgGtsPathname)
+    img_GTS <- readImage(OrgGtsFilename)
+    display(img_GTS, method="raster")
+    lines(intsec_linepair_vertex_coord2[,3], intsec_linepair_vertex_coord2[,4],col="red",asp=1,type="l",lwd=2,lty=1)
+    GTS_uds <- img_GTS[orig_x:wind_x, orig_y:wind_y, 1:3]
+    display(GTS_uds, method="raster")
+    lines(intsec_linepair_vertex_coord2[,3]-orig_x,-intsec_linepair_vertex_coord2[,4]-orig_y,col="red",asp=1,type="l",lwd=2,lty=1)
+  } #end if answ="Y")
+  
+  cat("Test on agreement with the Ground Truth","\n")
+  
+  if (proc_mode == "demo") {
+    cat("if demo - type Y ","\n")
+  }
+  
+  answ <- readline("does the result agree with the Ground Truth? type Y or N: ")
+  
+  if (answ == "N") { 
+    
+    cat ("start again with this object and select other values for 'cas' and/or 'epsilon' ","\n")
+    setwd(home_dir2)
+    source(paste("extract_single_building_v",v_nr,".R",sep = ""))  
+  } #end if
+  #end of plotting of results with cas=nonortho_only
+  
+  
+  ##processing of other objects (buildings)
+  answ2 <- readline("other buildings to process? type Y or N: ")
+  
+  if (answ2 == "Y" && proc_mode == "auto") {
+    
+    k_y_auto <- k_y_auto + 1 #next building
+    
+    if (k_y_auto < n_y_auto) {
+      setwd(home_dir2)
+      source(paste("extract_single_building_v",v_nr,".R",sep = ""))
+    } #end if (k_y_auto < n_y_auto)
+    
+    if (k_y_auto >= n_y_auto) {
+      cat(paste("end of processing object ",bnr2, sep = ""),"\n")
+      cat("end of processing mode 'auto' ","\n")
+      proc_mode <- "NA"
+    } #end if (k_y_auto > n_y_auto)
+    
+  } #end if answ2 = "Y" && proc_mode = "auto"  
+  
+  if (answ2 == "Y" && proc_mode != "auto") {
+    dev.list()
+    #dev.off(3)
+    setwd(home_dir2)
+    source(paste("extract_single_building_v",v_nr,".R",sep = ""))
+  }  #end (answ2 = "Y" && proc_mode = "obj_wise")
+  
+  if (answ2 == "N") {
+    
+    #planning a new processing
+    answ5 <- readline("do you want to start a complete new processing? type Y or N: ")
+    
+    if (answ5 == "Y") { 
+      setwd(home_dir)
+      fname15 <- paste("./results/",Img_name,"/",sep="")
+      setwd(fname15)
+      file.remove("b_all.txt") #removal of files with numbers of processed objects (buildings)
+      cat("end of program 'plot_results_on_references.R'","\n")
+    } else {
+      dev.list()
+      dev.off(3)
+      dev.off(4)
+      cat("end of program 'plot_results_on_references.R'","\n")
+      cat("end of software package 'topomap'","\n")
+    }
+    
+  } #end if answ2 = "N"
+  
+} #end plot of results of cas=nonortho_only
+
+################################################################################
+  
 if (cas == "nonortho_only_RDP") { 
   dev.list()
   #dev.off(6) #close of external window
@@ -326,7 +488,6 @@ if (cas == "nonortho_only_RDP") {
        axes = TRUE, ann = T, frame.plot = TRUE, main = paste("building #", bnr2," of image '",Img_name,"'",sep = ""))
   points(intsec_linepair_vertex_coord2$x,-intsec_linepair_vertex_coord2$y,type="p", col="red", pch=20, cex=1)
   points(intsec_linepair_vertex_coord2$x,-intsec_linepair_vertex_coord2$y, type="l", col="green", lty=1, lwd=2)
-  
   
   #plot graph (large) scale)
   dev.list()
