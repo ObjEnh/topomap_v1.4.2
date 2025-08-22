@@ -512,7 +512,11 @@ if (Img_name == "ISPRS4_DLR10") {
   } #end of b25
   
   ##b26
-  if (bnr2 == 26 && p_pos == "cor_det") { 
+  
+  #cas='100_all+nonortho'
+  
+  if (bnr2 == 26 && p_pos == "cor_det" && cas == "100_all+nonortho") { 
+    #stop("continue step by step")
     B5_6
     B5_6R4 <- B5_6
     B5_6R4 <- B5_6R4[-c(1:8,10:17),] 
@@ -520,13 +524,14 @@ if (Img_name == "ISPRS4_DLR10") {
     row.names(B5_6R4) <- 1 : n_z
     B5_6R4
     n_z2 <- length(B5_6R4$lnr)
-    B5_6R4[1:n_z2,8] <- 1
+    B5_6R4[1:n_z2,8] <- 0 #changed 
     row.names(B5_6R4) <- 1 : n_z2
     colnames(B5_6R4)[8]="ortho"
     B5_6R4
   } #end of b26
   
-  #cas='nonortho_only_RDP'
+  
+  ##cas='nonortho_only_RDP'
   
   if (bnr2 == 26 && p_pos == "cor_img") { 
     cat("p_pos= ", p_pos, "\n")
