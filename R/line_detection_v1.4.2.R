@@ -1774,6 +1774,7 @@ if (cas == "nonortho_only") {
     for (i in vec) {
       #input of identifiers of non-orthogonal line segments
       #include selected reference line
+      #sequence of line-segments, for example anti-clockwise, must be maintained
       #manual input at the console 
       #end of input: type 0
       
@@ -1913,10 +1914,12 @@ if (cas == "nonortho_only") {
       source(paste("./spObj/spObj_line_detection_v",v_nr,".R",sep = "")) #case: nonortho_only
       B5_6R4
       lnr_det5 <- B5_6R4$lnr
+      B5_6 <- B5_6R4
     } #end if
       
   } #end proc modes: "demo", "auto", "obj-wise"
     
+  B5_6
   lnr_det5
   n_total2 <- length(lnr_det5)
   n_nonortholines2
@@ -1951,7 +1954,8 @@ if (cas == "nonortho_only") {
   write.table(cas,fname9,row.names = FALSE, col.names = FALSE)
 } #end case = "nonortho_only"
 
-##case: non-orthogonal lines only_RDP 
+
+##case=non-orthogonal lines only_RDP 
 
 if (cas == "nonortho_only_RDP") { 
   
@@ -2034,12 +2038,77 @@ if (cas == "100_all") {
 }
 
 if (cas == "100_all+nonortho") {
-  B5_6 <- B5_6 #dummy line
+  B5_6 <- B5_6R4 
 }
   
 if (cas == "nonortho_only") {
-    B5_6 <- B5_6 #dummy line
-}
+  B5_6
+  #stop("new code")
+  phi_deg <- B5_6$theta_angle
+  phi <- (phi_deg/180)*pi
+  m <- length(phi_deg) #number of lines in object
+  #matrix elements for m lines
+  A <- matrix(nrow=2*m, ncol=m) #matrix
+  A[,] <- 0
+  A <- design_mat(m,phi)
+  x0 <- B5_6$ro_pixel
+  b0 <- A %*% x0 #calculation of intersections
+  b0 #approximate coordinates
+  #
+  xk <- rep(0,m)
+  yk <- rep(0,m)
+  vec <- seq(from=1, to=(2*m), by=2)
+  
+  k=1
+  for (i in vec) {
+    cat("i=", i, "\n")
+    xk[k] <- b0[i,1]
+    yk[k] <- b0[i+1,1]
+    k=k+1
+  }
+  
+  head(b0)
+  xk
+  yk
+  #check-plot (large scale)
+  par(mai = c(1.02,0.82,0.82,0.42)) 
+  x <- xc
+  y <- yc
+  r_max2 <- 1.1 * r_max
+  plot(x,-y, pch=3, cex=2, col="red", asp=1, 
+       xlim=c(xc - r_max2,xc + r_max2), 
+       ylim=c(-(yc + r_max2),-(yc - r_max2)), 
+       ann=TRUE, axes=TRUE, main=paste("b ",bnr2, sep=("")))
+  points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="red")
+  
+  for (i in vec) { 
+    points(xk[i],-yk[i], type="p", col="blue", pch=3, cex=1, asp=1)
+  }
+  
+  xkk <- xk
+  xkk[m+1] <- xk[1]
+  xkk
+  ykk <- yk
+  ykk[m+1] <- yk[1]
+  ykk
+  points(xkk,-ykk,type="l", lwd=2, lty=1,col="black",asp=1)
+
+  # set up of file 'intsec_linepair_vertex_coord'
+  intsec_linepair_vertex_coord <- matrix(nrow=(m), ncol=4)
+  intsec_linepair_vertex_coord[,1]  <- NA
+  intsec_linepair_vertex_coord[,2]  <- B5_6$lnr
+  intsec_linepair_vertex_coord[,3] <- xk
+  intsec_linepair_vertex_coord[,4] <- -yk
+  intsec_linepair_vertex_coord2 <- rbind(intsec_linepair_vertex_coord,intsec_linepair_vertex_coord[1,])
+  intsec_linepair_vertex_coord2
+  setwd(home_dir)
+  f5 <- paste("./results/",Img_name,"/man","/b",bnr2,"_intsec_linepair_vertex_coord2.txt",sep="")
+  write.table(intsec_linepair_vertex_coord2,f5)
+  
+  ##continue by 'plot_results_on_references_v1.4.2'
+  setwd(home_dir2)
+  source(paste("plot_results_on_references_v",v_nr,".R",sep=""))
+} #end case=nonortho_only
 
 if (cas == "nonortho_only_RDP") {
   #stop("continue step by step")
@@ -2048,15 +2117,9 @@ if (cas == "nonortho_only_RDP") {
   dev.set(2)
   plot(simplified_lines, col = "red", pch=3, cex=1, main=paste("b ",bnr2,"- RDP-result", sep=("")), asp=1)
   points(simplified_lines$x,simplified_lines$y, type="l", col="blue", lwd=2, lty=1,asp=1)
-  # i=31 #i=index in simplified lines of first scale-point, b221
-  # j=5 ##i=index in simplified lines of second scale-point, b221
-  # points(simplified_lines$x[i],simplified_lines$y[i],
-  #        pch=20,col=("brown"),cex=1.5,asp=1)
-  # points(simplified_lines$x[j],simplified_lines$y[j],
-  #        pch=20,col=("black"),cex=1.5,asp=1)
-  ##transformation into xy-system
   
-  #plot of pc3 in extern window
+  ##plot of pc3 in extern window
+  
   #dev.list()
   windows()  # Opens external graphics window
   #dev.set(4)
@@ -2070,11 +2133,11 @@ if (cas == "nonortho_only_RDP") {
        main=paste("b ",bnr2, sep=("")))
   points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="red")
   
-  #measurement of ref-line in native window using standard locator()
+  #measurement of ref-line in external window using standard locator()
   #this operation has been necessary because 
   #digitizing by means of 'locator()' works in 
   #external window correctly
-  #place native window out side RStudio panes
+  #place external window out side RStudio panes
   cat("manual measurement of two pixels with extreme y-coordinates","\n")
   dev.list()
   dev.set(4)
@@ -2217,7 +2280,7 @@ if (cas == "nonortho_only_RDP") {
 } #end of case = "nonortho_only_RDP"  
 
 if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" ||
-  cas == "100_all+nonortho" || cas == "nonortho_only") {
+  cas == "100_all+nonortho") {
   row.names(B5_6) <- 1 : length(B5_6$lnr)
   lnr_det7 <- B5_6$lnr
   lnr_det7
