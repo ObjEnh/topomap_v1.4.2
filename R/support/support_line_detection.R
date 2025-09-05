@@ -19,6 +19,11 @@
 ## 10.plot of detected non-ortho-line onto enlarged orthoimage
 ## 11.calculation of angle (center of object to new center of segment)
 ## 12.search of index for coordinate
+## 13.transformation from xy-system to theta/ro-system
+## 14.generate vertex-labels from digitized coordinates
+## 15.digitizing of polygon-vertices
+## 16.calculation of vertex-labels
+
 ################################################################################
 
 ## 1. improving the ro-range in Hough-space
@@ -404,7 +409,8 @@ points(xc-orig_x,yc-orig_y,pch=3, asp=1, cex=1.3, col="red")
 points(as.integer(pc3$col-orig_x), as.integer(pc3$row-orig_y), 
        pch=20, asp=1, cex=0.3, col="green")
 #k=1.64 #k=approximate scale factor (ISPRS1,ISPRS7)
-k=1.5 #k=approximate scale factor (ISPRS4,ISPRS4_DLR10)
+#kf2=1.00 approximate scale factor (ISPRS4,ISPRS4_DLR10)
+
 #determination of transformation parameter by means of orthoimage (large scale)
 #measure two control 2 points (left lower, right upper) and one checkpoint (middle)
 L1 <- trans_ortho() #three points are plotted and must be measured by clique on courser
@@ -456,6 +462,10 @@ x12 <- pts12[1,1]
 y12 <- pts12[2,1]
 x <<- x12
 y <<- y12
+
+#coordinates of second point, small scale
+cat("x_coordinate= ",x,sep = "","\n") 
+cat("y_coordinate= ",y,sep = "","\n")
 
 #plot of second point in uds
 points(x-orig_x,y-orig_y,pch=3, asp =1, cex=1,asp=1, col="red") #large scale
@@ -675,7 +685,7 @@ text((x-orig_x),((y+11)-orig_y),txt2, cex=1, col="white")
 
 #input
 theta_ind=10 #change value
-x=273#point (mean, img_system)
+x=273 #point (mean, img_system)
 y=740 #point (mean, img_system) check!
 points(x-orig_x,y-orig_y,pch=3, asp =1, cex=2,asp=1, col="blue") #large scale
 
@@ -788,11 +798,11 @@ b13_angle_df3
 
 #end of ## 11. calculation of angle (center of object to new center of segment)
 
-##12.search of index for coordinate
+## 12.search of index for coordinate
 
 #search index for max(simplified_lines_cor$x)
 length(simplified_lines_cor$x)
-vec <- 1:length(simplified_lines_cor$x)
+vec <- 1 : length(simplified_lines_cor$x)
 round(xy1$x[1])
 round(xy1$y[1])
 
@@ -817,7 +827,605 @@ for (i in vec) {
   
 }
 
-# end of ##12.search of index for coordinate
+# end of ## 12.search of index for coordinate
+
+## 13.transformation from xy-system to theta,ro-system
+
+#digitizing
+dir_meas <- locator(2) #measure 2 points on line
+x_ang <- (dir_meas$y[1] - dir_meas$y[2]) / (dir_meas$x[1] - dir_meas$x[2])
+alpha_meas <- atan(x_ang) * omega
+alpha_math <- (-alpha_meas) #change to math-system
+theta_math <- alpha_math + 90
+theta_img <- (-theta_math) #change to img-system
+
+if (theta_img < 0) {
+  theta_img <- theta_img + 180
+}
+#
+
+#measure two control 2 points (left lower, right upper) and one checkpoint (middle)
+L1 <- trans_ortho() #three points are plotted and must be measured by clique on courser
+
+#transformation parameter
+D <- matrix(nrow=2, ncol=2)
+D[1,1] <- L1[[1]][1,1]
+D[1,2] <- L1[[1]][1,2]
+D[2,1] <- L1[[1]][2,1]
+D[2,2] <- L1[[1]][2,2]
+a0 <- L1[[2]][1]
+b0 <- L1[[2]][2]
+tr_lat <- c(a0,b0)
+kf2 <- L1[[3]] #scale factor for plotting into image)
+
+#measurement of two points to determine theta, ro and line number
+#required range for alpha_meas: -90 ... +85 degrees -> select proper positions of first and second point
+
+c10 <- locator(2) #standard function of locator
+c10
+
+pts10 <- c(c10$x[1],c10$y[1],c10$x[2],c10$y[2])
+pts10
+loc1 <- c(c10$x[1],c10$y[1]) #first point
+loc2 <- c(c10$x[2],c10$y[2]) #second point
+
+#transformation to image-system (small scale)
+pts11 <- tr_lat + D%*%loc1 #first point
+pts12 <- tr_lat + D%*%loc2 #second point
+
+#first point
+x11 <- pts11[1,1] #x-coordinate
+y11 <- pts11[2,1] #y-coordinate
+x <- x11
+y <- y11
+
+#coordinates of first point, small scale
+cat("x_coordinate= ",x,sep = "","\n")
+cat("y_coordinate= ",y,sep = "","\n")
+
+#plot of first point in uds
+points(x,y,pch=3, asp =1, cex=3,asp=1, col="red") #large scale
+points(x-orig_x,y-orig_y,pch=3, asp =1, cex=1,asp=1, col="red") #large scale
+
+#second point
+x12 <- pts12[1,1]
+y12 <- pts12[2,1]
+x <- x12
+y <- y12
+
+#plot of second point in uds
+points(x-orig_x,y-orig_y,pch=3, asp =1, cex=1,asp=1, col="red") #large scale
+
+#
+alpha_meas <- atan2((y12 - y11),(x12 - x11)) * omega
+#alpha <- alpha_meas #required range: -90 ... +85 degrees?
+alpha_math <- (-alpha_meas) #change to math-system
+theta_math <- alpha_math + 90
+
+#calculation of ro (examples)
+theta_ind=10 #change value
+x= 269.864934821093 #point (vertex 195,math-system)
+y= -781.810244400153
+#
+x=378.741097918553 #vertex 1, math-system
+y=-718.950562327501
+#
+x=347.016571737633  #vertex 274, math_system
+y=-681.142744278041
+#points(x-orig_x,y-orig_y,pch=3, asp =1, cex=2,asp=1, col="blue") #large scale
+points(x,-y,pch=3, asp =1, cex=2,asp=1, col="green") #small scale
+
+## end of ## 13.transformation from xy-system to theta/ro-system 
+
+## 14.generate vertex-labels from digitized coordinates
+#digitize coordinates of vertices
+img_uds <- img_ref[orig_x:wind_x,orig_y:wind_y,1:3]
+display(img_uds, method = "raster")
+points(xc-orig_x,yc-orig_y,pch=3, asp=1, cex=1.3, col="red")
+points(as.integer(pc3$col-orig_x), as.integer(pc3$row-orig_y), 
+       pch=20, asp=1, cex=0.3, col="green")
+
+dig_coord2 <- matrix(nrow=24,ncol=4)
+colnames(dig_coord2) <- c("line_nrs", "vertex_nr", "x","y")
+
+#measurement of vertices to determine theta, ro and line number
+#required range for alpha_meas: -90 ... +85 degrees -> select proper positions of first and second point
+i=1
+
+while (i <= 24) {
+  
+  c10 <- locator(1) #standard function of locator
+  points(c10$x,c10$y,pch=3, asp =1, cex=1,asp=1, col="red") #large scale
+  
+  x <- c10$x + orig_x
+  y <- c10$y + orig_y
+  
+  points(x-orig_x,y-orig_y,pch=3, asp =1, cex=1,asp=1, col="white") #large scale
+  
+  #coordinates of first point, small scale
+  cat("x_coordinate= ",x,sep = "","\n") 
+  cat("y_coordinate= ",y,sep = "","\n")
+  
+  #plot of point on orthoimage
+  #points(x,y,pch=3, asp =1, cex=3,asp=1, col="red") #large scale
+  points(x-orig_x,y-orig_y,pch=3, asp =1, cex=1,asp=1, col="white") #large scale
+  
+  
+  dig_coord2[i,3] <- x
+  dig_coord2[i,4] <- -y
+  i <- i + 1
+}
+
+dig_coord2
+
+lnr_det7 <- rep(0, (n_nonortholines2-1))
+n_B4 <- length(B4$lnr)
+vec4 <- 1 : n_B4
+
+#write digitized points/vertices to file
+setwd(home_dir)
+f6 <- "./results/ISPRS4_DLR10/man/b26_intsec_linepair_vertex_coord3.txt"
+write.table(dig_coord2,f6)
+#
+dig_coord4 <- read.table(f6)
+colnames(dig_coord4) <- c("line_nrs", "vertex_nr", "x","y")
+head(dig_coord4)
+n_dig_coord <- length(dig_coord4$vertex_nr)
+n_nonortholines2 <- n_dig_coord + 1
+dig_coord4[(n_nonortholines2),] <- dig_coord4[1,] #add first point to the list at the end
+dig_coord4
+
+#functions
+
+round_to_5 <- function(x) {
+  x_r5 <- 5 * sign(x) * floor(abs(x)/5 + 0.5)
+  return(x_r5)
+} #end function round_to_5
+
+lnr_man <- function() { 
+  #stop("step by step")
+  #print(x12)
+  cat("x11= ",x11,"\n")
+  cat("y11= ",y11,"\n")
+  cat("x12= ",x12,"\n")
+  cat("y12= ",y12,"\n")
+  alpha_meas <- atan2((y12 - y11),(x12 - x11)) * omega 
+  cat("alpha_meas= ", alpha_meas,"\n")
+  alpha_math <- alpha_meas #required range: -90 ... +85 degrees?
+  #alpha_math <- alpha_math + 180
+  theta_math <- alpha_math - 90
+  theta_math
+  
+  if (theta_math < 0) {
+    theta_math <- theta_math + 180
+  }
+  
+  if (theta_math > 180) {
+    theta_math <- theta_math - 180
+  }
+  
+  theta_math_arc=theta_math/omega
+  #y <- -y #change to math_system
+  x <- x11 #changed from x12 to x11
+  y <- y11
+  ro_math <- x*cos(theta_math_arc) + y*sin(theta_math_arc)
+  ro_math
+  
+  #change to img-system
+  theta_img <- 180 - theta_math
+  cat("theta_img= ", theta_img, "\n")
+  #round to steps of 5
+  
+  theta_img_r5 <- round_to_5(theta_img)
+  cat("theta_img_r5 = ",theta_img_r5,"\n") #required range: 0...175 degree
+  #
+  ro_img <- (-ro_math)  
+  ro_img_r <- round(ro_img)
+  cat("ro_img_r = ",ro_img_r,"\n")
+  
+  for (i in vec4) {
+    
+    #cat("i= ", i,"\n")
+    
+    if (B4$theta_angle[i] == theta_img_r5 && B4$ro_pixel[i] == ro_img_r) {
+      cat("i= ",i,"\n")
+      print(B4$lnr[i]) 
+      lnr_det7[k] <- B4$lnr[i]
+    }
+    
+  } #end loop i
+  
+  lnr_det7
+  return(lnr_det7)
+  
+} #end function lnr_man
+
+
+#start of calculation of vertex label
+n_dig_coord4 <- length(dig_coord4$x)
+
+k=1 #
+
+while (k <= (n_dig_coord4-1)) {
+  
+  x11 <- dig_coord4$x[k]
+  y11 <- dig_coord4$y[k]
+  x12 <- dig_coord4$x[k+1]
+  y12 <- dig_coord4$y[k+1]
+  
+  ##calculation of vertex_number (k)
+  cat("vertex number= ",k,"\n")
+  lnr_det7 <- lnr_man()
+  lnr_det7
+  k = k + 1
+  
+} #end of loop k
+
+lnr_det7
+
+#store vertex-numbers
+setwd(home_dir)
+f6 <- "./results/ISPRS4_DLR10/man/b26_vertex_numbers4.txt"
+write.table(lnr_det7,f6)
+## end of script ##14.generate vertex-labels from digitized vertices
+
+## 15.digitizing of polygon-vertices
+
+#display of enlarged orthoimage
+img_uds <- img_ref[orig_x:wind_x,orig_y:wind_y,1:3]
+display(img_uds, method = "raster")
+points(xc-orig_x,yc-orig_y,pch=3, asp=1, cex=1.3, col="green")
+points(as.integer(pc3$col-orig_x), as.integer(pc3$row-orig_y), 
+       pch=20, asp=1, cex=0.3, col="green")
+#generation of matrix
+n_vert=24 #number of vertices of object (to be changed)
+dig_coord2 <- matrix(nrow=n_vert,ncol=4)
+colnames(dig_coord2) <- c("line_nrs", "vertex_nr", "x","y")
+
+#measurement of vertices
+i=1
+
+while (i <= n_vert) {
+  
+  c10 <- locator(1) #standard function of locator
+  points(c10$x,c10$y,pch=3, asp =1, cex=1,asp=1, col="blue") #large scale
+  
+  x <- c10$x + orig_x 
+  y <- c10$y + orig_y
+  
+  #check plot
+  points(x-orig_x,y-orig_y,pch=3, asp =1, cex=1,asp=1, col="white") #large scale
+  
+  #coordinates of vertex (small scale)
+  cat("x_coordinate= ",x,sep = "","\n") 
+  cat("y_coordinate= ",y,sep = "","\n")
+  
+  cat("i= ",i,"\n")
+  dig_coord2[i,3] <- x
+  dig_coord2[i,4] <- -y
+  i <- i + 1
+}
+
+dig_coord2
+
+#write digitized points/vertices to file
+setwd(home_dir)
+f6 <- "./results/ISPRS4_DLR10/man/b26_intsec_linepair_vertex_coord4.txt"
+write.table(dig_coord2,f6)
+## end of script 15. digitizing of polygon-vertices
+
+
+## 16. calculation of vertex-labels
+lnr_det7 <- rep(0, (n_nonortholines2-1))
+n_B4 <- length(B4$lnr)
+vec4 <- 1 : n_B4
+ro_rg2=5 #search range:  ro-ro_rg2 ... ro+rg2
+
+dig_coord4 <- read.table(f6)
+colnames(dig_coord4) <- c("line_nrs", "vertex_nr", "x","y")
+head(dig_coord4)
+n_dig_coord <- length(dig_coord4$vertex_nr)
+n_nonortholines2 <- n_dig_coord + 1
+dig_coord4[(n_nonortholines2),] <- dig_coord4[1,] #add first point to the list at the end
+dig_coord4
+#functions
+
+round_to_5 <- function(x) {
+  x_r5 <- 5 * sign(x) * floor(abs(x)/5 + 0.5)
+  return(x_r5)
+} #end function round_to_5
+
+lnr_man <- function() { 
+  cat("x11= ",x11,"\n")
+  cat("y11= ",y11,"\n")
+  cat("x12= ",x12,"\n")
+  cat("y12= ",y12,"\n")
+  alpha_meas <- atan2((y12 - y11),(x12 - x11)) * omega 
+  cat("alpha_meas= ", alpha_meas,"\n")
+  alpha_math <- alpha_meas #required range: -90 ... +85 degrees?
+  alpha_math <- alpha_math + 180
+  theta_math <- alpha_math + 90
+  theta_math
+  theta_math_arc=theta_math/omega
+  x <- x11 
+  y <- y11
+  ro_math <- x*cos(theta_math_arc) + y*sin(theta_math_arc)
+  ro_math
+  cat("ro_math= ",ro_math,"\n")
+  ro_img <- (ro_math) 
+  ro_img_r <- round(ro_img)
+  
+  #change to img-system
+  theta_img <- 360 - theta_math
+  cat("theta_img= ", theta_img, "\n")
+  
+  
+  if (theta_img > 180) {
+    theta_img <- theta_img - 180
+  }
+  
+  if (theta_img < 0) {
+    theta_img <- theta_img + 180
+  }
+  
+  theta_img
+  
+  theta_img_r5 <- round_to_5(theta_img) #call of function
+  idx <- which(B4$theta_angle == theta_img_r5 & B4$ro_pixel %in% (ro_img_r-ro_rg2):(ro_img_r+ro_rg2))
+  
+  if (length(idx) == 0) {
+    idx <- NA_integer_   # force NA if no match
+  }
+  print(idx)
+  i <- idx
+  cat("i= ",i,"\n")
+  lnr_nonortho <- i
+  cat("lnr_nonortho= ",lnr_nonortho,"\n")
+  lnr_nonortho 
+  return(lnr_nonortho)
+  
+} #end function lnr_man
+
+#calculation of vertex label
+n_B4 <- length(B4$lnr)
+vec4 <- 1 : n_B4
+n_dig_coord4 <- length(dig_coord4$x)
+
+k=1 #
+
+while (k <= (n_dig_coord4-1)) {
+  
+  x11 <- dig_coord4$x[k]
+  y11 <- dig_coord4$y[k]
+  x12 <- dig_coord4$x[k+1]
+  y12 <- dig_coord4$y[k+1]
+
+  ##calculation of vertex_number (k)
+  cat("k= ",k,"\n")
+  lnr_nonortho <- lnr_man() #call of function 
+  cat("lnr_nonortho= ",lnr_nonortho,"\n")
+  lnr_det7[k] <- lnr_nonortho[1] #change
+  lnr_nonortho <- 0
+  k = k + 1
+  
+} #end of loop k
+
+#end of calculation of vertex-labels
+lnr_det7
+length(lnr_det7)
+lnr_det77 <- lnr_det7
+lnr_det77
+
+#storage of all vertex-labels
+setwd(home_dir)
+f6 <- "./results/ISPRS4_DLR10/man/b26_vertex_numbers77.txt"
+write.table(lnr_det7,f6)
+
+## calculation of vertices labels with 'ro_img <- (-ro_math)'
+lnr_det7 <- rep(0, (n_nonortholines2-1))
+n_B4 <- length(B4$lnr)
+vec4 <- 1 : n_B4
+
+#write digitized points/vertices to file
+setwd(home_dir)
+f6 <- "./results/ISPRS4_DLR10/man/b26_intsec_linepair_vertex_coord4.txt"
+write.table(dig_coord2,f6)
+#
+dig_coord4 <- read.table(f6)
+colnames(dig_coord4) <- c("line_nrs", "vertex_nr", "x","y")
+head(dig_coord4)
+n_dig_coord <- length(dig_coord4$vertex_nr)
+n_nonortholines2 <- n_dig_coord + 1
+dig_coord4[(n_nonortholines2),] <- dig_coord4[1,] #add first point to the list at the end
+dig_coord4
+#functions
+
+round_to_5 <- function(x) {
+  x_r5 <- 5 * sign(x) * floor(abs(x)/5 + 0.5)
+  return(x_r5)
+} #end function round_to_5
+
+lnr_man <- function() { 
+  
+  cat("x11= ",x11,"\n")
+  cat("y11= ",y11,"\n")
+  cat("x12= ",x12,"\n")
+  cat("y12= ",y12,"\n")
+  alpha_meas <- atan2((y12 - y11),(x12 - x11)) * omega 
+  cat("alpha_meas= ", alpha_meas,"\n")
+  alpha_math <- alpha_meas #required range: -90 ... +85 degrees?
+  alpha_math <- alpha_math + 180
+  theta_math <- alpha_math + 90
+  theta_math
+  
+  theta_math_arc=theta_math/omega
+  x <- x11 
+  y <- y11
+  ro_math <- x*cos(theta_math_arc) + y*sin(theta_math_arc)
+  ro_math
+  cat("ro_math= ",ro_math,"\n")
+  ro_img <- (-ro_math) ##sign may be wrong
+  ro_img_r <- round(ro_img)
+  
+  #change to img-system
+  theta_img <- 360 - theta_math
+  cat("theta_img= ", theta_img, "\n")
+  
+  
+  if (theta_img > 180) {
+    theta_img <- theta_img - 180
+  }
+  
+  if (theta_img < 0) {
+    theta_img <- theta_img + 180
+  }
+  
+  theta_img
+  theta_img_r5 <- round_to_5(theta_img) #function call
+  idx <- which(B4$theta_angle == theta_img_r5 & B4$ro_pixel %in% (ro_img_r-ro_rg2):(ro_img_r+ro_rg2))
+  if (length(idx) == 0) {
+    idx <- NA_integer_   # force NA if no match
+  }
+  print(idx)
+  i <- idx
+  cat("i= ",i,"\n")
+  lnr_nonortho <- i
+  cat("lnr_nonortho= ",lnr_nonortho,"\n")
+  lnr_nonortho 
+  return(lnr_nonortho)
+  
+} #end function lnr_man
+
+#calculation of vertex number
+n_B4 <- length(B4$lnr)
+vec4 <- 1 : n_B4
+n_dig_coord4 <- length(dig_coord4$x)
+k=1 
+
+while (k <= (n_dig_coord4-1)) {
+  
+  x11 <- dig_coord4$x[k]
+  y11 <- dig_coord4$y[k]
+  x12 <- dig_coord4$x[k+1]
+  y12 <- dig_coord4$y[k+1]
+  
+  ##calculation of vertex_number (k)
+  cat("k= ",k,"\n")
+  lnr_nonortho <- lnr_man() #call of function 
+  cat("lnr_nonortho= ",lnr_nonortho,"\n")
+  lnr_det7[k] <- lnr_nonortho[1] #change
+  lnr_nonortho <- 0
+  k = k + 1
+  
+} #end of loop k
+
+lnr_det7
+length(lnr_det7)
+lnr_det78 <- lnr_det7
+lnr_det78
+#storage of all vertex-labels
+setwd(home_dir)
+f6 <- "./results/ISPRS4_DLR10/man/b26_vertex_numbers78.txt"
+write.table(lnr_det78,f6)
+
+#corrections (manually determined)  
+lnr_det77
+lnr_det77[10] <- 6 #
+lnr_det77[16] <- 365
+lnr_det77[20] <- 8
+lnr_det77[6] <- 33
+lnr_det77[14] <- 52
+lnr_det77[24] <- 195
+lnr_det78[4] <- 104  
+lnr_det78[7] <- 5
+lnr_det78[12] <- 4 
+lnr_det78[15] <- 834
+lnr_det78[19] <- 17 
+lnr_det78[22] <- 465
+
+#combination of both vectors
+lnr_det7_combined <- rowSums(cbind(lnr_det77, lnr_det78), na.rm = TRUE)
+lnr_det7_combined[is.na(lnr_det77) & is.na(lnr_det78)] <- NA
+which(is.na(lnr_det7_combined))
+lnr_det7_combined
+
+#storage of all vertex-labels
+setwd(home_dir)
+f6 <- "./results/ISPRS4_DLR10/man/b26_vertex_numbers_all.txt"
+write.table(lnr_det7_combined,f6)
+
+
+## plot of lines with known vertex-label
+img_uds <- img_ref[orig_x : wind_x, abs(orig_y) : wind_y,1:3]
+display(img_uds, method = "raster")
+#display(img_uds,method = "browser") #display enables zooming
+points(xc-orig_x,yc-orig_y,pch=3, asp=1, cex=1.3, col="yellow")
+points(as.integer(pc3$col-orig_x), as.integer(pc3$row-orig_y), 
+       pch=20, asp=1, cex=0.3, col="green")
+lnr_det77
+lnr_det78
+lnr_det7_combined #found by ro_rg2=5
+
+for (i in vec3) {
+  #i=22
+  browser()
+  display(img_uds, method = "raster")
+  #display(img_uds,method = "browser") #display enables zooming
+  points(xc-orig_x,yc-orig_y,pch=3, asp=1, cex=1.3, col="yellow")
+  points(as.integer(pc3$col-orig_x), as.integer(pc3$row-orig_y), 
+         pch=20, asp=1, cex=0.3, col="green")
+  lnr <-lnr_det7_combined[i]
+  cat("lnr= ",lnr,"\n")
+  B4[lnr,]
+  theta_angle <- B4[lnr,5] #input of line-label
+  theta_angle 
+  theta_math <- (-theta_angle)
+  theta_math_arc <- theta_math/omega
+  ro_pixel <- B4[lnr,6]
+  ro_math <- (ro_pixel) 
+  
+  b <- ro_math/sin(theta_math_arc) #watch sign
+  
+  #plot in small scale
+  b_img <- (-b) #change to img_system
+  a = (-1/tan(theta_math_arc))
+  cat("a= ",a,"\n")
+  a_img <- (-a) #change to img_system
+  coef <- c(b_img,a_img)
+  
+  if (is.finite(a_img)) {
+    abline(coef, col="red", lty=1, lwd=2, asp=1)
+  }  else {
+    ro_l1 <- B4$ro_pixel[lnr]
+    ro_l2 <- ro_l1 + ro_1
+    ro_l3 <- round(ro_l2 - orig_x)
+    lines(c(ro_l3,ro_l3),c(0,(wind_y - orig_y)),col="red")
+  } #end if-else
+  
+  #calculation by intercept for image extract (math_system)
+  orig_y_math <- -orig_y
+  b2 <- a * orig_x + b - orig_y_math 
+  
+  #change of parameters to image_system
+  b2_img <- (-b2)
+  a_img <- (-a)
+  coef2 <- c(b2_img,a_img)
+  
+  # plot in large scale
+  
+  if (is.finite(a_img)) {
+    abline(coef2, col="red", lty=1, lwd=2, asp=1)
+  }  else {
+    ro_l1 <- B4$ro_pixel[lnr]
+    ro_l2 <- ro_l1 + ro_1
+    ro_l3 <- round(ro_l2 - orig_x)
+    lines(c(ro_l3,ro_l3),c(0,(wind_y - orig_y)),col="green")
+  } #end if-else
+
+} #end of loop i
+
+# end of plot line using label
+# end of script ## 16.calculation of vertex labels
 
 ##end of support_line_detection.R
 ################################################################################
