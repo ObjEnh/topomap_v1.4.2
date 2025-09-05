@@ -1812,7 +1812,7 @@ if (cas == "nonortho_only") {
       cat("input_mode= ", input_mode,"\n")
       
       setwd(home_dir)
-      f6 <- "./results/ISPRS4_DLR10/man/b26_vertex_numbers.txt" #example
+      f6 <- "./results/ISPRS4_DLR10/man/b26_vertex_labels_all.txt" #example
       lnr_det8 <- read.table(f6)
       lnr_det3 <- lnr_det8$x
       lnr_det3
@@ -1889,7 +1889,7 @@ if (cas == "nonortho_only") {
     
     #loop for plotting approximate lines (large scale)
     for (n1 in vec3) {
-      #browser()
+      browser()
       display(img_uds, method = "raster")
       points((pc3$col - orig_x),(pc3$row - orig_y), pch='.', asp=1, cex=2, col = "green")
       cat("PC_nr=", B5_6$lnr[n1],"theta_angle=", B5_6$theta_angle[n1], "\n")
