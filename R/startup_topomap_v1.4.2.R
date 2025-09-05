@@ -124,6 +124,7 @@ if (Img_name == "ISPRS4_DLR10") { #classification result: DLR10
 ##setting of parameters
 proc_mode <- "NA" #mode of processing
 n_long_PCs <- 1 # default, number of pixel clouds (PCs) 
+input_mode <- "vector" #input of nonortholines ("single" or "vector")
 #to be displayed for selecting the reference line for buildings with orthogonal sides 
 
 ## install packages if required
