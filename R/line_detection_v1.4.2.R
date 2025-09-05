@@ -1742,14 +1742,13 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
     bn_PC <- n_ortholines2
     soph=0 #sequence is difficult to determine
     
-  } 
+  
 } #end case= "100_all + nonortho"
 ################################################################################
   
 ##case: non-orthogonal lines only 
 
 if (cas == "nonortho_only") { 
-  #stop("proceed step by step")
   cat("define minimum size of line segment: 15 pixel (recommended) or 35 (alternativ)","\n")
   n_pix <- readline("type minimm size of line - if demo - type 35: ") #manual input (n_pix=n_pix[m]/pixelsize[m])
   n_pix <- as.integer(n_pix)
@@ -1762,10 +1761,11 @@ if (cas == "nonortho_only") {
   lnr_det3 <- rep(0,26) #maximal number of line segments - subject of change
   cat("determine nonorthogonal lines ", "\n")
   cat("use scripts #8 and 9# at 'support_line_detection' ", "\n")
+  cat("input_mode= ", input_mode,"\n")
   
-  if (proc_mode == "demo" || 
-      proc_mode == "auto" ||
-      proc_mode == "obj_wise") {
+  if (proc_mode == "demo" && input_mode == "single" || 
+      proc_mode == "auto" && input_mode == "single"||
+      proc_mode == "obj_wise" && input_mode == "single") { 
     
     vec <- 1 : 26 #max 25 additional lines (subject of change)
     n_nonortholines2 <- 0
@@ -1797,6 +1797,28 @@ if (cas == "nonortho_only") {
     lnr_det3 <- subset(lnr_det3,lnr_det3 > 0)
     n_total <- length(lnr_det3)
     n_nonortholines2
+    #
+  } #end input_mode = "single"   
+    
+  ##determination of line segments manually, input_mode = "vector"
+    
+  if (proc_mode == "demo" && input_mode == "vector" || 
+      proc_mode == "auto" && input_mode == "vector" ||
+      proc_mode == "obj_wise" && input_mode == "vector") {
+      
+      lnr_det3 <- rep(0,26) #maximal number of line segments - subject of change
+      cat("determine nonorthogonal lines ", "\n")
+      cat("use scripts #15 & #16 at 'support_line_detection' ", "\n")
+      cat("input_mode= ", input_mode,"\n")
+      
+      setwd(home_dir)
+      f6 <- "./results/ISPRS4_DLR10/man/b26_vertex_numbers.txt" #example
+      lnr_det8 <- read.table(f6)
+      lnr_det3 <- lnr_det8$x
+      lnr_det3
+      n_total <- length(lnr_det3)
+      n_nonortholines2 <- n_total
+    } #end of input_mode = "vector"
     
     ##display image detail (large scale)
     display(img_uds, method = "raster")
@@ -1821,8 +1843,6 @@ if (cas == "nonortho_only") {
 
     #loop
     for (n1 in lnr_det5) {
-      #cat("i= ", i,"\n")
-      #cat("n1= ", n1,"\n")
       j = 1
       while (j <= k14) {
         #cat("j= ",j,"\n")
@@ -1832,8 +1852,8 @@ if (cas == "nonortho_only") {
           break
         }  #end if
         j = j+1
-      } #end j-loop
-    } #end of n1-loop
+      } #end loop j
+    } #end of loop n1
 
     B5_6
     
@@ -1850,7 +1870,7 @@ if (cas == "nonortho_only") {
       centers_PC[n,2] <- x_m
       centers_PC[n,3] <- y_m
       centers_PC[n,4] <- round(n_P/kf)
-    } #end of n-loop
+    } #end of loop n
     
     centers_PC
     
@@ -1869,7 +1889,7 @@ if (cas == "nonortho_only") {
     
     #loop for plotting approximate lines (large scale)
     for (n1 in vec3) {
-      browser()
+      #browser()
       display(img_uds, method = "raster")
       points((pc3$col - orig_x),(pc3$row - orig_y), pch='.', asp=1, cex=2, col = "green")
       cat("PC_nr=", B5_6$lnr[n1],"theta_angle=", B5_6$theta_angle[n1], "\n")
@@ -1900,7 +1920,7 @@ if (cas == "nonortho_only") {
       } #end if-else
       
       cat("#","\n")
-    } #end n1-loop
+    } #end loop n1
     
     cat("are the lines correctly identified?","\n") #case="nonortho_only"
     #cat("if 'auto' -> type: N","\n")
@@ -1917,7 +1937,7 @@ if (cas == "nonortho_only") {
       B5_6 <- B5_6R4
     } #end if
       
-  } #end proc modes: "demo", "auto", "obj-wise"
+  } #end proc modes: "demo", "auto", "obj-wise" and "vector
     
   B5_6
   lnr_det5
@@ -1948,12 +1968,13 @@ if (cas == "nonortho_only") {
   with_northo <- sum(B5_6$ortho)/length(B5_6$ortho)
   soph <- 1 #sequence is difficult to determine
   
-  #output of cas="nonortho_only"
+  #output of case="nonortho_only"
   setwd(home_dir)
   fname9 <- paste("./data/",Img_name,"/b",bnr2,"_case.txt", sep="")
   write.table(cas,fname9,row.names = FALSE, col.names = FALSE)
-} #end case = "nonortho_only"
 
+} #end case = "nonortho_only"
+################################################################################
 
 ##case=non-orthogonal lines only_RDP 
 
