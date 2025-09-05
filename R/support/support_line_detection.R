@@ -1351,7 +1351,7 @@ lnr_det7_combined
 
 #storage of all vertex-labels
 setwd(home_dir)
-f6 <- "./results/ISPRS4_DLR10/man/b26_vertex_numbers_all.txt"
+f6 <- "./results/ISPRS4_DLR10/man/b26_vertex_labels_all.txt"
 write.table(lnr_det7_combined,f6)
 
 
