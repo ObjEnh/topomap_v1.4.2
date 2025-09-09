@@ -20,7 +20,7 @@ setwd(home_dir)
 ##parameter
 omega=180/pi #factor to convert from radiant to degree
 #k=1.64 #approximate scale factor for length of line segment (empirically determined for ISPRS1 and ISPRS7)
-k=1.5 #approximate scale factor for length of line segment (empirically determined for ISPRS4, ISPRS_DLR10)
+k=1.5 #approximate scale factor for length of line segment (empirically determined for ISPRS4, ISPRS4_DLR10)
 options(digits=8)
 
 ##input of point cluster (PC) of line segment
