@@ -371,8 +371,8 @@ if (Img_name == "ISPRS4_DLR10") {
     simplified_lines_cor
     
   # scaling points
-    i=31 # 1.vertex for scaling (to be changed) 
-    j=5 # 2.vertex for scaling (to be changed) 
+    i=31 # 1.vertex for scaling  
+    j=5 # 2.vertex for scaling 
     
   } #end b14 - "nonortho_only_RDP" - "cor_img"
   
@@ -493,6 +493,9 @@ if (Img_name == "ISPRS4_DLR10") {
     #par("usr")
     #points(60,60,col="red", pch=3,cex=1,asp=1)
     #points(505,60,col="red", pch=3,cex=1,asp=1)
+    # scaling points
+    i=9 #i=index in simplified lines of first scale-point (b221_1)
+    j=23 ##i=index in simplified lines of second scale-point (b221_2)
   } #end b221 - cas='nonortho_only_RDP'
   
   
@@ -557,6 +560,9 @@ if (Img_name == "ISPRS4_DLR10") {
     simplified_lines_cor[(n_simpl_lines_cor+1),] <- simplified_lines_cor[1,]
     simplified_lines_cor
     lines(simplified_lines_cor, col = "blue", lty = 1, lwd=2,asp=1)
+    # scaling points
+    i=52 #i=index in simplified lines of first scale-point (b26_1)
+    j=33 ##i=index in simplified lines of second scale-point (b26_2)
   } #end b26 - cas='nonortho_only_RDP'
   
 } #end of orthoimage "ISPRS4_DLR10"
