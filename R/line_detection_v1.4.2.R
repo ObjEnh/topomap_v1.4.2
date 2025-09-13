@@ -2032,8 +2032,8 @@ if (cas == "nonortho_only_RDP") {
   lines(simplified_lines_cor, col = "red", lty = 1, lwd=2,asp=1)
   simplified_lines <- simplified_lines_cor
   simplified_lines
-  #i=52 #i=index in simplified lines of first scale-point b221
-  #j=33 ##i=index in simplified lines of second scale-point b221
+  cat("i= ",i,"\n") #i=index in simplified lines of first scale-point
+  cat("j= ",j,"\n") #j=index in simplified lines of second scale-point
   points(simplified_lines$x[i],simplified_lines$y[i],
          pch=20,col=("brown"),cex=1,asp=1)
   points(simplified_lines$x[j],simplified_lines$y[j],
@@ -2161,7 +2161,7 @@ if (cas == "nonortho_only_RDP") {
   #place external window out side RStudio panes
   cat("manual measurement of two pixels with extreme y-coordinates","\n")
   dev.list()
-  dev.set(4)
+  #dev.set(4)
   #
   xy <- locator(2)
   print(xy)
