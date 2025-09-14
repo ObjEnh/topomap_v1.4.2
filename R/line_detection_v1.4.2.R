@@ -2143,7 +2143,7 @@ if (cas == "nonortho_only_RDP") {
   
   #dev.list()
   windows()  # Opens external graphics window
-  #dev.set(4)
+  dev.set(4)
   par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
   x <- xc
   y <- yc
@@ -2177,6 +2177,8 @@ if (cas == "nonortho_only_RDP") {
   plot(simplified_lines, col = "red", pch=3, cex=1, main=paste("b ",bnr2,"- RDP-result", sep=("")), asp=1)
   points(simplified_lines$x,simplified_lines$y, type="l", col="blue", lwd=2, lty=1,asp=1)
   
+  cat("i= ",i,"\n") #i=index in simplified lines of first scale-point
+  cat("j= ",j,"\n") #j=index in simplified lines of second scale-point
   #plot scale points
   points(simplified_lines$x[i],simplified_lines$y[i],
          pch=20,col=("brown"),cex=1.5,asp=1)
@@ -2263,13 +2265,13 @@ if (cas == "nonortho_only_RDP") {
   } #end of loop
   
   simplified_lines_complete_trans
-  dev.list()
+  #dev.list()
   #dev.set(4)
   
   ##plot all simplified lines in xy-system
   points(simplified_lines_complete_trans$x,simplified_lines_complete_trans$y,type ="p",pch=20,cex=1,col="green",asp=1)
   points(simplified_lines_complete_trans$x,simplified_lines_complete_trans$y,type ="l",lty=1,lwd=2,col="blue",asp=1)
-  dev.off(4)
+  #dev.off(4)
   
   #storage
   simplified_lines_complete_trans
@@ -2291,10 +2293,10 @@ if (cas == "nonortho_only_RDP") {
   points(intsec_linepair_vertex_coord2[,3]-orig_x,
          intsec_linepair_vertex_coord2[,4]-orig_y,type ="l",lty=1,lwd=2,col="white")
   display(img_ref,"raster")
-  #dev.set(4)
+  dev.set(4)
   points(intsec_linepair_vertex_coord2[,3],intsec_linepair_vertex_coord2[,4],type ="l",lty=1,lwd=2,col="white")
   dev.list()
-
+  dev.off(4)
   #continue by 'plot_results_on_references_v1.4.2'
   setwd(home_dir2)
   source(paste("plot_results_on_references_v",v_nr,".R",sep=""))
