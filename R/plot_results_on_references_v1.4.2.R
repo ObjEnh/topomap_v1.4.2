@@ -630,7 +630,7 @@ if (cas == "nonortho_only_RDP") {
       dev.off(3)
       dev.off(4)
       cat("end of program 'plot_results_on_references.R'","\n")
-      cat("end of software package 'topomap'","\n")
+      #cat("end of software package 'topomap'","\n")
     }
     
   } #end if answ2 = "N"
