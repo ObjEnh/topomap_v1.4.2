@@ -495,7 +495,7 @@ if (Img_name == "ISPRS4_DLR10") {
     #points(505,60,col="red", pch=3,cex=1,asp=1)
     # scaling points
     i=9 #i=index in simplified lines of first scale-point (b221_1)
-    j=23 ##i=index in simplified lines of second scale-point (b221_2)
+    j=25 ##i=index in simplified lines of second scale-point (b221_2)
   } #end b221 - cas='nonortho_only_RDP'
   
   
