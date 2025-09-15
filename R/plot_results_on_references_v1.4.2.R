@@ -294,7 +294,7 @@ if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" || cas == "100_all+n
       cat("end of program 'plot_results_on_references.R'","\n")
     } else {
       cat("end of program 'plot_results_on_references.R'","\n")
-      stop("end of program package 'buildenh'")
+      stop("end of program package 'topomap'")
     }
     
   } #end if answ2 = "N"
