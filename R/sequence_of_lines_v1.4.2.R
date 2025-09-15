@@ -643,7 +643,7 @@ if (sek == "bdr_follow") {
     bnr2_orig  <- as.integer(bnr2_orig)
     bnr2 <- bnr2_orig
   }
-  
+  #stop("continue step by step")
   b_new <- readImage(paste("./data/",Img_name,"/images/b",bnr2,"_new8.tif",sep = "")) 
   colorMode(b_new) <- Grayscale
   plot(b_new[,,1])
@@ -915,7 +915,7 @@ if (sek == "bdr_follow") {
   plot(xc,-yc, pch=3, cex=2, col="blue", asp=1, xlim=c(xc - r_max2,xc + r_max2), ylim=c(-(yc + r_max2),-(yc - r_max2)),
   main=paste("b ",bnr2, sep=(""))) #large scale
   points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.3, col="black") # original pixel cloud for building
-  points(b13_angle_df3$x_centre,-b13_angle_df3$y_centre, asp=1, pch=20,col="brown", cex=1.5)
+  points(b13_angle_df3$x_centre,-b13_angle_df3$y_centre, asp=1, pch=20,col="red", cex=1.5)
   #plot of PCs and checkpoints
   #plot(coords$x,coords$y,pch=16,cex=0.2,col="brown",asp=1,xlim=c(xc-r_max2,xc+r_max2),ylim=c(yc+r_max2,yc-r_max2),xlab=NULL,ylab=NULL,ann=T,main=paste("b",bnr2),axes=TRUE)
   #plot(coords$x,coords$y,pch=16,cex=0.2,col="black",asp=1,xlim=c(1,1887),ylim=c(2557,1),xlab=NULL,ylab=NULL,ann=FALSE,main=paste("b",bnr2),axes=TRUE) #small scale
@@ -1105,7 +1105,7 @@ if (sek == "bdr_follow") {
   for (n1 in vec2) {
     readline("press 'enter' to display next point ")
     print(b13_angle_df4$nr_center[n1])
-    points(b13_angle_df4$x_centre[n1],-b13_angle_df4$y_centre[n1], asp=1, pch=20,col="red", cex=1.5)
+    points(b13_angle_df4$x_centre[n1],-b13_angle_df4$y_centre[n1], asp=1, pch=20,col="green", cex=1.5)
   }
   
   #change of direction in sequence
