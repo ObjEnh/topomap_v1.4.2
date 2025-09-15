@@ -43,10 +43,16 @@ if (Img_name == "ISPRS4") {
 
 if (Img_name == "ISPRS4_DLR10") {
   
+  #b12
+  if(bnr2 == 12 && p_pos == "cor_adj_line") {
+    B6
+    B6[3,]<- c(546,125,66,12,125,66,1)
+  } #end b17
+  
+  
   #b17
   
   if(bnr2 == 17 && p_pos == "cor_adj_line") {
-    #stop("correction of adjustment")
     B6
     B6[15,]<- c(923,125,255,17,125,255,1)
   } #end b17
