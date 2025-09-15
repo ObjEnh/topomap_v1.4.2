@@ -386,6 +386,7 @@ if (Img_name == "ISPRS4_DLR10") {
   if (bnr2 == 12 && p_pos == "cor_pos") {
     #determine new position by 'support_line_detection.R', #6
     #or with angle by 'support_sequence_of_lines.R', #9
+    #stop("continue step by step")
     b13_angle_df2
     b13_angle_df2[2,1:4] <- c(123,NA,295,249) #lnr=123,midpoint is manually determined
     b13_angle_df2[6,1:4] <- c(220,NA,307,248) #lnr=220,midpoint is manually determined
@@ -393,6 +394,10 @@ if (Img_name == "ISPRS4_DLR10") {
     b13_angle_df2[9,1:4] <- c(546,NA,299,288) #lnr=546,midpoint is manually determined
     b13_angle_df2[10,1:4] <- c(91,NA,287,294) #lnr=91,midpoint is manually determined
     b13_angle_df3 <- b13_angle_df2
+  } #end b12 - "cor_pos"
+  
+  if (bnr2 == 12 && p_pos == "cor_sek") {
+    sequence_seg2 = c(87,21,546,91,1,6,8,63,123,220)
   } #end b12 - "cor_pos"
   
   ##b14
