@@ -1996,7 +1996,7 @@ if (cas == "nonortho_only_RDP") {
   print(b_bin)
   
   display(b_bin, "raster")
-  #display(b_bin, "browser")
+  display(b_bin, "browser")
   plot(b_bin)
   
   # if (Img_name == "ISPRS4" || Img_name == "ISPRS4_DLR10") { #low-resolution image
@@ -2035,9 +2035,9 @@ if (cas == "nonortho_only_RDP") {
   cat("i= ",i,"\n") #i=index in simplified lines of first scale-point
   cat("j= ",j,"\n") #j=index in simplified lines of second scale-point
   points(simplified_lines$x[i],simplified_lines$y[i],
-         pch=20,col=("brown"),cex=1,asp=1)
+         pch=20,col=("lightblue"),cex=1,asp=1)
   points(simplified_lines$x[j],simplified_lines$y[j],
-         pch=20,col=("black"),cex=1,asp=1)
+         pch=20,col=("green"),cex=1,asp=1)
 } #end case = "nonortho_only_RDP"
 ################################################################################
 
@@ -2133,64 +2133,60 @@ if (cas == "nonortho_only") {
 
 if (cas == "nonortho_only_RDP") {
   #stop("continue step by step")
-  #transformation
+  
+  #preparation of auto transformation
   simplified_lines
   dev.set(2)
-  plot(simplified_lines, col = "red", pch=3, cex=1, main=paste("b ",bnr2,"- RDP-result", sep=("")), asp=1)
+  par(mai = c(1.02,0.82,0.82,0.42))
+  plot(simplified_lines, col = "white", pch=3, cex=1, main=paste("b ",bnr2,"- RDP-result", sep=("")), asp=1)
   points(simplified_lines$x,simplified_lines$y, type="l", col="blue", lwd=2, lty=1,asp=1)
   
-  ##plot of pc3 in extern window
+  ##generation of two scale points
+  #max & min in y (RDP)
+  y_min_RDP <- min(simplified_lines$y)
+  i <- which(simplified_lines[, "y"] == y_min_RDP)
+  simplified_lines[i,] #first point
+  #
+  y_max_RDP <- max(simplified_lines$y)
+  j <- which(simplified_lines[, "y"] == y_max_RDP)
+  simplified_lines[j,] #second point
   
-  #dev.list()
-  windows()  # Opens external graphics window
-  dev.set(4)
+  ##pixel cluster of building boundary line
+  dev.set(2)
   par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
   x <- xc
   y <- yc
   r_max2 <- 1.1 * r_max
-  #large system centered at xc,yc and r_max2
+  
+  #display pixel cluster around center (xc,yc)
   plot(x,-y, pch=3, cex=2, col="red", asp=1, xlim=c(xc - r_max2,xc + r_max2),
        ylim=c(-(yc + r_max2),-(yc - r_max2)), ann = TRUE, axes = TRUE,
        main=paste("b ",bnr2, sep=("")))
   points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="red")
   
-  #measurement of ref-line in external window using standard locator()
-  #this operation has been necessary because 
-  #digitizing by means of 'locator()' works in 
-  #external window correctly
-  #place external window out side RStudio panes
-  cat("manual measurement of two pixels with extreme y-coordinates","\n")
-  dev.list()
-  #dev.set(4)
+  #max & min in x of pixel cluster in target-system (man)
+  x_min_man <- min(pc3$col)
+  m_ind <- which(pc3[,"col"] == x_min_man)
+  m_indm <- m_ind[ceiling(length(m_ind)/2)]
+  m_indm
+  pc3[m_indm,]
   #
-  xy <- locator(2)
-  print(xy)
-  x_11 <- xy[[1]][1]
-  x_11
-  y_11 <- xy[[2]][1]
-  y_11
-  points(x_11,y_11, pch = 19, col = "brown")
-  x_22 <- xy[[1]][2]
-  y_22 <- xy[[2]][2]
-  points(x_22,y_22, pch = 19, col = "blue")
-  dev.set(2)
-  plot(simplified_lines, col = "red", pch=3, cex=1, main=paste("b ",bnr2,"- RDP-result", sep=("")), asp=1)
-  points(simplified_lines$x,simplified_lines$y, type="l", col="blue", lwd=2, lty=1,asp=1)
+  x_max_man <- max(pc3$col)
+  n_ind <- which(pc3[,"col"] == x_max_man)
+  n_indm <- n_ind[ceiling(length(n_ind)/2)]
+  n_indm
+  pc3[n_indm,]
   
-  cat("i= ",i,"\n") #i=index in simplified lines of first scale-point
-  cat("j= ",j,"\n") #j=index in simplified lines of second scale-point
-  #plot scale points
-  points(simplified_lines$x[i],simplified_lines$y[i],
-         pch=20,col=("brown"),cex=1.5,asp=1)
-  points(simplified_lines$x[j],simplified_lines$y[j],
-         pch=20,col=("blue"),cex=1.5,asp=1)
-  
-  ##calculalation of transformation parameters
+  ##calculation of transformation parameters
   x1=simplified_lines$x[i] # simplified_lines coordinates vertex i
   y1=simplified_lines$y[i] #  
   x2=simplified_lines$x[j] # simplified_lines coordinates vertex j
   y2=simplified_lines$y[j] #
   
+  dev.set(2)
+  par(mai = c(1.02,0.82,0.82,0.42))
+  plot(simplified_lines, col = "white", pch=3, cex=1, main=paste("b ",bnr2,"- RDP-result", sep=("")), asp=1)
+  points(simplified_lines$x,simplified_lines$y, type="l", col="blue", lwd=2, lty=1,asp=1)
   points(x1,y1,pch=20,col=("brown"),cex=1.5,asp=1)
   points(x2,y2,pch=20,col=("blue"),cex=1.5,asp=1)
   
@@ -2217,87 +2213,123 @@ if (cas == "nonortho_only_RDP") {
     return(L1)
   } #end of function 'trans_param()'
   
-  L1 <- trans_param()
-  D <- L1[[1]]
+  L1 <- trans_param() #call of function
+  D_bdr <- L1[[1]]
   tr_lat <- L1[[2]]
-  kf3<- L1[[3]]
+  kfak10<- L1[[3]]
+  D_bdr
+  #
   
-  #transformation of the two vertices of ref-line (check of transformation)
+  ##transformation of the two vertices of ref-line (check of transformation)
   transform2 <- function() {
     #transformation parameters
-    D
+    D_bdr
     tr_lat
-    kf3
+    kfak10
     print(tr_lat)
     print(D)
-    loc <- c(x1,y1) #vertex 13
+    loc <- c(x1,y1) #vertex coordinates
     pts9 <- tr_lat + D%*%loc #transformation to image-system
     return(pts9)
-  } #end of transform2 
+  } #end of function transform2 
   
-  pts9 <- transform2()
+  pts9 <- transform2() #call of function
+  pts9
   x <- pts9[1,1]
   y <- pts9[2,1]
-  x
-  y
-  y <- -y #sign change for plotting in external window
-  dev.set(4) #activats of external window
-  points(x,y,pch=20, cex=2,asp=1, col="green") #plot of two scale points
+   
+  ##display pixel cluster of building boundary line
+  dev.set(2)
+  par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
+  x <- xc
+  y <- yc
+  r_max2 <- 1.1 * r_max
   
-  #transformation of all vertices in matrix 'simplified_lines'
-  simplified_lines
-  simplified_lines_complete <- simplified_lines
-  simplified_lines_complete_trans <- simplified_lines_complete
+  #display pixel cluster around center (xc,yc)
+  plot(x,-y, pch=3, cex=2, col="red", asp=1, xlim=c(xc - r_max2,xc + r_max2),
+       ylim=c(-(yc + r_max2),-(yc - r_max2)), ann = TRUE, axes = TRUE,
+       main=paste("b ",bnr2, sep=("")))
+  points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="red")
+  points(x,-y,pch=20, cex=2,asp=1, col="green") #plot of one scale point
+  
+  ##checking of transformation by one vertex
+  x1 <- simplified_lines[i,1] #first point
+  y1 <- simplified_lines[i,2]
+  # x1 <- simplified_lines[j,1] #second point
+  # y1 <- simplified_lines[j,2]
+  V=matrix(nrow=2, ncol=2)
+  V1=matrix(nrow=2, ncol=2)
+  V1[1,1] <- x1
+  V1[2,1] <- y1
+  V <- V1
+  V
+  v1 <- V[,1]
+  v1
+  v <- D_bdr%*%v1
+  a0_bdr2 <- tr_lat[1]
+  b0_bdr2 <- tr_lat[2]
+  x <- v[1,1] + a0_bdr2
+  y <- v[2,1] + b0_bdr2
+  points(x,y, pch = 19, col = "brown")
+  
+  cat("is transformation correct?","\n")
+  #stop("continue step by step")
+  
+  ##preparation of transformation with all vertices
+  tr_lat2 <- c(a0_bdr2,b0_bdr2)
+  simplified_lines_complete <- simplified_lines 
+  simplified_lines_complete_trans2 <- simplified_lines_complete
+  
+  ##transformation of all vertices into system 'man'
   vec <- 1 : length(simplified_lines_complete$x)
+  
   #loop
   for (i in vec) {
     x <- simplified_lines_complete$x[i]
     y <- simplified_lines_complete$y[i]
-    loc <- c(x,y) #vertex 
-    pts9 <- tr_lat + D%*%loc #transformation to image-system
+    loc <- c(x,y) #vertex i 
+   
+    pts9 <- tr_lat2 + D_bdr%*%loc #transformation to man-system
     x9 <- pts9[1,1]
     y9 <- pts9[2,1]
     x_trans <- x9
     y_trans <- y9
     points(x_trans,y_trans,pch=20, asp =1, cex=1,asp=1, col="green")
-    simplified_lines_complete_trans$x[i] <- x_trans
-    simplified_lines_complete_trans$y[i] <- y_trans
+    simplified_lines_complete_trans2$x[i] <- x_trans
+    simplified_lines_complete_trans2$y[i] <- y_trans
   } #end of loop
   
-  simplified_lines_complete_trans
-  #dev.list()
-  #dev.set(4)
+  ##plot all simplified lines in xy-system 
+  #points(simplified_lines_complete_trans2$x,simplified_lines_complete_trans2$y,type ="p",pch=20,cex=0.5,col="green",asp=1)
+  points(simplified_lines_complete_trans2$x,simplified_lines_complete_trans2$y,type ="l",lty=1,lwd=2,col="blue",asp=1)
+  simplified_lines_complete_trans2
   
-  ##plot all simplified lines in xy-system
-  points(simplified_lines_complete_trans$x,simplified_lines_complete_trans$y,type ="p",pch=20,cex=1,col="green",asp=1)
-  points(simplified_lines_complete_trans$x,simplified_lines_complete_trans$y,type ="l",lty=1,lwd=2,col="blue",asp=1)
-  #dev.off(4)
-  
-  #storage
-  simplified_lines_complete_trans
-  n_siml2 <- length(simplified_lines_complete_trans$x)
+
+  #storage of all transformed vertices
+  simplified_lines_complete_trans2
+  #simplified_lines_complete_trans
+  n_siml2 <- length(simplified_lines_complete_trans2$x)
   
   intsec_linepair_vertex_coord <- matrix(nrow=n_siml2, ncol=4)
   intsec_linepair_vertex_coord[,2]  <- 1 : (n_siml2)
-  intsec_linepair_vertex_coord[,3] <- simplified_lines_complete_trans[,1]
-  intsec_linepair_vertex_coord[,4] <- -simplified_lines_complete_trans[,2]
-  intsec_linepair_vertex_coord2 <- rbind(intsec_linepair_vertex_coord,intsec_linepair_vertex_coord[1,])
+  intsec_linepair_vertex_coord[,3] <- simplified_lines_complete_trans2[,1]
+  intsec_linepair_vertex_coord[,4] <- simplified_lines_complete_trans2[,2]
+  intsec_linepair_vertex_coord2 <- intsec_linepair_vertex_coord
+  
   setwd(home_dir)
-  f5 <- paste("./results/",Img_name,"/RDP/","b",bnr2,"_intsec_linepair_vertex_coord2.txt",sep="")
+  f5 <- paste("./results/",Img_name,"/RDP/","b",bnr2,"_intsec_linepair_vertex_coord3.txt",sep="")
   write.table(intsec_linepair_vertex_coord2,f5)
   cat("table with line-pairs,vertex/corner-number,coordinates(x,y)","\n")
   print(intsec_linepair_vertex_coord2)
   
-  #coordinates of building in img_uds
+  #display of coordinates of building vertices in ortho-image (large scale)
   display(img_uds,"raster")
   points(intsec_linepair_vertex_coord2[,3]-orig_x,
-         intsec_linepair_vertex_coord2[,4]-orig_y,type ="l",lty=1,lwd=2,col="white")
-  display(img_ref,"raster")
-  dev.set(4)
-  points(intsec_linepair_vertex_coord2[,3],intsec_linepair_vertex_coord2[,4],type ="l",lty=1,lwd=2,col="white")
-  dev.list()
-  dev.off(4)
-  #continue by 'plot_results_on_references_v1.4.2'
+         -intsec_linepair_vertex_coord2[,4]-orig_y,type ="l",lty=1,lwd=2,col="white")
+  display(img_ref,"raster") #display of building vertices in ortho-image (small scale)
+  #dev.set(4)
+  points(intsec_linepair_vertex_coord2[,3],-intsec_linepair_vertex_coord2[,4],type ="l",lty=1,lwd=2,col="green")
+  #continue by program 'plot_results_on_references_v1.4.2'
   setwd(home_dir2)
   source(paste("plot_results_on_references_v",v_nr,".R",sep=""))
 } #end of case = "nonortho_only_RDP"  
