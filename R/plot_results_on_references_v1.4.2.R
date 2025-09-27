@@ -455,7 +455,7 @@ if (cas == "nonortho_only") {
     } else {
       dev.list()
       dev.off(3)
-      dev.off(4)
+      #dev.off(4)
       cat("end of program 'plot_results_on_references.R'","\n")
       cat("end of software package 'topomap'","\n")
     }
@@ -470,11 +470,11 @@ if (cas == "nonortho_only_RDP") {
   dev.list()
   #dev.off(6) #close of external window
   #dev.set(4)
-  windows()
-  
+  #windows()
+  dev.set(2)
   #input of table with line-pair, vertex-number and final coordinates (x,y)
   setwd(home_dir)
-  f5 <- paste("./results/",Img_name,"/RDP/b",bnr2,"_intsec_linepair_vertex_coord2.txt",sep="")
+  f5 <- paste("./results/",Img_name,"/RDP/b",bnr2,"_intsec_linepair_vertex_coord3.txt",sep="")
   intsec_linepair_vertex_coord2 <- read.table(f5)
   names(intsec_linepair_vertex_coord2) <- c("line_pair","vertex_nr","x","y")
   cat("table with line-pairs,vertex/corner-number,coordinates(x,y)","\n")
@@ -486,8 +486,8 @@ if (cas == "nonortho_only_RDP") {
   y=0
   plot(x,y, pch=3, cex=1.5,  cex.axis = 1.2, cex.lab=1.5, col="red", asp=1, xlim=c(1,600), ylim=c(-813,-1),
        axes = TRUE, ann = T, frame.plot = TRUE, main = paste("building #", bnr2," of image '",Img_name,"'",sep = ""))
-  points(intsec_linepair_vertex_coord2$x,-intsec_linepair_vertex_coord2$y,type="p", col="red", pch=20, cex=1)
-  points(intsec_linepair_vertex_coord2$x,-intsec_linepair_vertex_coord2$y, type="l", col="green", lty=1, lwd=2)
+  points(intsec_linepair_vertex_coord2$x,intsec_linepair_vertex_coord2$y,type="p", col="red", pch=20, cex=1)
+  points(intsec_linepair_vertex_coord2$x,intsec_linepair_vertex_coord2$y, type="l", col="green", lty=1, lwd=2)
   
   #plot graph (large) scale)
   dev.list()
@@ -502,7 +502,7 @@ if (cas == "nonortho_only_RDP") {
        main=paste("b ",bnr2, sep=("")))
   #points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="red")
   #points(intsec_linepair_vertex_coord2$x,intsec_linepair_vertex_coord2$y,type="p", col="black", pch=20, cex=1,asp=1)
-  points(intsec_linepair_vertex_coord2$x,-intsec_linepair_vertex_coord2$y,type="l", col="blue", lty=1, lwd=2, asp=1)
+  points(intsec_linepair_vertex_coord2$x,intsec_linepair_vertex_coord2$y,type="l", col="blue", lty=1, lwd=2, asp=1)
   
   ##
   #plot onto orthoimage (small) scale)
@@ -515,7 +515,7 @@ if (cas == "nonortho_only_RDP") {
   img_ref <- readImage(OrgImgFilename)
   display(img_ref, method = "raster")
   lines(intsec_linepair_vertex_coord[,3], 
-        (intsec_linepair_vertex_coord[,4]),col="white",asp=1,type="l",lwd=2,lty=1)
+        (-intsec_linepair_vertex_coord[,4]),col="white",asp=1,type="l",lwd=2,lty=1)
   
   #plot onto orthoimage (large scale)
   display(img_uds,method = "raster")
@@ -627,8 +627,8 @@ if (cas == "nonortho_only_RDP") {
       cat("end of program 'plot_results_on_references.R'","\n")
     } else {
       dev.list()
-      dev.off(3)
-      dev.off(4)
+      #dev.off(3)
+      #dev.off(4)
       cat("end of program 'plot_results_on_references.R'","\n")
       #cat("end of software package 'topomap'","\n")
     }
