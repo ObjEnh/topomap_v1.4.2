@@ -537,6 +537,7 @@ if (Img_name == "ISPRS4_DLR10") {
   ##cas='nonortho_only_RDP'
   
   if (bnr2 == 26 && p_pos == "cor_img") { 
+    #stop("continue step by step")
     cat("p_pos= ", p_pos, "\n")
     plot(W$'4', col="white")  #black building
     w = W$'4'
@@ -550,7 +551,7 @@ if (Img_name == "ISPRS4_DLR10") {
     y_v <- round(out_poly_df$y)
     plot(x_v,y_v,type = "l", asp=1)
     lines(x_v,y_v,col="red", lty=2, asp=1)
-    simplified_lines <- RamerDouglasPeucker(x_v, y_v, epsilon = 5)
+    simplified_lines <- RamerDouglasPeucker(x_v, y_v, epsilon = 5) #call of RDP-function
     simplified_lines
     lines(simplified_lines, col = "green", lty = 1, lwd=2,asp=1)
     #points(simplified_lines[4,],pch=20, cex=1, col="blue", asp=1)
