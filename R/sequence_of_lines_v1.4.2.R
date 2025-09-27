@@ -742,7 +742,7 @@ if (sek == "bdr_follow") {
   #dy_window_plot <- plotPar[5]
   dy_window_plot
   kf3 <- size_plotting_region_y/dy_window_plot #scale factor between image (img) and plot
-  #kf3 may be checked in 'support_sequence_of_lines.R', script #9
+  #kf3 may be checked in 'support_sequence_of_lines.R', script #10
   1/kf3
   window_size_x <- 578 #specified value
   margin_size_x <- (par("mai")[2]+par("mai")[4])/pixel_size #unit pixel
