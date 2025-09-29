@@ -888,6 +888,7 @@ ce <- matrix(nrow=10, ncol=2)
 ce_df <- data.frame(ce)
 names(ce_df) <- c("lnr","counts")
 ce_df$counts <- 0
+cat("n_pix8=",n_pix8,"pixel","\n") #minimum number of pixels at B4$n_pixel[8] (to be selected in 'startup_topomap')
 #
 
 y1 <- B4$theta_index[1:n_longest_lines]
@@ -954,7 +955,8 @@ cat("n_nonortholines= ", n_nonortholines,"\n") #number of non-ortholines
 ##determination of object-type
 ty <- fe(max_pix,n_ortholines_1,n_nonortholines) #ty-value is an estimate
 cat("suggestion for object type=",ty, "\n")
-cat("object types (cas): 1 (extr_wd), 2 (4_long), 3 (100_all), 4 (100_all+nonortho), 5 (nonortho_only), 6 (nonortho_only_RDP)","\n")
+cat("object types (cas): 1 (extr_wd), 2 (4_long), 3 (100_all), 4 (100_all+nonortho), 
+    5 (nonortho_only), 6 (nonortho_only_RDP)","\n")
 
 if (ty == 0) {
   cat("suggestion is 4", "\n") 
@@ -2170,12 +2172,18 @@ if (cas == "nonortho_only_RDP") {
   m_indm <- m_ind[ceiling(length(m_ind)/2)]
   m_indm
   pc3[m_indm,]
+  x_11 <- pc3[m_indm,1]
+  y_11 <- -pc3[m_indm,2]
+  points(x_11, y_11, pch=20, asp=1, cex=1.5, col="blue")
   #
   x_max_man <- max(pc3$col)
   n_ind <- which(pc3[,"col"] == x_max_man)
   n_indm <- n_ind[ceiling(length(n_ind)/2)]
   n_indm
   pc3[n_indm,]
+  x_22 <- pc3[n_indm,1]
+  y_22 <- -pc3[n_indm,2]
+  points(x_22, y_22, pch=20, asp=1, cex=1.5, col="green")
   
   ##calculation of transformation parameters
   x1=simplified_lines$x[i] # simplified_lines coordinates vertex i
@@ -2227,9 +2235,9 @@ if (cas == "nonortho_only_RDP") {
     tr_lat
     kfak10
     print(tr_lat)
-    print(D)
+    print(D_bdr)
     loc <- c(x1,y1) #vertex coordinates
-    pts9 <- tr_lat + D%*%loc #transformation to image-system
+    pts9 <- tr_lat + D_bdr%*%loc #transformation to image-system
     return(pts9)
   } #end of function transform2 
   
@@ -2249,8 +2257,8 @@ if (cas == "nonortho_only_RDP") {
   plot(x,-y, pch=3, cex=2, col="red", asp=1, xlim=c(xc - r_max2,xc + r_max2),
        ylim=c(-(yc + r_max2),-(yc - r_max2)), ann = TRUE, axes = TRUE,
        main=paste("b ",bnr2, sep=("")))
-  points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="red")
-  points(x,-y,pch=20, cex=2,asp=1, col="green") #plot of one scale point
+  points(pc3$col, pc3$row, pch=20, asp=1, cex=0.5, col="red")
+  points(x,y,pch=20, cex=2,asp=1, col="green") #plot of one scale point
   
   ##checking of transformation by one vertex
   x1 <- simplified_lines[i,1] #first point
@@ -2270,7 +2278,7 @@ if (cas == "nonortho_only_RDP") {
   b0_bdr2 <- tr_lat[2]
   x <- v[1,1] + a0_bdr2
   y <- v[2,1] + b0_bdr2
-  points(x,y, pch = 19, col = "brown")
+  points(x,-y, pch = 19, col = "brown")
   
   cat("is transformation correct?","\n")
   #stop("continue step by step")
