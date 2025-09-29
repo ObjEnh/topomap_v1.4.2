@@ -2245,7 +2245,16 @@ if (cas == "nonortho_only_RDP") {
   pts9
   x <- pts9[1,1]
   y <- pts9[2,1]
-   
+  
+  #test of rotation angle
+  alph_obj <- atan(D_bdr[2,1]/D_bdr[1,1])*omega
+  d_alph_obj <- abs(alph_obj - 90)
+  cat("d_alpha= ", d_alph_obj,"degrees", "\n")
+  
+  if (d_alph_obj > thr_d_alph_obj) {
+   cat("d_alph_obj exceeds threshold","\n")  
+  }
+  
   ##display pixel cluster of building boundary line
   dev.set(2)
   par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
@@ -2279,9 +2288,6 @@ if (cas == "nonortho_only_RDP") {
   x <- v[1,1] + a0_bdr2
   y <- v[2,1] + b0_bdr2
   points(x,-y, pch = 19, col = "brown")
-  
-  cat("is transformation correct?","\n")
-  #stop("continue step by step")
   
   ##preparation of transformation with all vertices
   tr_lat2 <- c(a0_bdr2,b0_bdr2)
