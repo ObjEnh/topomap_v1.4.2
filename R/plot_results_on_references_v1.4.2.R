@@ -478,7 +478,7 @@ if (cas == "nonortho_only_RDP") {
   intsec_linepair_vertex_coord2 <- read.table(f5)
   names(intsec_linepair_vertex_coord2) <- c("line_pair","vertex_nr","x","y")
   cat("table with line-pairs,vertex/corner-number,coordinates(x,y)","\n")
-  print(intsec_linepair_vertex_coord2)
+  print(intsec_linepair_vertex_coord2) #math-system
   
   #plot graph (small scale)
   par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
@@ -510,7 +510,7 @@ if (cas == "nonortho_only_RDP") {
   intsec_linepair_vertex_coord2 <- read.table(f5)
   names(intsec_linepair_vertex_coord2) <- c("line_pair","vertex_nr","x","y")
   cat("table with line-pairs,vertex/corner-number,coordinates(x,y)","\n")
-  print(intsec_linepair_vertex_coord2)
+  print(intsec_linepair_vertex_coord2) #img-system
   setwd(OrgImgPathname)
   img_ref <- readImage(OrgImgFilename)
   display(img_ref, method = "raster")
