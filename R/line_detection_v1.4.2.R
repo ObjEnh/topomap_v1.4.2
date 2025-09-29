@@ -2185,6 +2185,10 @@ if (cas == "nonortho_only_RDP") {
   y_22 <- -pc3[n_indm,2]
   points(x_22, y_22, pch=20, asp=1, cex=1.5, col="green")
   
+  #distance 
+  dist_x_man <- sqrt((pc3$col[m_indm]-pc3$col[n_indm])^2+(pc3$row[m_indm]-pc3$row[n_indm])^2)
+  dist_x_man
+  
   ##calculation of transformation parameters
   x1=simplified_lines$x[i] # simplified_lines coordinates vertex i
   y1=simplified_lines$y[i] #  
@@ -2254,6 +2258,9 @@ if (cas == "nonortho_only_RDP") {
   if (d_alph_obj > thr_d_alph_obj) {
    cat("d_alph_obj exceeds threshold","\n")  
   }
+  
+  d_coor <- d_alph_obj/omega * dist_x_man
+  cat("d_coor= ",d_coor,"pixel","\n")  #coordinate deviation with d_alph_obj and dist_x_man
   
   ##display pixel cluster of building boundary line
   dev.set(2)
