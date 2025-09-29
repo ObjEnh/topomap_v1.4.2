@@ -123,10 +123,12 @@ if (Img_name == "ISPRS4_DLR10") { #classification result: DLR10
 
 ##setting of parameters
 proc_mode <- "NA" #mode of processing
-n_long_PCs <- 1 # default, number of pixel clouds (PCs) 
+n_long_PCs <- 1 #number of pixel clouds (PCs) 
 input_mode <- "vector" #input of nonortholines ("single" or "vector")
-n_pix8=80 #number of pixels of the 8th longest line segment in B8 (parameter for determination of object type)
-#to be displayed for selecting the reference line for buildings with orthogonal sides 
+n_pix8=80 #number of pixels of the 8th longest line segment in B8 (parameter 
+#for determination of object type)
+thr_d_alph_obj=2 #[degrees], threshold for deviation of rotation angle in 
+#transformation of img-system to man-system
 
 ## install packages if required
 # install.packages('EBImage')
