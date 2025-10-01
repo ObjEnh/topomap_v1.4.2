@@ -226,14 +226,14 @@ bnr2
 file1 <- paste('./data/',Img_name,'/images/b',bnr2,'_new8.tif',sep = "")
 tiff(file1, width=578, height=578, units="px", bg = "white")
 r_max2 <- round(1.1*r_max)
-plot(coords$x, coords$y, pch=16, cex=0.2,col="black",
-  asp=1,xlim=c(xc-r_max2,xc+r_max2),ylim=c(yc+r_max2,
-   yc-r_max2),xlab = NULL,ylab=NULL, ann= T, main=paste("b", bnr2), axes=TRUE)
+# plot(coords$x, coords$y, pch=16, cex=0.2,col="black",
+#   asp=1,xlim=c(xc-r_max2,xc+r_max2),ylim=c(yc+r_max2,
+#    yc-r_max2),xlab = NULL,ylab=NULL, ann= T, main=paste("b", bnr2), axes=TRUE)
 
 # with points for scaling
-# plot(coords$x, coords$y, pch=16, cex=0.2,col="black",
-#     asp=1,xlim=c(xc-r_max2,xc+r_max2),ylim=c(yc+r_max2,
-#     yc-r_max2),xlab = NULL,ylab=NULL, ann= F, axes=F)
+plot(coords$x, coords$y, pch=16, cex=0.2,col="black",
+    asp=1,xlim=c(xc-r_max2,xc+r_max2),ylim=c(yc+r_max2,
+    yc-r_max2),xlab = NULL,ylab=NULL, ann= F, axes=F)
 # points(xc, yc, pch = 16, cex=1.5, col = "black", asp=1) #centre of PC
 # points(xc+r_max, yc+r_max, pch=16, cex=1.5, col="black", asp=1) #point for scaling
 # points(xc-r_max, yc+r_max, pch=16, cex=1.5, col="black", asp=1) #point for scaling
