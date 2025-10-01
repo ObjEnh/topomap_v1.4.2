@@ -514,8 +514,8 @@ if (cas == "nonortho_only_RDP") {
   setwd(OrgImgPathname)
   img_ref <- readImage(OrgImgFilename)
   display(img_ref, method = "raster")
-  lines(intsec_linepair_vertex_coord[,3], 
-        (-intsec_linepair_vertex_coord[,4]),col="white",asp=1,type="l",lwd=2,lty=1)
+  lines(intsec_linepair_vertex_coord2[,3], 
+        (-intsec_linepair_vertex_coord2[,4]),col="white",asp=1,type="l",lwd=2,lty=1)
   
   #plot onto orthoimage (large scale)
   display(img_uds,method = "raster")
@@ -559,7 +559,8 @@ if (cas == "nonortho_only_RDP") {
     setwd(OrgGtsPathname)
     img_GTS <- readImage(OrgGtsFilename)
     display(img_GTS, method="raster")
-    lines(intsec_linepair_vertex_coord2[,3], intsec_linepair_vertex_coord2[,4],col="red",asp=1,type="l",lwd=2,lty=1)
+    lines(intsec_linepair_vertex_coord2[,3], -intsec_linepair_vertex_coord2[,4],col="red",asp=1,type="l",lwd=2,lty=1)
+    #large scale
     GTS_uds <- img_GTS[orig_x:wind_x, orig_y:wind_y, 1:3]
     display(GTS_uds, method="raster")
     lines(intsec_linepair_vertex_coord2[,3]-orig_x,-intsec_linepair_vertex_coord2[,4]-orig_y,col="red",asp=1,type="l",lwd=2,lty=1)
