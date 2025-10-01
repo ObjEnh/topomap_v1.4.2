@@ -2018,28 +2018,52 @@ if (cas == "nonortho_only_RDP") {
   cat("nc= ", nc, "\n")
   W <- tiles(tess(image=Z18)) #separation of components
   
-  if (nc == 1) { #stop("select data manually at script-line 647 in script 'sequence_of_line.R'")}
-    plot(W$'1', col="white",asp=1)  #black building
-    w = W$'1'
-    plot(w,asp=1)
-    #p_pos = "cor_img"
-  } else {
-    p_pos = "cor_img"
-    setwd(home_dir2)
-    source(paste("./spObj/spObj_line_detection_v",v_nr,".R",sep="")) #selection of W$x
-    #plot(w)
-    simplified_lines_cor
-  } #end if-else
-
-  lines(simplified_lines_cor, col = "red", lty = 1, lwd=2,asp=1)
-  simplified_lines <- simplified_lines_cor
+  # if (nc == 1) { #stop("select data manually at script-line 647 in script 'sequence_of_line.R'")}
+  #   plot(W$'1', col="white",asp=1)  #black building
+  #   w = W$'1'
+  #   plot(w,asp=1)
+  #   #p_pos = "cor_img"
+  # } else {
+  #   p_pos = "cor_img"
+  #   setwd(home_dir2)
+  #   source(paste("./spObj/spObj_line_detection_v",v_nr,".R",sep="")) #selection of W$x
+  #   #plot(w)
+  #   simplified_lines_cor
+  # } #end if-else
+  
+  ##
+  #cat("p_pos= ", p_pos, "\n")
+  plot(W$'2', col="white")  #black building
+  w = W$'2'
+  plot(w)
+  out_poly <- as.polygonal(w) #conversion to polygons
+  plot(out_poly)
+  out_poly_df <- as.data.frame(out_poly)
+  n_pt <- length(out_poly_df$x)
+  y3 <- 1 : n_pt
+  x_v <- round(out_poly_df$x)
+  y_v <- round(out_poly_df$y)
+  plot(x_v,y_v,type = "l", asp=1)
+  lines(x_v,y_v,col="red", lty=2, asp=1)
+  simplified_lines <- RamerDouglasPeucker(x_v, y_v, epsilon = 5) #call of RDP-function
   simplified_lines
-  cat("i= ",i,"\n") #i=index in simplified lines of first scale-point
-  cat("j= ",j,"\n") #j=index in simplified lines of second scale-point
-  points(simplified_lines$x[i],simplified_lines$y[i],
-         pch=20,col=("lightblue"),cex=1,asp=1)
-  points(simplified_lines$x[j],simplified_lines$y[j],
-         pch=20,col=("green"),cex=1,asp=1)
+  lines(simplified_lines, col = "green", lty = 1, lwd=2,asp=1)
+  # simplified_lines_cor <- simplified_lines
+  # n_simpl_lines_cor <- length(simplified_lines_cor$x)
+  # row.names(simplified_lines_cor) <- 1 : n_simpl_lines_cor
+  # simplified_lines_cor
+  #lines(simplified_lines_cor, col = "blue", lty = 1, lwd=2,asp=1)
+  lines(simplified_lines, col = "blue", lty = 1, lwd=2,asp=1)
+  ##
+  # lines(simplified_lines_cor, col = "red", lty = 1, lwd=2,asp=1)
+  # simplified_lines <- simplified_lines_cor
+  simplified_lines
+  # cat("i= ",i,"\n") #i=index in simplified lines of first scale-point
+  # cat("j= ",j,"\n") #j=index in simplified lines of second scale-point
+  # points(simplified_lines$x[i],simplified_lines$y[i],
+  #        pch=20,col=("lightblue"),cex=1,asp=1)
+  # points(simplified_lines$x[j],simplified_lines$y[j],
+  #        pch=20,col=("green"),cex=1,asp=1)
 } #end case = "nonortho_only_RDP"
 ################################################################################
 
@@ -2147,11 +2171,18 @@ if (cas == "nonortho_only_RDP") {
   #max & min in y (RDP)
   y_min_RDP <- min(simplified_lines$y)
   i <- which(simplified_lines[, "y"] == y_min_RDP)
-  simplified_lines[i,] #first point
+  simplified_lines[i,] #first scale point
   #
   y_max_RDP <- max(simplified_lines$y)
   j <- which(simplified_lines[, "y"] == y_max_RDP)
-  simplified_lines[j,] #second point
+  simplified_lines[j,] #second scale point
+  
+  cat("i= ",i,"\n") #i=index in simplified lines of first scale-point
+  cat("j= ",j,"\n") #j=index in simplified lines of second scale-point
+  points(simplified_lines$x[i],simplified_lines$y[i],
+         pch=20,col=("lightblue"),cex=1,asp=1)
+  points(simplified_lines$x[j],simplified_lines$y[j],
+         pch=20,col=("green"),cex=1,asp=1)
   
   ##pixel cluster of building boundary line
   dev.set(2)
@@ -2325,8 +2356,7 @@ if (cas == "nonortho_only_RDP") {
   points(simplified_lines_complete_trans2$x,simplified_lines_complete_trans2$y,type ="l",lty=1,lwd=2,col="blue",asp=1)
   simplified_lines_complete_trans2
   
-
-  #storage of all transformed vertices
+  ##storage of all transformed vertices
   simplified_lines_complete_trans2
   #simplified_lines_complete_trans
   n_siml2 <- length(simplified_lines_complete_trans2$x)
@@ -2336,6 +2366,8 @@ if (cas == "nonortho_only_RDP") {
   intsec_linepair_vertex_coord[,3] <- simplified_lines_complete_trans2[,1]
   intsec_linepair_vertex_coord[,4] <- simplified_lines_complete_trans2[,2]
   intsec_linepair_vertex_coord2 <- intsec_linepair_vertex_coord
+  intsec_linepair_vertex_coord2 <- rbind(intsec_linepair_vertex_coord,intsec_linepair_vertex_coord[1,])
+  intsec_linepair_vertex_coord2
   
   setwd(home_dir)
   f5 <- paste("./results/",Img_name,"/RDP/","b",bnr2,"_intsec_linepair_vertex_coord3.txt",sep="")
