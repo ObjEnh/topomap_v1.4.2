@@ -341,41 +341,6 @@ if (Img_name == "ISPRS4_DLR10") {
   } #end b14 - "cor_det"
 # end bnr2=14, cas ="nonortho_only", p_pos="cor_det" 
 
-##cas='nonortho_only_RDP'
-  
-  if (bnr2 == 14 && cas == "nonortho_only_RDP" && p_pos == "cor_img") {
-    cat("p_pos= ", p_pos, "\n")
-    plot(W$'4', col="white")  #black building
-    w = W$'4'
-    plot(w)
-    out_poly <- as.polygonal(w) #conversion to polygons
-    plot(out_poly)
-    out_poly_df <- as.data.frame(out_poly)
-    n_pt <- length(out_poly_df$x)
-    y3 <- 1 : n_pt
-    x_v <- round(out_poly_df$x)
-    y_v <- round(out_poly_df$y)
-    
-    #loop
-    for (i in y3) {
-      points(x_v[i], y_v[i], pch=16, col="red", cex=0.2) #points from edge
-    }
-    
-    x_v
-    y_v
-    plot(x_v,y_v,type = "l", asp=1)
-    lines(x_v,y_v,col="red", lty=2, asp=1)
-    simplified_lines <- RamerDouglasPeucker(x_v, y_v, epsilon = 5)
-    lines(simplified_lines, col = "green", lty = 1, lwd=2)
-    simplified_lines_cor <- simplified_lines[-40,]
-    simplified_lines_cor
-    
-  # scaling points
-    i=31 # 1.vertex for scaling  
-    j=5 # 2.vertex for scaling 
-    
-  } #end b14 - "nonortho_only_RDP" - "cor_img"
-  
   ##b15
   #cas='100_all'
   
@@ -464,41 +429,6 @@ if (Img_name == "ISPRS4_DLR10") {
     n_total <- n_nonortholines2 + n_ortholines2
   } #end b221
   
-  ##b221
-  #cas='nonortho_only_RDP'
-  
-  if (bnr2 == 221 && p_pos == "cor_img") { 
-    cat("p_pos= ", p_pos, "\n")
-    plot(W$'2', col="white")  #black building
-    w = W$'2'
-    plot(w)
-    out_poly <- as.polygonal(w) #conversion to polygons
-    plot(out_poly)
-    out_poly_df <- as.data.frame(out_poly)
-    n_pt <- length(out_poly_df$x)
-    y3 <- 1 : n_pt
-    x_v <- round(out_poly_df$x)
-    y_v <- round(out_poly_df$y)
-    plot(x_v,y_v,type = "l", asp=1)
-    lines(x_v,y_v,col="red", lty=2, asp=1)
-    simplified_lines <- RamerDouglasPeucker(x_v, y_v, epsilon = 5)
-    simplified_lines
-    lines(simplified_lines, col = "green", lty = 1, lwd=2,asp=1)
-    #simplified_lines_cor <- simplified_lines[-(1:5),]
-    simplified_lines_cor <- simplified_lines
-    n_simpl_lines <- length(simplified_lines_cor$x)
-    row.names(simplified_lines_cor) <- 1 : n_simpl_lines
-    simplified_lines_cor[(n_simpl_lines+1),] <- simplified_lines_cor[1,]
-    simplified_lines_cor
-    #par("usr")
-    #points(60,60,col="red", pch=3,cex=1,asp=1)
-    #points(505,60,col="red", pch=3,cex=1,asp=1)
-    # scaling points
-    i=9 #i=index in simplified lines of first scale-point (b221_1)
-    j=25 ##i=index in simplified lines of second scale-point (b221_2)
-  } #end b221 - cas='nonortho_only_RDP'
-  
-  
   ##b25
   if (bnr2 == 25 && p_pos == "cor_det") { 
     B5_6
@@ -536,36 +466,31 @@ if (Img_name == "ISPRS4_DLR10") {
   
   ##cas='nonortho_only_RDP'
   
-  if (bnr2 == 26 && p_pos == "cor_img") { 
-    #stop("continue step by step")
-    cat("p_pos= ", p_pos, "\n")
-    plot(W$'4', col="white")  #black building
-    w = W$'4'
-    plot(w)
-    out_poly <- as.polygonal(w) #conversion to polygons
-    plot(out_poly)
-    out_poly_df <- as.data.frame(out_poly)
-    n_pt <- length(out_poly_df$x)
-    y3 <- 1 : n_pt
-    x_v <- round(out_poly_df$x)
-    y_v <- round(out_poly_df$y)
-    plot(x_v,y_v,type = "l", asp=1)
-    lines(x_v,y_v,col="red", lty=2, asp=1)
-    simplified_lines <- RamerDouglasPeucker(x_v, y_v, epsilon = 5) #call of RDP-function
-    simplified_lines
-    lines(simplified_lines, col = "green", lty = 1, lwd=2,asp=1)
-    #points(simplified_lines[4,],pch=20, cex=1, col="blue", asp=1)
-    simplified_lines_cor <- simplified_lines[-(1:4),]
-    n_simpl_lines_cor <- length(simplified_lines_cor$x)
-    row.names(simplified_lines_cor) <- 1 : n_simpl_lines_cor
-    simplified_lines_cor[(n_simpl_lines_cor+1),] <- simplified_lines_cor[1,]
-    simplified_lines_cor
-    lines(simplified_lines_cor, col = "blue", lty = 1, lwd=2,asp=1)
-    # scaling points
-    i=52 #i=index in simplified lines of first scale-point (b26_1)
-    j=33 ##i=index in simplified lines of second scale-point (b26_2)
-  } #end b26 - cas='nonortho_only_RDP'
-  
+  # if (bnr2 == 26 && p_pos == "cor_img") { 
+  #   #stop("continue step by step")
+  #   cat("p_pos= ", p_pos, "\n")
+  #   plot(W$'2', col="white")  #black building
+  #   w = W$'2'
+  #   plot(w)
+  #   out_poly <- as.polygonal(w) #conversion to polygons
+  #   plot(out_poly)
+  #   out_poly_df <- as.data.frame(out_poly)
+  #   n_pt <- length(out_poly_df$x)
+  #   y3 <- 1 : n_pt
+  #   x_v <- round(out_poly_df$x)
+  #   y_v <- round(out_poly_df$y)
+  #   plot(x_v,y_v,type = "l", asp=1)
+  #   lines(x_v,y_v,col="red", lty=2, asp=1)
+  #   simplified_lines <- RamerDouglasPeucker(x_v, y_v, epsilon = 5) #call of RDP-function
+  #   simplified_lines
+  #   lines(simplified_lines, col = "green", lty = 1, lwd=2,asp=1)
+  #   simplified_lines_cor <- simplified_lines
+  #   n_simpl_lines_cor <- length(simplified_lines_cor$x)
+  #   row.names(simplified_lines_cor) <- 1 : n_simpl_lines_cor
+  #   simplified_lines_cor
+  #   lines(simplified_lines_cor, col = "blue", lty = 1, lwd=2,asp=1)
+  # } #end b26 - cas='nonortho_only_RDP'
+  # 
 } #end of orthoimage "ISPRS4_DLR10"
 
 ##end of script 'spObj_line_detection.R'
