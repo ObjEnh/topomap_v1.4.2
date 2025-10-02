@@ -522,22 +522,21 @@ if (cas == "nonortho_only_RDP") {
   lines(intsec_linepair_vertex_coord2[,3]-orig_x, 
         (-intsec_linepair_vertex_coord2[,4]-orig_y),col="white",asp=1,type="l",lwd=2,lty=1)
   
-  # #plot vertex numbers
-  # n_x <- length(intsec_linepair_vertex_coord$x)
-  # intsec_linepair_vertex_coord[n_x,2] <- 1
+  # ##plot vertex numbers
+  # n_x <- length(intsec_linepair_vertex_coord2$x)
+  # intsec_linepair_vertex_coord2[n_x,2] <- 1
   # 
   # vec_y <- 1 : n_x
   # 
   # for (i in vec_y) {
   #   #browser()
   #   cat("i=",i,"\n")
-  #   text(intsec_linepair_vertex_coord[i,3]-orig_x,(intsec_linepair_vertex_coord[i,4]-orig_y),
-  #        labels = intsec_linepair_vertex_coord[i,2],
+  #   text(intsec_linepair_vertex_coord2[i,3]-orig_x,(-intsec_linepair_vertex_coord2[i,4]-orig_y),
+  #        labels = intsec_linepair_vertex_coord2[i,2],
   #        pos=2, offset = 0.7, cex = 1, col = "white")
   # } #end for-loop
-  
-  #end of plot of outline with vertexes-numbers onto enlarged orthoimage
-  
+  # #end of plot of outline with vertexes-numbers onto enlarged orthoimage
+
   
   cat("does the result agree with the orthoimage (large scale)?","\n")
   
