@@ -1105,7 +1105,7 @@ if (sek == "bdr_follow") {
   for (n1 in vec2) {
     readline("press 'enter' to display next point ")
     print(b13_angle_df4$nr_center[n1])
-    points(b13_angle_df4$x_centre[n1],-b13_angle_df4$y_centre[n1], asp=1, pch=20,col="green", cex=1.5)
+    points(b13_angle_df4$x_centre[n1],-b13_angle_df4$y_centre[n1], asp=1, pch=20,col="red", cex=1.5)
   }
   
   #change of direction in sequence
@@ -1113,7 +1113,7 @@ if (sek == "bdr_follow") {
   b13_angle_df4
   dx_seq <- (b13_angle_df4$x_centre[1]-b13_angle_df4$x_centre[2])
 
-  if (dx_seq < 0) {
+  if (dx_seq > 0) {
     sequence_seg_rev <- changeDir(sequence_seg) #function call for change of direction in sequence
     sequence_seg_rev #reversed sequence
     sequence_seg <- sequence_seg_rev
