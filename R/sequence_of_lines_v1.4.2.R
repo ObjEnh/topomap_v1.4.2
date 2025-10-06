@@ -933,7 +933,7 @@ if (sek == "bdr_follow") {
   for (i in vec) { 
     readline("press 'enter' to display next midpoint ")
     cat("index=", i, "point_number= ", b13_angle_df3$nr_center[i],"\n")
-    points(b13_angle_df3$x_centre[i],-b13_angle_df3$y_centre[i], asp=1, pch=20,col="red", cex=1.5)  
+    points(b13_angle_df3$x_centre[i],-b13_angle_df3$y_centre[i], asp=1, pch=20,col="green", cex=1.5)  
   }
   
   
@@ -1105,15 +1105,17 @@ if (sek == "bdr_follow") {
   for (n1 in vec2) {
     readline("press 'enter' to display next point ")
     print(b13_angle_df4$nr_center[n1])
-    points(b13_angle_df4$x_centre[n1],-b13_angle_df4$y_centre[n1], asp=1, pch=20,col="red", cex=1.5)
+    points(b13_angle_df4$x_centre[n1],-b13_angle_df4$y_centre[n1], asp=1, pch=20,col="green", cex=1.5)
   }
   
-  #change of direction in sequence
+  #manual change of direction in the sequence of line segments
   sequence_seg_rev <- rep(NA,n_seq)
   b13_angle_df4
-  dx_seq <- (b13_angle_df4$x_centre[1]-b13_angle_df4$x_centre[2])
 
-  if (dx_seq > 0) {
+  cat("change of direction in sequence? - type Y or N","\n")
+  answ6 = readline("answ6= ")
+  
+  if (answ6 == "Y") {
     sequence_seg_rev <- changeDir(sequence_seg) #function call for change of direction in sequence
     sequence_seg_rev #reversed sequence
     sequence_seg <- sequence_seg_rev
