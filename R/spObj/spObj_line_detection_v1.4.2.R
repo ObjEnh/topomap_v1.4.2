@@ -1,5 +1,4 @@
 ##name of script: spObj_line_detection.R
-cat("version_number= ",v_nr,"\n")
 ##purpose: dealing with special objects in script 'line detection.R' 
 ##instructions: change of default values may be required
 #default values: ref_line=1
@@ -10,6 +9,7 @@ cat("version_number= ",v_nr,"\n")
 ##author: Joachim Höhle
 ##GNU General Public License (GPL)
 
+cat(paste("name of script: spObj_line_detection.R_v",v_nr,sep = ""),"\n")
 
 ##orthoimage "ISPRS7"
 
@@ -326,6 +326,23 @@ if (Img_name == "ISPRS4_DLR10") {
   } #end b12 
   
 ##b14
+#cas='100_all+nonortho'  
+  if (bnr2 == 14 && cas == "100_all+nonortho" && p_pos == "cor_det") {
+    cat("p_pos= ", p_pos, "\n")
+    #stop("continue step by step")
+    B5_6
+    B5_6R4 <- B5_6
+    B5_6R4 <- B5_6R4[-c(1:15),]
+    n_z <- nrow(B5_6R4)
+    row.names(B5_6R4) <- 1 : n_z
+    B5_6R4[1:n_z,8] <- 0
+    colnames(B5_6R4)[8]="ortho"
+    n_nonortholines2 <- length(B5_6R4[,1])
+    n_ortholines2=0
+    n_total = n_nonortholines2 
+  } #end b14 - "cor_det"
+  # end bnr2=14, cas ="100_all+nonortho", p_pos="cor_det" 
+  
 #cas='nonortho_only'
   
   if (bnr2 == 14 && cas == "nonortho_only" && p_pos == "cor_det") {
@@ -452,7 +469,7 @@ if (Img_name == "ISPRS4_DLR10") {
     #stop("continue step by step")
     B5_6
     B5_6R4 <- B5_6
-    B5_6R4 <- B5_6R4[-c(1:8,10:17),] 
+    B5_6R4 <- B5_6R4[-c(1:17),] 
     n_z <- length(B5_6R4$lnr)
     row.names(B5_6R4) <- 1 : n_z
     B5_6R4
