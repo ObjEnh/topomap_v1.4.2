@@ -803,7 +803,7 @@ if (sek == "bdr_follow") {
   points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.2, col="cyan") # original pointcloud for building
 
   for (i in vec_y) {
-    browser()
+    #browser()
     cat("nr_center= ",b13_angle_df2$nr_center[i],"\n")
     points(b13_angle_df2$x_centre[i],-b13_angle_df2$y_centre[i], asp=1, pch=20,col="blue", cex=1.5)
   }
@@ -1048,7 +1048,6 @@ if (sek == "bdr_follow") {
   n_seq <- length(sequence_seg)
   sequence_seg #vector of identified midpoints 
   n_midpts 
-  n_seq
   #end of detection of midpts
   
   ##check of the identified points 
@@ -1098,7 +1097,7 @@ if (sek == "bdr_follow") {
        main=paste("b ",bnr2, sep=(""))) #large scale
   points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.3, col="black") # original pixel cloud for building
   points(b13_angle_df4$x_centre[1],-b13_angle_df4$y_centre[1], asp=1, pch=20,col="red", cex=1.5)
-  points(b13_angle_df4$x_centre[2],-b13_angle_df4$y_centre[2], asp=1, pch=20,col="green", cex=1.5)
+  points(b13_angle_df4$x_centre[2],-b13_angle_df4$y_centre[2], asp=1, pch=20,col="blue", cex=1.5)
   #
   
   #plot of all points 
@@ -1108,18 +1107,37 @@ if (sek == "bdr_follow") {
     points(b13_angle_df4$x_centre[n1],-b13_angle_df4$y_centre[n1], asp=1, pch=20,col="green", cex=1.5)
   }
   
-  #manual change of direction in the sequence of line segments
-  sequence_seg_rev <- rep(NA,n_seq)
-  b13_angle_df4
-
-  cat("change of direction in sequence? - type Y or N","\n")
-  answ6 = readline("answ6= ")
+  #stop("continue step by step")
   
-  if (answ6 == "Y") {
+  ##automated change of direction
+  n_midpts2 <- length(sequence_seg)
+  alph_s = beta_s <- rep(0,n_midpts2)
+  alph_s[1] <- (90 - B5_6$theta_angle[1])
+  alph_s[2] <- (90 - B5_6$theta_angle[2])
+  beta_s[1] <- 180 - (alph_s[2] - alph_s[1])
+  #
+  alph_s[n_midpts2] <- (90 - B5_6$theta_angle[n_midpts2])
+  beta_s[n_midpts2] <- alph_s[1] - alph_s[n_midpts2]
+  beta_s[n_midpts2]
+
+  if (beta_s[n_midpts2] < 0 ) {
     sequence_seg_rev <- changeDir(sequence_seg) #function call for change of direction in sequence
     sequence_seg_rev #reversed sequence
     sequence_seg <- sequence_seg_rev
   }
+  
+  ##manual change of direction in the sequence of line segments
+  # sequence_seg_rev <- rep(NA,n_seq)
+  # b13_angle_df4
+  # 
+  # cat("change of direction in sequence? - type Y or N","\n")
+  # answ6 = readline("answ6= ")
+  # 
+  # if (answ6 == "Y") {
+  #   sequence_seg_rev <- changeDir(sequence_seg) #function call for change of direction in sequence
+  #   sequence_seg_rev #reversed sequence
+  #   sequence_seg <- sequence_seg_rev
+  # }
   
   sequence_seg
   
