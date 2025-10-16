@@ -487,24 +487,30 @@ if (Img_name == "ISPRS4_DLR10") {
   
   ##221
   
-  if (bnr2 == 221 && p_pos == "cor_pos") {
+  if (bnr2 == 221 && p_pos == "cor_pos" && cas == "100_all+nonortho") {
     #determine new position by 'support_line_detection.R':#6
     #or with angle by 'support_sequence_of_lines.R', #9
+    #stop("manually")
     b13_angle_df2
     b13_angle_df3 <- b13_angle_df2
-    b13_angle_df3[7,1:4] <- c(66,NA,66,565) #lnr=66,midpoint is manually determined
-    b13_angle_df3[8,1:4] <- c(76,NA,83,563) #lnr=76,midpoint is manually determined
-    b13_angle_df3[10,1:4] <- c(69,NA,115,570) #lnr=69,midpoint is manually determined
-    b13_angle_df3[14,1:4] <- c(150,NA,165,577) #lnr=150,midpoint is manually determined
-    b13_angle_df3[3,1:4] <- c(3,NA,41,594) #lnr=3,midpoint is manually determined
+    b13_angle_df3[9,1:4] <- c(3,NA,39,595) #lnr=3,midpoint is manually determined
+    b13_angle_df3[3,1:4] <- c(73,NA,64,563) #lnr=73,midpoint is manually determined
+    b13_angle_df3[5,1:4] <- c(181,NA,102,547) #lnr=181,midpoint is manually determined
     b13_angle_df3
-  } #end b221 - "cor_pos"
+  } #end b221 - "cor_pos" - "100_all+nonortho"
   
-  if (bnr2 == 221 && p_pos == "cor_sek") { 
-    sequence_seg
-    sequence_seg <- c(1,6,66,76,191,69,27,84,3,5,916,8,7,150)
-    sequence_seg2 <-sequence_seg
-  } #end b221 - "cor_sek")
+  
+  # if (bnr2 == 221 && p_pos == "cor_sek" && cas == "100_all+nonortho") { 
+  #   sequence_seg
+  #   sequence_seg <- c(1,7,73,36,181,45,31,91,3,6,625,154,10,21)
+  #   sequence_seg2 <-sequence_seg
+  # } #end b221 - "cor_sek" - "100_all+nonortho"
+  
+  # if (bnr2 == 221 && p_pos == "cor_sek" && cas == "nonortho_only") { 
+  #   sequence_seg
+  #   #sequence_seg <- c(1,6,66,76,191,69,27,84,3,5,916,8,7,150)
+  #   sequence_seg2 <-sequence_seg
+  # } #end b221 - "cor_sek" - "100_all+nonortho"
   
   ##b26
   
