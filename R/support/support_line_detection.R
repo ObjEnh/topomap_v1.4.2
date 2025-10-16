@@ -72,7 +72,8 @@ save(theta_step, ro_step, ro, ro_1, n_theta, n_ro, ro_rg, file=paste("./data/",I
 #determination of theta_ind
 #results must be > 0
 
-dir_meas <- locator(2) #measure 2 points on line
+dir_meas <- locator(2, type="p", pch=3) #measure 2 points on line
+dir_meas
 x_ang <- (dir_meas$y[1] - dir_meas$y[2]) / (dir_meas$x[1] - dir_meas$x[2])
 alpha_meas <- atan(x_ang) * omega
 alpha_math <- (-alpha_meas) #change to math-system
@@ -100,7 +101,7 @@ cat("alph_ind=", alph_ind, "\n")
 ################################################################################################
 
 ## 3. search of lines (lnr) with theta_index and plot of line
-theta_ind <- readline("type theta_index= ")
+#theta_ind <- readline("type theta_index= ")
 theta_ind <- as.integer(theta_ind)
 thr_line_seg = n_pix/3 #threshold for length of line-segment [pixel]
 ct=0
@@ -164,7 +165,7 @@ lnr <- as.integer(lnr)
   y_m <- mean(P_red[,3]) 
   points(P[,2]-orig_x,(P[,3]-orig_y), pch=".", asp=1, cex=2.0, col="yellow") #see 'Plots' (plot))
   points(P_red[,2]-orig_x,(P_red[,3]-orig_y), pch=".", asp=1, cex=2.0, col="black") #see 'Plots' (plot)
-  points(x_m-orig_x, y_m-orig_y, pch=16, asp=1, cex=2.0, col="blue")
+  points(x_m-orig_x, y_m-orig_y, pch=16, asp=1, cex=2.0, col="red")
 
 #plot of selected line onto image extract 
 theta_math <- 180 - B4$theta_angle[lnr]
@@ -197,7 +198,7 @@ a_img <- (-a)
 coef2 <- c(b2_img,a_img)
 
 if (is.finite(a_img) && is.finite(b2_img)) {
-  abline(coef2, col="blue", lty=1, lwd=3, asp=1)
+  abline(coef2, col="red", lty=1, lwd=2, asp=1)
 } else {
   ro_l1 <- B4$ro_pixel[lnr]
   ro_l3 <- round(ro_l1 - orig_x)
@@ -213,7 +214,7 @@ vec <- 1 : length(B0[,1])
 
 for (i in vec) {
   
-  if (B0[i,2] == theta_ind && B0[i,3] == 374) { #B0[i,3] (ro_ind) must  be adapted
+  if (B0[i,2] == theta_ind && B0[i,3] == 375) { #B0[i,3] (ro_ind) must  be adapted
     cat("i= ", i,"\n")
     print(B0[i, ])
     ct <- ct + 1
@@ -684,11 +685,11 @@ text((x-orig_x),((y+11)-orig_y),txt2, cex=1, col="white")
 ## 9. calculation of ro_ind using theta_index and one measured point
 
 #input
-theta_ind=10 #change value
-x=273 #point (mean, img_system)
-y=740 #point (mean, img_system) check!
-points(x-orig_x,y-orig_y,pch=3, asp =1, cex=2,asp=1, col="blue") #large scale
-
+theta_ind=8 #change value
+x=round((dir_meas$x[1]+dir_meas$x[2])/2)+orig_x #point (mean, img_system)
+y=round((dir_meas$y[1]+dir_meas$y[2])/2)+orig_y #point (mean, img_system) check!
+points(x-orig_x,y-orig_y,pch=16, asp =1, cex=1,asp=1, col="red") #large scale
+#points(x,y,pch=16, asp =1, cex=1,asp=1, col="red") #large scale
 theta_img = (theta_ind - 1) * theta_step 
 theta_math = 180 - theta_img
 theta_math_arc=theta_math/omega
