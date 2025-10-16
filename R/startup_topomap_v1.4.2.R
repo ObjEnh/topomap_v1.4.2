@@ -140,6 +140,7 @@ thr_d_alph_obj=2 #[degrees], threshold for deviation of rotation angle in
 # install.packages('rpart')
 # install.packages('nlme')
 # install.packages("RDP")
+# install.packages("smoothr")
 
 ##loading of libraries 
 setwd(home_dir2)
