@@ -671,15 +671,16 @@ while (i < k13) {
   i <- i + 1
   if (B4$theta_angle[i] == theta_ref && B4$n_pixel[i] >= lol || 
       B4$theta_angle[i] == alph_ref && B4$n_pixel[i] >= lol) {
-    B5_2[k1,] <- c(B4$lnr[i],B4$theta_index[i], B4$ro_index[i], B4$n[i], 
-      B4$theta_angle[i],B4$ro_pixel[i],B4$n_pixel[i])
-    k1 <- k1 + 1
+        B5_2[k1,] <- c(B4$lnr[i],B4$theta_index[i], B4$ro_index[i], B4$n[i], 
+        B4$theta_angle[i],B4$ro_pixel[i],B4$n_pixel[i])
+        k1 <- k1 + 1
   }
 } #end of loop while
 
 ## generalizing, reduction of matrix, conversion to data frame
 head(B5_2)
-B5_3 <- subset(B5_2,B5_2[,7] >= lol) # length of lines (lol) >= 10 pixels (=0.9 m) (n_pixel)
+B5_3 <- subset(B5_2,B5_2[,7] >= lol) # length of lines (lol) 
+#>= 10 pixels (=0.9 m) (n_pixel)
 B5_3
 B5_4 <- data.frame(B5_3)
 names(B5_4) <- c("lnr", "theta_index", "ro_index", "n", "theta_angle","ro_pixel","n_pixel")
@@ -1583,9 +1584,9 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
   cat("are lines of other orientation part of the object unknown? ", "\n")
   cat("use scripts #8 and 9# at 'support_line_detection' ", "\n")
   
-  if (proc_mode == "demo" || 
-      proc_mode == "auto" ||
-      proc_mode == "obj_wise") {
+  # if (proc_mode == "demo" || 
+  #     proc_mode == "auto" ||
+  #     proc_mode == "obj_wise") {
     
     vec <- 1 : 26 #max 25 additional lines
     n_nonortholines2 <- 0
@@ -1596,9 +1597,9 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
       #manual input at the console - if more than one line: repeat, 
       #if 0 type 0, see "demo"
       
-      if (Img_name == "ISPRS7") { 
-        cat("if demo -> type 3 RETURN, 4 RETURN, 0 RETURN", "\n")
-      } 
+      # if (Img_name == "ISPRS7") { 
+      #   cat("if demo -> type 3 RETURN, 4 RETURN, 0 RETURN", "\n")
+      # } 
       
       # if (Img_name == "ISPRS4") {
       #   cat("if demo -> type 1 RETURN, 24 RETURN, 0 RETURN", "\n") #update
@@ -1619,6 +1620,7 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
       } else { 
          break
       } #end if-else
+      
     } #end i-loop
     
     
@@ -1665,7 +1667,7 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
       centers_PC[n,2] <- x_m
       centers_PC[n,3] <- y_m
       centers_PC[n,4] <- round(n_P/kf)
-    } #end of for-loop
+    } #end of for-loop n
     
     centers_PC
     
@@ -1679,7 +1681,7 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
       x <- centers_PC[i,2]
       y <- centers_PC[i,3]
       points(x-orig_x,-(y-orig_y_math),pch=18, asp=1, cex=1.3, col="red")
-    } #end for-loop
+    } #end for-loop i
     
     #end of check-plot
     
@@ -1719,7 +1721,7 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
       } #end if-else
       
       cat("#","\n")
-    } #end for-loop (large scale)
+    } #end for-loop n1 (large scale)
     
     cat("are the lines correctly identified?","\n") #case="100_all+nonortho"
     cat("if 'auto' -> type: N","\n")
@@ -1744,6 +1746,7 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
     bn_PC <- n_ortholines2
     soph=0 #sequence is difficult to determine
     
+  #} #end proc_modes "demo", "auto", "obj_wise")  
   
 } #end case= "100_all + nonortho"
 ################################################################################
@@ -1751,6 +1754,7 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
 ##case: non-orthogonal lines only 
 
 if (cas == "nonortho_only") { 
+  #stop("one by one")
   cat("define minimum size of line segment: 15 pixel (recommended) or 35 (alternativ)","\n")
   n_pix <- readline("type minimm size of line - if demo - type 35: ") #manual input (n_pix=n_pix[m]/pixelsize[m])
   n_pix <- as.integer(n_pix)
@@ -1765,46 +1769,46 @@ if (cas == "nonortho_only") {
   cat("use scripts #8 and 9# at 'support_line_detection' ", "\n")
   cat("input_mode= ", input_mode,"\n")
   
-  if (proc_mode == "demo" && input_mode == "single" || 
-      proc_mode == "auto" && input_mode == "single"||
-      proc_mode == "obj_wise" && input_mode == "single") { 
-    
-    vec <- 1 : 26 #max 25 additional lines (subject of change)
-    n_nonortholines2 <- 0
-    
-    #loop
-    for (i in vec) {
-      #input of identifiers of non-orthogonal line segments
-      #include selected reference line
-      #sequence of line-segments, for example anti-clockwise, must be maintained
-      #manual input at the console 
-      #end of input: type 0
-      
-      # if (Img_name == "ISPRS4_DLR10") {
-      #    cat("if auto -> type x RETURN, type 0 RETURN ", "\n") #update x (object with non-ortholines)
-      # }
-      
-      
-      add_nr <- readline("type the label of a non-orthogonal line= ") #manual input at the console
-      add_nr <- as.integer(add_nr)
-      
-      if (add_nr > 0) {
-        n_nonortholines2 <-  n_nonortholines2 + 1
-        lnr_det3[n_nonortholines2] <- add_nr
-      } else { 
-        break
-      } #end if-else
-    } #end i-loop
-    
-    lnr_det3 <- subset(lnr_det3,lnr_det3 > 0)
-    n_total <- length(lnr_det3)
-    n_nonortholines2
-    #
-  } #end input_mode = "single"   
-    
+  # if (proc_mode == "demo" && input_mode == "single" ||
+  #     proc_mode == "auto" && input_mode == "single"||
+  #     proc_mode == "obj_wise" && input_mode == "single") {
+  #   
+  #   vec <- 1 : 26 #max 25 additional lines (subject of change)
+  #   n_nonortholines2 <- 0
+  #   
+  #   #loop
+  #   for (i in vec) {
+  #     #input of identifiers of non-orthogonal line segments
+  #     #include selected reference line
+  #     #sequence of line-segments, for example anti-clockwise, must be maintained
+  #     #manual input at the console 
+  #     #end of input: type 0
+  #     
+  #     # if (Img_name == "ISPRS4_DLR10") {
+  #     #    cat("if auto -> type x RETURN, type 0 RETURN ", "\n") #update x (object with non-ortholines)
+  #     # }
+  #     
+  #     
+  #     add_nr <- readline("type the label of a non-orthogonal line= ") #manual input at the console
+  #     add_nr <- as.integer(add_nr)
+  #     
+  #     if (add_nr > 0) {
+  #       n_nonortholines2 <-  n_nonortholines2 + 1
+  #       lnr_det3[n_nonortholines2] <- add_nr
+  #     } else { 
+  #       break
+  #     } #end if-else
+  #   } #end i-loop
+  #   
+  #   lnr_det3 <- subset(lnr_det3,lnr_det3 > 0)
+  #   n_total <- length(lnr_det3)
+  #   n_nonortholines2
+  #   #
+  # } #end input_mode = "single"   
+  #   
   ##determination of line segments manually, input_mode = "vector"
     
-  if (proc_mode == "demo" && input_mode == "vector" || 
+  if (proc_mode == "demo" && input_mode == "vector" ||
       proc_mode == "auto" && input_mode == "vector" ||
       proc_mode == "obj_wise" && input_mode == "vector") {
       
@@ -1814,132 +1818,135 @@ if (cas == "nonortho_only") {
       cat("input_mode= ", input_mode,"\n")
       
       setwd(home_dir)
-      f6 <- "./results/ISPRS4_DLR10/man/b26_vertex_labels_all.txt" #example
+      f6 <- paste("./results/ISPRS4_DLR10/man/b",bnr2,"_vertex_labels.txt",sep="") 
       lnr_det8 <- read.table(f6)
-      lnr_det3 <- lnr_det8$x
+      lnr_det8
+      lnr_det8 <- as.vector(lnr_det8$x)
+      lnr_det3 <- lnr_det8
       lnr_det3
       n_total <- length(lnr_det3)
       n_nonortholines2 <- n_total
-    } #end of input_mode = "vector"
+  } #end of input_mode = "vector"
     
-    ##display image detail (large scale)
+  ##display image detail (large scale)
+  display(img_uds, method = "raster")
+  n_lnr3 <- length(lnr_det3)
+  vec3 <- 1 : n_lnr3
+  #
+  centers_PC <- matrix(nrow=n_lnr3, ncol=4)
+  centers_PC[,] <- 0
+  centers_PC
+    
+  B5_6 <<- matrix(nrow = n_lnr3, ncol = 7) #make B5_6 to global variable
+  B5_6 <- data.frame(B5_6) 
+  names(B5_6) <- c("lnr","theta_index","ro_index","n","theta_angle","ro_pixel","n_pixel")
+  B5_6[,] <- 0
+  lnr_det3
+  vec_nr <- lnr_det3
+  B5_6$lnr[1:n_nonortholines2] <- lnr_det3
+  B5_6
+  lnr_det5 <- lnr_det3
+  k14 <- max(lnr_det5)
+  i=1
+
+  #loop
+  for (n1 in lnr_det5) {
+    j = 1
+    while (j <= k14) {
+      #cat("j= ",j,"\n")
+      
+      if (n1 == B4$lnr[j]) {
+        B5_6[i,] <- B4[j,]
+        i = i+1
+        break
+      }  #end if
+      j = j+1
+    } #end loop j
+  } #end of loop n1
+
+  B5_6
+  
+  #loop
+  for (n in vec3) {
+    lnr <- lnr_det3[n]
+    cat("lnr= ",lnr,"\n")
+    PC_seg_P_nP <- PC_segment_4(lnr) #call of function
+    P <- PC_seg_P_nP[[1]]
+    n_P <- PC_seg_P_nP[[2]]
+    x_m <- mean(P[,2])
+    y_m <- mean(-P[,3])
+    centers_PC[n,1] <- lnr
+    centers_PC[n,2] <- x_m
+    centers_PC[n,3] <- y_m
+    centers_PC[n,4] <- round(n_P/kf)
+  } #end of loop n
+  
+  centers_PC
+    
+  ## plot centers of line at image extract
+    
+  #loop
+  for (i in vec3) {
+    cat("i=",i,"\n")
+    points((pc3$col - orig_x),(pc3$row - orig_y), pch='.', asp=1, cex=2, col = "green")
+    points(xc-orig_x,yc-orig_y,pch=3, asp=1, cex=1.3, col="red")
+    x <- centers_PC[i,2]
+    y <- centers_PC[i,3]
+    points(x-orig_x,-(y-orig_y_math),pch=16, asp=1, cex=1.5, col="red")
+  } #end i-loop
+  #end of check-plot
+    
+  #loop for plotting approximate lines (large scale)
+  for (n1 in vec3) {
+    browser()
     display(img_uds, method = "raster")
-    n_lnr3 <- length(lnr_det3)
-    vec3 <- 1 : n_lnr3
-    #
-    centers_PC <- matrix(nrow=n_lnr3, ncol=4)
-    centers_PC[,] <- 0
-    centers_PC
+    points((pc3$col - orig_x),(pc3$row - orig_y), pch='.', asp=1, cex=2, col = "green")
+    cat("PC_nr=", B5_6$lnr[n1],"theta_angle=", B5_6$theta_angle[n1], "\n")
+    theta_angle <- as.integer(B5_6$theta_angle[n1])
+    theta_math <- (180 - theta_angle) #theta of oriented line
+    x <- centers_PC[n1,2]
+    y <- centers_PC[n1,3]
+    p2<- round(x * cos(theta_math/omega) + y * sin(theta_math/omega))
+    a <- -1/tan(theta_math/omega)
+    b <- round(p2/sin(theta_math/omega))
+    #calculation of intercept for image extract (math_system)
+    y1_math <- a * orig_x + b
+    y1_math <- round(y1_math) #change to math-system
+    orig_y_math <- (-orig_y) #change to math_system
+    b2 <- y1_math - orig_y_math
+    a_img <- -a #change to img-system
+    b2_img <- (-b2)
+    # plotting of line segments
+    coef2 <- c(b2_img,a_img)
     
-    B5_6 <<- matrix(nrow = n_lnr3, ncol = 7) #make B5_6 to global variable
-    B5_6 <- data.frame(B5_6) 
-    names(B5_6) <- c("lnr","theta_index","ro_index","n","theta_angle","ro_pixel","n_pixel")
-    B5_6[,] <- 0
-    lnr_det3
-    vec_nr <- lnr_det3
-    B5_6$lnr[1:n_nonortholines2] <- lnr_det3
+    if (is.finite(a_img)) {
+      abline(coef2, col="red", lty=1, lwd=2, asp=1)
+    }  else {
+      ro_l1 <- B4$ro_pixel[lnr]
+      ro_l2 <- ro_l1 + ro_1
+      ro_l3 <- round(ro_l2 - orig_x)
+      lines(c(ro_l3,ro_l3),c(orig_y, (wind_y - orig_y)),col="blue")
+    } #end if-else
+    
+    cat("#","\n")
+  } #end loop n1
+  
+  cat("are the lines correctly identified?","\n") #case="nonortho_only"
+  #cat("if 'auto' -> type: N","\n")
+  answ <- readline("type: Y or N: ")
+    
+  if (answ == "N") {
+    lnr_det3 <- B5_6$lnr
     B5_6
-    lnr_det5 <- lnr_det3
-    k14 <- max(lnr_det5)
-    i=1
-
-    #loop
-    for (n1 in lnr_det5) {
-      j = 1
-      while (j <= k14) {
-        #cat("j= ",j,"\n")
-        if (n1 == B4$lnr[j]) {
-          B5_6[i,] <- B4[j,]
-          i = i+1
-          break
-        }  #end if
-        j = j+1
-      } #end loop j
-    } #end of loop n1
-
-    B5_6
-    
-    #loop
-    for (n in vec3) {
-      lnr <- lnr_det3[n]
-      cat("lnr= ",lnr,"\n")
-      PC_seg_P_nP <- PC_segment_4(lnr) #call of function
-      P <- PC_seg_P_nP[[1]]
-      n_P <- PC_seg_P_nP[[2]]
-      x_m <- mean(P[,2])
-      y_m <- mean(-P[,3])
-      centers_PC[n,1] <- lnr
-      centers_PC[n,2] <- x_m
-      centers_PC[n,3] <- y_m
-      centers_PC[n,4] <- round(n_P/kf)
-    } #end of loop n
-    
-    centers_PC
-    
-    ## plot centers of line at image extract
+    p_pos <- "cor_det"
+    setwd(home_dir2)
+    source(paste("./spObj/spObj_line_detection_v",v_nr,".R",sep = "")) #case: nonortho_only
+    B5_6R4
+    lnr_det5 <- B5_6R4$lnr
+    B5_6 <- B5_6R4
+  } #end if
       
-    #loop
-    for (i in vec3) {
-      cat("i=",i,"\n")
-      points((pc3$col - orig_x),(pc3$row - orig_y), pch='.', asp=1, cex=2, col = "green")
-      points(xc-orig_x,yc-orig_y,pch=3, asp=1, cex=1.3, col="red")
-      x <- centers_PC[i,2]
-      y <- centers_PC[i,3]
-      points(x-orig_x,-(y-orig_y_math),pch=18, asp=1, cex=1.3, col="red")
-    } #end i-loop
-    #end of check-plot
-    
-    #loop for plotting approximate lines (large scale)
-    for (n1 in vec3) {
-      browser()
-      display(img_uds, method = "raster")
-      points((pc3$col - orig_x),(pc3$row - orig_y), pch='.', asp=1, cex=2, col = "green")
-      cat("PC_nr=", B5_6$lnr[n1],"theta_angle=", B5_6$theta_angle[n1], "\n")
-      theta_angle <- as.integer(B5_6$theta_angle[n1])
-      theta_math <- (180 - theta_angle) #theta of oriented line
-      x <- centers_PC[n1,2]
-      y <- centers_PC[n1,3]
-      p2<- round(x * cos(theta_math/omega) + y * sin(theta_math/omega))
-      a <- -1/tan(theta_math/omega)
-      b <- round(p2/sin(theta_math/omega))
-      #calculation of intercept for image extract (math_system)
-      y1_math <- a * orig_x + b
-      y1_math <- round(y1_math) #change to math-system
-      orig_y_math <- (-orig_y) #change to math_system
-      b2 <- y1_math - orig_y_math
-      a_img <- -a #change to img-system
-      b2_img <- (-b2)
-      # plotting of line segments
-      coef2 <- c(b2_img,a_img)
-      
-      if (is.finite(a_img)) {
-        abline(coef2, col="red", lty=1, lwd=2, asp=1)
-      }  else {
-        ro_l1 <- B4$ro_pixel[lnr]
-        ro_l2 <- ro_l1 + ro_1
-        ro_l3 <- round(ro_l2 - orig_x)
-        lines(c(ro_l3,ro_l3),c(orig_y, (wind_y - orig_y)),col="blue")
-      } #end if-else
-      
-      cat("#","\n")
-    } #end loop n1
-    
-    cat("are the lines correctly identified?","\n") #case="nonortho_only"
-    #cat("if 'auto' -> type: N","\n")
-    answ <- readline("type: Y or N: ")
-    
-    if (answ == "N") {
-      lnr_det3 <- B5_6$lnr
-      B5_6
-      p_pos <- "cor_det"
-      setwd(home_dir2)
-      source(paste("./spObj/spObj_line_detection_v",v_nr,".R",sep = "")) #case: nonortho_only
-      B5_6R4
-      lnr_det5 <- B5_6R4$lnr
-      B5_6 <- B5_6R4
-    } #end if
-      
-  } #end proc modes: "demo", "auto", "obj-wise" and "vector
+  #} #end proc modes: "demo", "auto", "obj-wise", "vector"
     
   B5_6
   lnr_det5
@@ -1974,6 +1981,7 @@ if (cas == "nonortho_only") {
   setwd(home_dir)
   fname9 <- paste("./data/",Img_name,"/b",bnr2,"_case.txt", sep="")
   write.table(cas,fname9,row.names = FALSE, col.names = FALSE)
+  #} #end proc modes: "demo", "auto", "obj-wise", "vector"
 
 } #end case = "nonortho_only"
 ################################################################################
@@ -2047,23 +2055,35 @@ if (cas == "nonortho_only_RDP") {
   lines(x_v,y_v,col="red", lty=2, asp=1)
   simplified_lines <- RamerDouglasPeucker(x_v, y_v, epsilon = 5) #call of RDP-function
   simplified_lines
-  lines(simplified_lines, col = "green", lty = 1, lwd=2,asp=1)
-  # simplified_lines_cor <- simplified_lines
-  # n_simpl_lines_cor <- length(simplified_lines_cor$x)
-  # row.names(simplified_lines_cor) <- 1 : n_simpl_lines_cor
-  # simplified_lines_cor
-  #lines(simplified_lines_cor, col = "blue", lty = 1, lwd=2,asp=1)
   lines(simplified_lines, col = "blue", lty = 1, lwd=2,asp=1)
-  ##
-  # lines(simplified_lines_cor, col = "red", lty = 1, lwd=2,asp=1)
-  # simplified_lines <- simplified_lines_cor
-  simplified_lines
-  # cat("i= ",i,"\n") #i=index in simplified lines of first scale-point
-  # cat("j= ",j,"\n") #j=index in simplified lines of second scale-point
-  # points(simplified_lines$x[i],simplified_lines$y[i],
-  #        pch=20,col=("lightblue"),cex=1,asp=1)
-  # points(simplified_lines$x[j],simplified_lines$y[j],
-  #        pch=20,col=("green"),cex=1,asp=1)
+  simplified_lines_complete <- rbind(simplified_lines,simplified_lines[1,])
+  simplified_lines_complete
+  lines(simplified_lines_complete, col = "blue", lty = 1, lwd=2,asp=1)
+  
+  ## Opret POLYGON
+  coords <- as.matrix(simplified_lines_complete)
+  
+  if (!all(coords[1, ] == coords[nrow(coords), ])) {
+    coords <- rbind(coords, coords[1, ])
+  }
+  
+  coords
+  poly <- st_polygon(list(coords))
+  poly <- st_sfc(poly, crs = "NA")
+  poly <- st_make_valid(poly)
+  st_is_valid(poly, reason = TRUE)
+  class(poly)
+  st_is_valid(poly)
+  plot(poly, col = "skyblue")
+  simplified <- st_simplify(poly, dTolerance = 11)
+  plot(simplified, col="red")
+  simplified
+  coords_simplified <- st_coordinates(simplified)
+  coords_simplified 
+  lines(coords_simplified, col = "blue", lty = 1, lwd=2,asp=1)
+  n_simpl <- length(coords_simplified[,1])
+  coords_simplified2 <- coords_simplified[,1:2]
+  coords_simplified2
 } #end case = "nonortho_only_RDP"
 ################################################################################
 
@@ -2155,36 +2175,43 @@ if (cas == "nonortho_only") {
   ##continue by 'plot_results_on_references_v1.4.2'
   setwd(home_dir2)
   source(paste("plot_results_on_references_v",v_nr,".R",sep=""))
-} #end case=nonortho_only
+} #end case='nonortho_only'in program line_detection 
 
 if (cas == "nonortho_only_RDP") {
   #stop("continue step by step")
   
   #preparation of auto transformation
   simplified_lines
+  coords_simplified2
+  simplified_lines2 <- simplified_lines[1:n_simpl,]
+  simplified_lines2 <- coords_simplified2
+  simplified_lines2_df <- as.data.frame(simplified_lines2)
+  colnames(simplified_lines2_df)=c("x","y")
+  simplified_lines2_df
   dev.set(2)
   par(mai = c(1.02,0.82,0.82,0.42))
-  plot(simplified_lines, col = "white", pch=3, cex=1, main=paste("b ",bnr2,"- RDP-result", sep=("")), asp=1)
-  points(simplified_lines$x,simplified_lines$y, type="l", col="blue", lwd=2, lty=1,asp=1)
+  #plot(simplified_lines2_df, col = "white", pch=3, cex=1, main=paste("b ",bnr2,"- RDP-result", sep=("")), asp=1)
+  plot(simplified_lines2_df, col = "white", pch=3, cex=1, main=paste("b ",bnr2,"- RDP-result", sep=("")), asp=1)
+  points(simplified_lines2_df$x,simplified_lines2_df$y, type="l", col="blue", lwd=2, lty=1,asp=1)
   
   ##generation of two scale points
   #max & min in y (RDP)
-  y_min_RDP <- min(simplified_lines$y)
-  i <- which(simplified_lines[, "y"] == y_min_RDP)
-  simplified_lines[i,] #first scale point
+  y_min_RDP <- min(simplified_lines2_df$y)
+  i <- which(simplified_lines2_df[, "y"] == y_min_RDP)
+  simplified_lines2_df[i,] #first scale point
   #
-  y_max_RDP <- max(simplified_lines$y)
-  j <- which(simplified_lines[, "y"] == y_max_RDP)
-  simplified_lines[j,] #second scale point
+  y_max_RDP <- max(simplified_lines2_df$y)
+  j <- which(simplified_lines2_df[, "y"] == y_max_RDP)
+  simplified_lines2_df[j,] #second scale point
   
   cat("i= ",i,"\n") #i=index in simplified lines of first scale-point
   cat("j= ",j,"\n") #j=index in simplified lines of second scale-point
-  points(simplified_lines$x[i],simplified_lines$y[i],
-         pch=20,col=("lightblue"),cex=1,asp=1)
-  points(simplified_lines$x[j],simplified_lines$y[j],
+  points(simplified_lines2_df$x[i],simplified_lines2_df$y[i],
+         pch=20,col=("blue"),cex=1,asp=1)
+  points(simplified_lines2_df$x[j],simplified_lines2_df$y[j],
          pch=20,col=("green"),cex=1,asp=1)
   
-  ##pixel cluster of building boundary line
+  #pixel cluster of building boundary line
   dev.set(2)
   par(mai = c(1.02,0.82,0.82,0.42)) #setup of margins/plot region [inches]
   x <- xc
@@ -2221,15 +2248,15 @@ if (cas == "nonortho_only_RDP") {
   dist_x_man
   
   ##calculation of transformation parameters
-  x1=simplified_lines$x[i] # simplified_lines coordinates vertex i
-  y1=simplified_lines$y[i] #  
-  x2=simplified_lines$x[j] # simplified_lines coordinates vertex j
-  y2=simplified_lines$y[j] #
+  x1=simplified_lines2_df$x[i] # simplified_lines2_df coordinates vertex i
+  y1=simplified_lines2_df$y[i] #  
+  x2=simplified_lines2_df$x[j] # simplified_lines2_df coordinates vertex j
+  y2=simplified_lines2_df$y[j] #
   
   dev.set(2)
   par(mai = c(1.02,0.82,0.82,0.42))
-  plot(simplified_lines, col = "white", pch=3, cex=1, main=paste("b ",bnr2,"- RDP-result", sep=("")), asp=1)
-  points(simplified_lines$x,simplified_lines$y, type="l", col="blue", lwd=2, lty=1,asp=1)
+  plot(simplified_lines2_df, col = "white", pch=3, cex=1, main=paste("b ",bnr2,"- RDP-result", sep=("")), asp=1)
+  points(simplified_lines2_df$x,simplified_lines2_df$y, type="l", col="blue", lwd=2, lty=1,asp=1)
   points(x1,y1,pch=20,col=("brown"),cex=1.5,asp=1)
   points(x2,y2,pch=20,col=("blue"),cex=1.5,asp=1)
   
@@ -2287,7 +2314,7 @@ if (cas == "nonortho_only_RDP") {
   cat("d_alpha= ", d_alph_obj,"degrees", "\n")
   
   if (d_alph_obj > thr_d_alph_obj) {
-   cat("d_alph_obj exceeds threshold","\n")  
+    cat("d_alph_obj exceeds threshold","\n")  
   }
   
   d_coor <- d_alph_obj/omega * dist_x_man
@@ -2304,14 +2331,14 @@ if (cas == "nonortho_only_RDP") {
   plot(x,-y, pch=3, cex=2, col="red", asp=1, xlim=c(xc - r_max2,xc + r_max2),
        ylim=c(-(yc + r_max2),-(yc - r_max2)), ann = TRUE, axes = TRUE,
        main=paste("b ",bnr2, sep=("")))
-  points(pc3$col, pc3$row, pch=20, asp=1, cex=0.5, col="red")
-  points(x,y,pch=20, cex=2,asp=1, col="green") #plot of one scale point
+  points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="red")
+  points(x,-y,pch=20, cex=2,asp=1, col="green") #plot of one scale point
   
   ##checking of transformation by one vertex
-  x1 <- simplified_lines[i,1] #first point
-  y1 <- simplified_lines[i,2]
-  # x1 <- simplified_lines[j,1] #second point
-  # y1 <- simplified_lines[j,2]
+  x1 <- simplified_lines2_df[i,1] #first point
+  y1 <- simplified_lines2_df[i,2]
+  # x1 <- simplified_lines2_df[j,1] #second point
+  # y1 <- simplified_lines2_df[j,2]
   V=matrix(nrow=2, ncol=2)
   V1=matrix(nrow=2, ncol=2)
   V1[1,1] <- x1
@@ -2329,44 +2356,41 @@ if (cas == "nonortho_only_RDP") {
   
   ##preparation of transformation with all vertices
   tr_lat2 <- c(a0_bdr2,b0_bdr2)
-  simplified_lines_complete <- simplified_lines 
-  simplified_lines_complete_trans2 <- simplified_lines_complete
+  simplified_lines2_df_complete <- simplified_lines2_df 
+  simplified_lines2_df_complete_trans2 <- simplified_lines2_df_complete
   
   ##transformation of all vertices into system 'man'
-  vec <- 1 : length(simplified_lines_complete$x)
+  vec <- 1 : length(simplified_lines2_df_complete$x)
   
   #loop
   for (i in vec) {
-    x <- simplified_lines_complete$x[i]
-    y <- simplified_lines_complete$y[i]
+    x <- simplified_lines2_df_complete$x[i]
+    y <- simplified_lines2_df_complete$y[i]
     loc <- c(x,y) #vertex i 
-   
+    
     pts9 <- tr_lat2 + D_bdr%*%loc #transformation to man-system
     x9 <- pts9[1,1]
     y9 <- pts9[2,1]
     x_trans <- x9
     y_trans <- y9
     points(x_trans,y_trans,pch=20, asp =1, cex=1,asp=1, col="green")
-    simplified_lines_complete_trans2$x[i] <- x_trans
-    simplified_lines_complete_trans2$y[i] <- y_trans
+    simplified_lines2_df_complete_trans2$x[i] <- x_trans
+    simplified_lines2_df_complete_trans2$y[i] <- y_trans
   } #end of loop
   
   ##plot all simplified lines in xy-system 
-  #points(simplified_lines_complete_trans2$x,simplified_lines_complete_trans2$y,type ="p",pch=20,cex=0.5,col="green",asp=1)
-  points(simplified_lines_complete_trans2$x,simplified_lines_complete_trans2$y,type ="l",lty=1,lwd=2,col="blue",asp=1)
-  simplified_lines_complete_trans2
+  points(simplified_lines2_df_complete_trans2$x,simplified_lines2_df_complete_trans2$y,type ="l",lty=1,lwd=2,col="blue",asp=1)
+  simplified_lines2_df_complete_trans2
   
   ##storage of all transformed vertices
-  simplified_lines_complete_trans2
-  #simplified_lines_complete_trans
-  n_siml2 <- length(simplified_lines_complete_trans2$x)
-  
-  intsec_linepair_vertex_coord <- matrix(nrow=n_siml2, ncol=4)
-  intsec_linepair_vertex_coord[,2]  <- 1 : (n_siml2)
-  intsec_linepair_vertex_coord[,3] <- simplified_lines_complete_trans2[,1]
-  intsec_linepair_vertex_coord[,4] <- simplified_lines_complete_trans2[,2]
+  simplified_lines2_df_complete_trans2
+  n_simpl2 <- length(simplified_lines2_df_complete_trans2$x)
+  #
+  intsec_linepair_vertex_coord <- matrix(nrow=n_simpl2, ncol=4)
+  intsec_linepair_vertex_coord[,2]  <- 1 : (n_simpl2)
+  intsec_linepair_vertex_coord[,3] <- simplified_lines2_df_complete_trans2[,1]
+  intsec_linepair_vertex_coord[,4] <- simplified_lines2_df_complete_trans2[,2]
   intsec_linepair_vertex_coord2 <- intsec_linepair_vertex_coord
-  intsec_linepair_vertex_coord2 <- rbind(intsec_linepair_vertex_coord,intsec_linepair_vertex_coord[1,])
   intsec_linepair_vertex_coord2
   
   setwd(home_dir)
@@ -2380,12 +2404,11 @@ if (cas == "nonortho_only_RDP") {
   points(intsec_linepair_vertex_coord2[,3]-orig_x,
          -intsec_linepair_vertex_coord2[,4]-orig_y,type ="l",lty=1,lwd=2,col="white")
   display(img_ref,"raster") #display of building vertices in ortho-image (small scale)
-  #dev.set(4)
   points(intsec_linepair_vertex_coord2[,3],-intsec_linepair_vertex_coord2[,4],type ="l",lty=1,lwd=2,col="green")
   #continue by program 'plot_results_on_references_v1.4.2'
   setwd(home_dir2)
   source(paste("plot_results_on_references_v",v_nr,".R",sep=""))
-} #end of case = "nonortho_only_RDP"  
+} #end of case = "nonortho_only_RDP" in program 'line_detection' 
 
 if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" ||
   cas == "100_all+nonortho") {
@@ -2691,12 +2714,12 @@ if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" ||
   } #end loop output of list PC_all
   
   all_PC
+} #end of cases "extr_wd", "4_long", "100_all", "100_all+nonortho"   
   
-  cat("end of script 'line-detection.R' - continue with 'sequence_of_lines.R' ","\n")
-  cat("####################################################################","\n")
-  setwd(home_dir2)
-  source(paste("sequence_of_lines_v",v_nr,".R",sep=""))
-} #end all cases except 'nonortho_only' and 'nonortho_only_RDP'   
+cat("end of script 'line-detection.R' - continue with 'sequence_of_lines.R' ","\n")
+cat("####################################################################","\n")
+setwd(home_dir2)
+source(paste("sequence_of_lines_v",v_nr,".R",sep=""))
 
 ################################################################################
 
