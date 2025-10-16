@@ -1126,6 +1126,7 @@ if (sek == "bdr_follow") {
     sequence_seg <- sequence_seg_rev
   }
   
+  sequence_seg
   ##manual change of direction in the sequence of line segments
   # sequence_seg_rev <- rep(NA,n_seq)
   # b13_angle_df4
@@ -1139,7 +1140,7 @@ if (sek == "bdr_follow") {
   #   sequence_seg <- sequence_seg_rev
   # }
   
-  sequence_seg
+  #sequence_seg
   
   ##re-arrange matrix 'b13_angle_df3' to new sequence
   b13_angle_df4
@@ -1158,7 +1159,7 @@ if (sek == "bdr_follow") {
     i=1
 
     while (i <= n_10) {
-      if (b13_angle_df5[n1,1] == b13_angle_df4[i,1] && b13_angle_df4[i,5] != "done") {
+      if (b13_angle_df5[n1,1] == b13_angle_df4[i,1] && b13_angle_df4[i,5] != "done"){
          b13_angle_df5[n1,2:4] <- b13_angle_df4[i,2:4]
          b13_angle_df4[i,5] <- "done"
          cat("n1= ",n1,"i= ",i, "\n")
@@ -1175,7 +1176,22 @@ if (sek == "bdr_follow") {
   plot(xc,-yc, pch=3, cex=2, col="blue", asp=1, xlim=c(xc - r_max2,xc + r_max2), ylim=c(-(yc + r_max2),-(yc - r_max2)),
        main=paste("b ",bnr2, sep=(""))) #large scale
   points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.3, col="black") # original pixel cloud for building
-  points(b13_angle_df5$x_centre,-b13_angle_df5$y_centre, asp=1, pch=20,col="green", cex=1.5)
+  points(b13_angle_df5$x_centre,-b13_angle_df5$y_centre, asp=1, pch=20,col="red", cex=1.5)
+ #end plot 
+
+#plot of midpts (one by one)
+  b13_angle_df5
+  plot(xc,-yc, pch=3, cex=2, col="blue", asp=1, xlim=c(xc - r_max2,xc + r_max2), ylim=c(-(yc + r_max2),-(yc - r_max2)),
+       main=paste("b ",bnr2, sep=(""))) #large scale
+  points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.3, col="black") # original pixel cloud for building
+  
+  for (i in vec_x) { 
+    browser()
+    cat("nr= ",b13_angle_df5$nr_center[i],"\n")
+    points(b13_angle_df5$x_centre[i],-b13_angle_df5$y_centre[i], asp=1, pch=20,
+    col="red", cex=1.5)
+  } #end plot one by one
+  
 } #end sek = "bdr_follow" 
 
 #end of route 'bdr-follow'
