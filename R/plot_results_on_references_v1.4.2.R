@@ -468,9 +468,6 @@ if (cas == "nonortho_only") {
   
 if (cas == "nonortho_only_RDP") { 
   dev.list()
-  #dev.off(6) #close of external window
-  #dev.set(4)
-  #windows()
   dev.set(2)
   #input of table with line-pair, vertex-number and final coordinates (x,y)
   setwd(home_dir)
@@ -500,15 +497,9 @@ if (cas == "nonortho_only_RDP") {
   plot(x,-y, pch=3, cex=2, col="red", asp=1, xlim=c(xc - r_max2,xc + r_max2),
        ylim=c(-(yc + r_max2),-(yc - r_max2)), ann = TRUE, axes = TRUE,
        main=paste("b ",bnr2, sep=("")))
-  #points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="red")
-  #points(intsec_linepair_vertex_coord2$x,intsec_linepair_vertex_coord2$y,type="p", col="black", pch=20, cex=1,asp=1)
   points(intsec_linepair_vertex_coord2$x,intsec_linepair_vertex_coord2$y,type="l", col="blue", lty=1, lwd=2, asp=1)
-  
-  ##
+
   #plot onto orthoimage (small) scale)
-  # f5 <- paste("./results/",Img_name,"/RDP/b",bnr2,"_intsec_linepair_vertex_coord2.txt",sep="")
-  # intsec_linepair_vertex_coord2 <- read.table(f5)
-  # names(intsec_linepair_vertex_coord2) <- c("line_pair","vertex_nr","x","y")
   cat("table with line-pairs,vertex/corner-number,coordinates(x,y)","\n")
   print(intsec_linepair_vertex_coord2) #img-system
   setwd(OrgImgPathname)
@@ -624,23 +615,22 @@ if (cas == "nonortho_only_RDP") {
       fname15 <- paste("./results/",Img_name,"/",sep="")
       setwd(fname15)
       file.remove("b_all.txt") #removal of files with numbers of processed objects (buildings)
-      cat("end of program 'plot_results_on_references.R'","\n")
+      #cat("end of program 'plot_results_on_references.R'","\n")
     } else {
       dev.list()
       #dev.off(3)
-      #dev.off(4)
-      cat("end of program 'plot_results_on_references.R'","\n")
+      #cat("end of program 'plot_results_on_references.R'","\n")
       #cat("end of software package 'topomap'","\n")
-    }
+    } #end if-else
     
   } #end if answ2 = "N"
   
-  cat("end of software package 'topomap' ","\n") 
-} #end of case="nonortho_only_RDP"
+} #end of case="nonortho_only_RDP" 
 
-#end of program 'plot_results_on_references.R'
-################################################################################
+cat("end of program 'plot_results_on_references.R'\n")
+cat("end of software package 'topomap'\n")
+invokeRestart("abort")
+###############################################################################
 
-##end of package 'topomap'
-################################################################################
+
 
