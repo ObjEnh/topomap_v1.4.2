@@ -426,15 +426,18 @@ if (Img_name == "ISPRS4_DLR10") {
   } #end b21
   
   ##b221
-  #cas="100_all+"
+  #cas="100_all+nonortho"
   
-  if (bnr2 == 221 && p_pos == "cor_det") { 
+  if (bnr2 == 221 && p_pos == "cor_det" && cas == "100_all+nonortho") { 
+    #stop("proceed manually")
     B5_6
+    n_B5_6 <- length(B5_6$lnr)
     B5_6R4 <- B5_6
-    B5_6R4 <- B5_6R4[-c(2:14),] 
+    B5_6R4 <- B5_6R4[-c(1:13),] 
     n_z <- length(B5_6R4$lnr)
     row.names(B5_6R4) <- 1 : n_z
-    B5_6R4[1,] <- c(1,25,356,286,120,369,118)
+    B5_6R4
+    #B5_6R4[1,] <- c(1,25,356,286,120,369,118)
     B5_6R4
     n_z2 <- length(B5_6R4$lnr)
     B5_6R4[1:n_z2,8] <- 0
@@ -444,7 +447,27 @@ if (Img_name == "ISPRS4_DLR10") {
     n_nonortholines2 <- n_z2
     n_ortholines2 <- 0
     n_total <- n_nonortholines2 + n_ortholines2
-  } #end b221
+  } #end b221 (cas = "100_all+nonortho")
+  
+  if (bnr2 == 221 && p_pos == "cor_det" && cas == "nonortho_only") { 
+    #stop("proceed manually")
+    B5_6
+    n_B5_6 <- length(B5_6$lnr)
+    B5_6R4 <- B5_6
+    B5_6R4 <- B5_6R4[-c(2:n_B5_6),] 
+    n_z <- length(B5_6R4$lnr)
+    row.names(B5_6R4) <- 1 : n_z
+    #B5_6R4[1,] <- c(1,25,356,286,120,369,118)
+    B5_6R4
+    n_z2 <- length(B5_6R4$lnr)
+    B5_6R4[1:n_z2,8] <- 0
+    row.names(B5_6R4) <- 1 : n_z2
+    colnames(B5_6R4)[8]="ortho"
+    B5_6R4
+    n_nonortholines2 <- n_z2
+    n_ortholines2 <- 0
+    n_total <- n_nonortholines2 + n_ortholines2
+  } #end b221 (cas = "nonortho_only")
   
   ##b25
   if (bnr2 == 25 && p_pos == "cor_det") { 
