@@ -437,8 +437,6 @@ if (Img_name == "ISPRS4_DLR10") {
     n_z <- length(B5_6R4$lnr)
     row.names(B5_6R4) <- 1 : n_z
     B5_6R4
-    #B5_6R4[1,] <- c(1,25,356,286,120,369,118)
-    B5_6R4
     n_z2 <- length(B5_6R4$lnr)
     B5_6R4[1:n_z2,8] <- 0
     row.names(B5_6R4) <- 1 : n_z2
