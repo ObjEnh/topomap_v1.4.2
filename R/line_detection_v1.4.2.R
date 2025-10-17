@@ -2075,7 +2075,7 @@ if (cas == "nonortho_only_RDP") {
   class(poly)
   st_is_valid(poly)
   plot(poly, col = "skyblue")
-  simplified <- st_simplify(poly, dTolerance = 11)
+  simplified <- st_simplify(poly, dTolerance = n_pix)
   plot(simplified, col="red")
   simplified
   coords_simplified <- st_coordinates(simplified)
