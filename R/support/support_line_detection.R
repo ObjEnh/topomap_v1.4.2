@@ -23,6 +23,7 @@
 ## 14.generate vertex-labels from digitized coordinates
 ## 15.digitizing of polygon-vertices
 ## 16.calculation of vertex-labels
+## 17.automated generation of line numbers (lnr)
 
 ################################################################################
 
@@ -1427,6 +1428,197 @@ for (i in vec3) {
 
 # end of plot line using label
 # end of script ## 16.calculation of vertex labels
+
+## 17. automated generation of line numbers (lnr)
+#determination of line-orientation 
+#in orthoimage (large scale) 
+#determination of theta_ind, ro_ind, lnr
+
+dir_meas <- locator(2, type="p", pch=3) #measure 2 points on line
+dir_meas
+x_ang <- (dir_meas$y[1] - dir_meas$y[2]) / (dir_meas$x[1] - dir_meas$x[2])
+alpha_meas <- atan(x_ang) * omega
+alpha_math <- (-alpha_meas) #change to math-system
+theta_math <- alpha_math + 90
+theta_img <- (-theta_math) #change to img-system
+
+if(theta_img < 0) {
+  theta_img <- theta_img + 180
+}
+
+theta_ind <- round(theta_img/theta_step) + 1
+theta_ind # theta_index
+
+cat("theta_ind=", theta_ind, "\n")
+
+if (theta_ind < 90/theta_step) {
+  alph_ind <- theta_ind + as.integer(90/theta_step)
+} else {
+  alph_ind <- theta_ind - as.integer(90/theta_step)
+}
+
+cat("alph_ind=", alph_ind, "\n")
+
+## calculation of ro_ind using theta_index and one measured point
+theta_ind
+x=round((dir_meas$x[1]+dir_meas$x[2])/2)+orig_x #point (mean, img_system)
+y=round((dir_meas$y[1]+dir_meas$y[2])/2)+orig_y #point (mean, img_system) check!
+points(x-orig_x,y-orig_y,pch=16, asp =1, cex=1,asp=1, col="red") #large scale
+#points(x,y,pch=16, asp =1, cex=1,asp=1, col="red") #large scale
+theta_img = (theta_ind - 1) * theta_step 
+theta_math = 180 - theta_img
+theta_math_arc=theta_math/omega
+y <- -y #change to math_system
+y
+ro_math <- round(x*cos(theta_math_arc) + y*sin(theta_math_arc))
+ro_math 
+ro_ind <- round((-ro_math - ro_1)/ro_step + 1) #test
+#ro_ind <- round((ro_math - ro_1)/ro_step + 1)
+cat("ro_index= ", ro_ind, "\n")
+
+## search of lines (lnr) with theta_index and plot of line
+
+#manual solution
+theta_ind
+thr_line_seg = n_pix/3 #threshold for length of line-segment [pixel]
+ct=0
+vec <- 1 : length(B2[,1])
+#k=1.64 #k=approximate scale factor (ISPRS1,ISPRS7)
+k=kf #kf=2.43 (ISPRS4)
+for (i in vec) {
+  
+  if (B2[i,1] == theta_ind && B2[i,3]/k >= thr_line_seg) { 
+    cat("i= ", i,"\n")
+    print(B2[i, ])
+    ct <- ct + 1
+  }
+  
+} #end search of lines with theta_index
+
+cat("counts= ",ct,"\n")  
+
+##search of lines (lnr) with alph_index
+theta_ind
+ortho_ind <- as.integer(90/theta_step)
+
+if (theta_ind < ortho_ind) {
+  alph_ind <- theta_ind + ortho_ind
+} else {
+  alph_ind <- theta_ind - ortho_ind
+}
+
+cat("alph_ind=", alph_ind, "\n")
+vec <- 1 : length(B2[,1])
+ct=0
+k
+
+for (i in vec) {
+  
+  if (B2[i,1] == alph_ind && (B2[i,3]/k) >= thr_line_seg) { # k=approximate scale factor
+    cat("i= ", i,"\n")
+    print(B2[i,])
+    ct <- ct + 1
+  }
+  
+} #end search of lines with alph_index
+
+cat("counts= ",ct,"\n")
+#end search of lines with alph_index
+
+##plot of selected line
+lnr <- readline("type line number: ") 
+lnr <- as.integer(lnr)
+
+#loop
+L_new  <- PC_segment_4(lnr)  
+P <- L_new[[1]]
+n_P <- L_new[[2]]
+P <- P[1:n_P,]
+P <- as.data.frame(P)
+names(P) <- c("idx","x","y")
+P_red <- reduce_pointset(P) 
+head(P_red)
+x_m <- mean(P_red[,2])
+y_m <- mean(P_red[,3]) 
+points(P[,2]-orig_x,(P[,3]-orig_y), pch=".", asp=1, cex=2.0, col="yellow") #see 'Plots' (plot))
+points(P_red[,2]-orig_x,(P_red[,3]-orig_y), pch=".", asp=1, cex=2.0, col="black") #see 'Plots' (plot)
+points(x_m-orig_x, y_m-orig_y, pch=16, asp=1, cex=2.0, col="red")
+
+#plot of selected line onto image extract 
+theta_math <- 180 - B4$theta_angle[lnr]
+
+if (theta_math >= 180) {
+  theta_math <- theta_math - 180  
+}
+
+cat("theta_math= ", theta_math,"\n")
+a <- -1/tan(theta_math/omega)
+cat("a=",a,"\n")
+x <- x_m
+y <- y_m 
+y_math <- (-y_m) #change to math_system
+p2 <- round(x*cos(theta_math/omega) + y_math*sin(theta_math/omega))
+b <- round(p2/sin(theta_math/omega))
+cat("b= ", b, "\n")
+coef = c(b,a)
+
+#calculation of intercept (b2) for image-extract
+orig_y_math <- (-orig_y) #change to math-system
+b_math <- b
+y1 <- a * orig_x + b_math
+b2_math <- y1 - orig_y_math
+cat("b2_math=", b2_math, "\n")
+
+#change to image-system
+b2_img <- round(-b2_math)
+a_img <- (-a)
+coef2 <- c(b2_img,a_img)
+
+if (is.finite(a_img) && is.finite(b2_img)) {
+  abline(coef2, col="white", lty=1, lwd=2, asp=1)
+} else {
+  ro_l1 <- B4$ro_pixel[lnr]
+  ro_l3 <- round(ro_l1 - orig_x)
+  lines(c(ro_l3,ro_l3),c(0,wind_y-orig_y),col="red",lty=1,lwd=3,asp=1)
+} #end if-else
+
+#
+theta_ind <- readline("type theta_index= ")
+theta_ind <- as.integer(theta_ind)
+
+ct=0
+vec <- 1 : length(B0[,1])
+
+for (i in vec) {
+  
+  if (B0[i,2] == theta_ind && B0[i,3] == ro_ind) { #B0[i,3] = ro_ind (must eventually be adapted)
+    cat("i= ", i,"\n")
+    print(B0[i, ])
+    ct <- ct + 1
+  }
+  
+} #end search of lines with theta_index
+
+cat("counts= ",ct,"\n")
+
+##alternative solution
+
+##search with theta_ind and ro_ind in B4
+ro_rg2=3 #range of search
+theta_img_r5 <- (theta_ind - 1)*theta_step
+ro_img_r <- (ro_ind -1)*ro_step +ro_1
+idx <- which(B4$theta_angle == theta_img_r5 & B4$ro_pixel %in% (ro_img_r-ro_rg2):(ro_img_r+ro_rg2))
+if (length(idx) == 0) {
+  idx <- NA_integer_   # force NA if no match
+}
+print(idx)
+i <- idx
+cat("i= ",i,"\n")
+lnr_nonortho <- i
+cat("lnr_nonortho= ",lnr_nonortho,"\n")
+lnr_nonortho 
+
+#end of script ## 17.
 
 ##end of support_line_detection.R
 ################################################################################
