@@ -5,7 +5,7 @@ cat("version_number= ",v_nr,"\n")
 #output: file with segments of the outline in proper order
 #instruction:try another sek-method in case of failing
 #special objects may require correction which can be carried out by additional scripts
-#use additional script: 'spObj_sequence_of_lines_v1.4.0.R'
+#use additional script: 'spObj_sequence_of_lines.R'
 #parameter 'p_pos' indicates the type of correction ("cor_pos" or "cor_sek")
 #author: Joachim Höhle
 #GNU General Public License (GPL)
@@ -49,7 +49,6 @@ cat ("preparation of line-sequence","\n")
 cat("has object a complex structure?","\n") 
 cat("activate parameter 'soph' in some methods (sek) - if required","\n")
 cat("complex structure: soph=1, simple structure: soph=0")
-#soph=0
 
 #parameters for the estimation of line-sequence
 cat("min_pixel= ",min_pixel,"\n")
@@ -171,6 +170,7 @@ if (sek == "Mpts") {
        main=paste("b ",bnr2, sep=(""),collapse=NULL)) #large scale
   points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.3, col="cyan") # original pointcloud for building
   #
+  
   n_b13_angle_df2 <- length(b13_angle_df2$nr_center)
   vec4 <- 1 : n_b13_angle_df2
   nr_dpx <<- round(r_max2/5) #displacement of number in x-direction
@@ -239,7 +239,7 @@ if (sek == "Mpts") {
 
 ################################################################################
 
-##"Mpts+dist"
+## method "Mpts+dist"
 #use of distances
 
 if (sek == "Mpts+dist") {
@@ -323,7 +323,7 @@ b13_angle_df2
   points(b13_angle_df2$x_centre,-b13_angle_df2$y_centre, asp=1, pch=20,col="black", cex=1.5)
   #
   
-  ##correction of midpoints which represent line segments
+  ## correction of midpoints which represent line segments
   b13_angle_df2
   
   #preparation
@@ -338,7 +338,7 @@ b13_angle_df2
   }
   b_angle_df_seq <- b_angle_df2_seq
   
-  ##determination of sequence
+  ## determination of sequence
   
   #add 'theta_appr' to df 'b_angle_df_seq'
   i<-1
@@ -653,14 +653,6 @@ if (sek == "bdr_follow") {
   display(b_bin, "raster")
   #display(b_bin, "browser")
   plot(b_bin)
-  
-  # if (Img_name == "ISPRS4" || Img_name == "ISPRS4_DLR10") { #low-resolution image
-  #   kern=makeBrush(5,shape="diamond")
-  #   b_bin_erode <- erode(b_bin, kern)
-  #   b_bin <- b_bin_erode
-  #   str(b_bin)
-  # }
-  
   b <- b_bin@.Data
   str(b)
   b_im <- as.im(b) #class image with other indexing
@@ -731,15 +723,11 @@ if (sek == "bdr_follow") {
   par("usr")
   dy_window_plot <- abs(par("usr")[3] - par("usr")[4]) 
   dy_window_plot #y-dimension of the plotting region in graph
-  # f1<-paste("./data/",Img_name,"/param_b",bnr2,sep="") #change
-  # load(f1)
-  # plotPar #original(non-partitioned) object
   xc <- plotPar[1]
   yc <- plotPar[2]
   r_max <- plotPar[3]
   
-  #check
-  #dy_window_plot <- plotPar[5]
+  #checking
   dy_window_plot
   kf3 <- size_plotting_region_y/dy_window_plot #scale factor between image (img) and plot
   #kf3 may be checked in 'support_sequence_of_lines.R', script #10
@@ -827,20 +815,38 @@ if (sek == "bdr_follow") {
     
   } #end if-else
   
-  if (substr(bnr2,2,2) == "1") { #point number <10
-  #if (substr(bnr2,3,3) == "1") { #point number >=10 
+  
+  if (attr_lab == "below10") { #point number <10 
+    
+    if (substr(bnr2,2,2) == "1") { 
+      part <- "2parts_1"
+      bnr2_part <- bnr2
+    }
+    
+    
+    if (substr(bnr2,2,2) == "2") { 
+      part <- "2parts_2"
+      bnr2_part <- bnr2
+    }
+    
+    if (substr(bnr2,2,2) == "3") { 
+      part <- "2parts_3"
+      bnr2_part <- bnr2
+    }
+    
+  } #end if attr_lab = "below10"
+  
+  if (substr(bnr2,3,3) == "1") { #point number >=10 
     part <- "2parts_1"
     bnr2_part <- bnr2
   }
 
-  if (substr(bnr2,2,2) == "2") { #point number <10
-  #if (substr(bnr2,3,3) == "2") { #point number >=10
+  if (substr(bnr2,3,3) == "2") { #point number >=10
     part <- "2parts_2"
      bnr2_part <- bnr2
   }
   
-  if (substr(bnr2,2,2) == "3") { #point number < 10
-  #if (substr(bnr2,3,3) == "3") { #point number >= 10
+  if (substr(bnr2,3,3) == "3") { #point number >= 10
     part <- "3parts_3"
     bnr2_part <- bnr2
   }
@@ -882,8 +888,6 @@ if (sek == "bdr_follow") {
   } else {
     
       if (answ == "Y") { 
-        #b13_angle_df
-        #b13_angle_df2 <- b13_angle_df
         b13_angle_df3 <- b13_angle_df2
       }
     
@@ -892,7 +896,7 @@ if (sek == "bdr_follow") {
   proc_mode
   answ
   bnr2
-  #b13_angle_df3
+  part
   
   if (answ == "N" && proc_mode == "obj_wise" && part == "no_part" || 
       answ == "N" && proc_mode == "demo" && part == "no_part") {
@@ -903,7 +907,7 @@ if (sek == "bdr_follow") {
       b13_angle_df3
   } #end if 
   
-  #b13_angle_df3
+  b13_angle_df3
   sequence_seg2 <- b13_angle_df3$nr_center 
   
   #check plot
@@ -916,15 +920,7 @@ if (sek == "bdr_follow") {
   main=paste("b ",bnr2, sep=(""))) #large scale
   points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.3, col="black") # original pixel cloud for building
   points(b13_angle_df3$x_centre,-b13_angle_df3$y_centre, asp=1, pch=20,col="red", cex=1.5)
-  #plot of PCs and checkpoints
-  #plot(coords$x,coords$y,pch=16,cex=0.2,col="brown",asp=1,xlim=c(xc-r_max2,xc+r_max2),ylim=c(yc+r_max2,yc-r_max2),xlab=NULL,ylab=NULL,ann=T,main=paste("b",bnr2),axes=TRUE)
-  #plot(coords$x,coords$y,pch=16,cex=0.2,col="black",asp=1,xlim=c(1,1887),ylim=c(2557,1),xlab=NULL,ylab=NULL,ann=FALSE,main=paste("b",bnr2),axes=TRUE) #small scale
-  points(xc+r_max, -(yc+r_max), pch=16, cex=1.5, col="black", asp=1) #point for scaling
-  points(xc-r_max, -(yc+r_max), pch=16, cex=1.5, col="black", asp=1) #point for scaling
-  points(xc-r_max, -(yc-r_max), pch=16, cex=1.5, col="black", asp=1) #point for scaling
-  points(xc+r_max, -(yc-r_max), pch=16, cex=1.5, col="black", asp=1) #point for scaling
   points(xc, -yc, pch = 3, cex=1.5, col = "red", asp=1) #centre of PC
-  
   n2_midpts <- length(b13_angle_df3$nr_center)
   
   #check of positions
@@ -935,7 +931,6 @@ if (sek == "bdr_follow") {
     cat("index=", i, "point_number= ", b13_angle_df3$nr_center[i],"\n")
     points(b13_angle_df3$x_centre[i],-b13_angle_df3$y_centre[i], asp=1, pch=20,col="green", cex=1.5)  
   }
-  
   
   #transformation to img-system
   b13_angle_df3
@@ -1107,9 +1102,7 @@ if (sek == "bdr_follow") {
     points(b13_angle_df4$x_centre[n1],-b13_angle_df4$y_centre[n1], asp=1, pch=20,col="green", cex=1.5)
   }
   
-  #stop("continue step by step")
-  
-  ##automated change of direction
+  ## automated change of direction
   n_midpts2 <- length(sequence_seg)
   alph_s = beta_s <- rep(0,n_midpts2)
   alph_s[1] <- (90 - B5_6$theta_angle[1])
@@ -1127,6 +1120,7 @@ if (sek == "bdr_follow") {
   }
   
   sequence_seg
+  
   ##manual change of direction in the sequence of line segments
   # sequence_seg_rev <- rep(NA,n_seq)
   # b13_angle_df4
@@ -1139,8 +1133,6 @@ if (sek == "bdr_follow") {
   #   sequence_seg_rev #reversed sequence
   #   sequence_seg <- sequence_seg_rev
   # }
-  
-  #sequence_seg
   
   ##re-arrange matrix 'b13_angle_df3' to new sequence
   b13_angle_df4
