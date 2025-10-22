@@ -124,7 +124,7 @@ if (Img_name == "ISPRS4_DLR10") { #classification result: DLR10
 ##setting of parameters
 proc_mode <- "NA" #mode of processing
 n_long_PCs <- 1 #number of pixel clouds (PCs) 
-input_mode <- "vector" #input of nonortholines ("single" or "vector")
+input_mode <- "single" #input of nonortholines ("single" or "vector")
 n_pix8=80 #number of pixels of the 8th longest line segment in B8 (parameter 
 #for determination of object type)
 thr_d_alph_obj=2 #[degrees], threshold for deviation of rotation angle in 
