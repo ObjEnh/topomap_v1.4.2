@@ -12,9 +12,10 @@ cat("start of program 'plot_results_on_references.R'","\n")
 #input of table with line-pair, vertex-number and final coordinates (x,y)
 ##plotting of results onto orthoimage 
 #large scale
-#cases=1,2,3,4,5
+#cases=1,2,3,4,5,6
 
-if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" || cas == "100_all+nonortho") { 
+if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" 
+    || cas == "100_all+nonortho") { 
   setwd(home_dir)
   f5 <- paste("./results/",Img_name,"/b",bnr2,"_intsec_linepair_vertex_coord.txt",sep="")
   intsec_linepair_vertex_coord2 <- read.table(f5)
@@ -81,7 +82,6 @@ if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" || cas == "100_all+n
   
   ##plot of coordinates and connecting lines of object onto orthoimage
   setwd(home_dir)
-  #fname12 <- paste("./results/",Img_name,"/b",bnr2,"_coord_adj_123_plot.txt",sep="")
   fname12 <- paste("./results/",Img_name,"/b",bnr2,"_coord_adj_plot.txt",sep="")
   b <- read.table(fname12)
   cat("plot of orthoimage", "\n")
@@ -291,15 +291,13 @@ if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" || cas == "100_all+n
       fname15 <- paste("./results/",Img_name,"/",sep="")
       setwd(fname15)
       file.remove("b_all.txt") #removal of files with numbers of processed objects (buildings)
-      cat("end of program 'plot_results_on_references.R'","\n")
+      #cat("end of program 'plot_results_on_references.R'","\n")
     } else {
       cat("end of program 'plot_results_on_references.R'","\n")
-      stop("end of program package 'topomap'")
-    }
+    } #end if-else
     
   } #end if answ2 = "N"
-
-  cat("end of program package 'buildenh' ","\n") 
+  
 } #end of cases=1,2,3,4
 
 if (cas == "nonortho_only") {
@@ -332,9 +330,8 @@ if (cas == "nonortho_only") {
   plot(x,-y, pch=3, cex=2, col="red", asp=1, xlim=c(xc - r_max2,xc + r_max2),
        ylim=c(-(yc + r_max2),-(yc - r_max2)), ann = TRUE, axes = TRUE,
        main=paste("b ",bnr2, sep=("")))
-  #points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="red")
-  #points(intsec_linepair_vertex_coord2$x,intsec_linepair_vertex_coord2$y,type="p", col="black", pch=20, cex=1,asp=1)
-  points(intsec_linepair_vertex_coord2$x,intsec_linepair_vertex_coord2$y,type="l", col="blue", lty=1, lwd=2, asp=1)
+  points(intsec_linepair_vertex_coord2$x,intsec_linepair_vertex_coord2$y,
+         type="l", col="blue", lty=1, lwd=2, asp=1)
   #
   
   #plot onto orthoimage (small) scale)
@@ -368,7 +365,7 @@ if (cas == "nonortho_only") {
   #        pos=2, offset = 0.7, cex = 1, col = "white")
   # } #end for-loop
   
-  #end of plot of outline with vertexes-numbers onto enlarged orthoimage
+  #end of plot of outline with vertex-numbers onto enlarged orthoimage
   
   
   cat("does the result agree with the orthoimage (large scale)?","\n")
@@ -419,7 +416,7 @@ if (cas == "nonortho_only") {
   
   if (answ2 == "Y" && proc_mode == "auto") {
     
-    k_y_auto <- k_y_auto + 1 #next building
+    k_y_auto <- k_y_auto + 1 #next object
     
     if (k_y_auto < n_y_auto) {
       setwd(home_dir2)
@@ -454,11 +451,10 @@ if (cas == "nonortho_only") {
       cat("end of program 'plot_results_on_references.R'","\n")
     } else {
       dev.list()
-      dev.off(3)
-      #dev.off(4)
+      #dev.off(3)
       cat("end of program 'plot_results_on_references.R'","\n")
-      cat("end of software package 'topomap'","\n")
-    }
+      #cat("end of software package 'topomap'","\n")
+    } #end if-else
     
   } #end if answ2 = "N"
   
@@ -615,19 +611,17 @@ if (cas == "nonortho_only_RDP") {
       fname15 <- paste("./results/",Img_name,"/",sep="")
       setwd(fname15)
       file.remove("b_all.txt") #removal of files with numbers of processed objects (buildings)
-      #cat("end of program 'plot_results_on_references.R'","\n")
+      cat("end of program 'plot_results_on_references.R'","\n")
     } else {
       dev.list()
       #dev.off(3)
-      #cat("end of program 'plot_results_on_references.R'","\n")
-      #cat("end of software package 'topomap'","\n")
+      cat("end of program 'plot_results_on_references.R'","\n")
     } #end if-else
     
   } #end if answ2 = "N"
   
 } #end of case="nonortho_only_RDP" 
 
-cat("end of program 'plot_results_on_references.R'\n")
 cat("end of software package 'topomap'\n")
 invokeRestart("abort")
 ###############################################################################
