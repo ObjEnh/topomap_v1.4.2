@@ -8,9 +8,10 @@ cat("version_number= ",v_nr,"\n")
 #the minimum lengths of the lines are defined by a default value (n_pix) 
 #the default value (n_pix) may be adapted to the existing objects of the orthoimage
 #use 'Zoom' for evaluation of position
-#change eventually the default value for each object type ("extr_wd", "4_long", "100_all", "100_all+nonortho", "nonortho_only", "nonortho_only_RDP")
+#change eventually the default value for each object type ("extr_wd", "4_long", "100_all", 
+#"100_all+nonortho", "nonortho_only", "nonortho_only_RDP")
 #if lines of other orientation than the main orientation are part of the object then specify their labels
-#use scripts #8 and #9 of 'support_line_detection.R' 
+#use script #17 of 'support_line_detection.R' 
 #author: Joachim Höhle
 #GNU General Public License (GPL)
 cat("#########################################################################","\n")
@@ -126,30 +127,15 @@ ro_rg=3: range with -Dis_max...Dis_max (default ISPRS1) ")
 #setting of ro_range
 if (Img_name == "ISPRS1" && proc_mode == "demo") {
   ro_rg = 3
-} #else {
-#   if (Img_name == "ISPRS1") {
-#     ro_rg <- readline("select ro_range: ") #type 1 or 2 or 3
-#     ro_rg <- as.integer(ro_rg)
-#   }
-#}
+} 
 
 if (Img_name == "ISPRS7" && proc_mode == "demo") {
   ro_rg = 1
-} #else {
-#   if (Img_name == "ISPRS7") {
-#     ro_rg <- readline("select ro_range: ") #type 1 or 2 or 3
-#     ro_rg <- as.integer(ro_rg)
-#   }  
-# }
+} 
 
 if (Img_name == "ISPRS4" && proc_mode == "demo") {
   ro_rg = 3
-} #else {
-#   if (Img_name == "ISPRS4") {
-#     ro_rg <- readline("select ro_range: ") #type 1 or 2 or 3
-#     ro_rg <- as.integer(ro_rg)
-#   }  
-# }
+} 
 
 if (Img_name == "ISPRS4_DLR10" && proc_mode == "demo") {
   ro_rg = 3
@@ -168,7 +154,6 @@ if(ro_rg == 0) {
   setwd(home_dir)
   save(theta_step, ro_step, ro, ro_1, n_theta, n_ro, ro_rg, file="H_par") #storage 
 } #end ro_rg=0
-#
 
 if (ro_rg == 1) { # 1 
   ro <- seq(0, Dis_max, by=ro_step) 
@@ -181,7 +166,6 @@ if (ro_rg == 1) { # 1
   save(theta_step, ro_step, ro, ro_1, n_theta, n_ro, ro_rg, 
        file = paste("./data/",Img_name,"/H_par", sep="", collapse=NULL)) 
 } #end of ro_rg = 1
-#
 
 if(ro_rg == 2) {
   #procedure with rotation of coordinate system with angle of fitted ellipse (building should have a longer side)
@@ -260,7 +244,7 @@ if (ro_rg == 3) { #default value
        file = paste("./data/",Img_name,"/H_par", sep="", collapse=NULL)) 
 } #end of ro_rg = 3
 
-#end of range selection
+#end of range-selection
 
 #is alpha realistic?
 #if not - find solution in 'support_line_detection.R'
@@ -353,16 +337,16 @@ cat("detected line segments (theta_index, ro_index, N), ordered with respect to
 #B2 <- subset(B1,B1[,3] >= 41) # 25*k  
 #B2 <- subset(B1,B1[,3] >= 20) # 12*k 
 #B2 <- subset(B1,B1[,3] >= 10) # 6*k 
-#B2 <- subset(B1,B1[,3] >= 5) # 3*k 
+#B2 <- subset(B1,B1[,3] >= 5)  # 3*k 
 
 #k ~ 2.31) (determined empirically) 
 #B2 <- subset(B1,B1[,3] >= 130) # 56*k 
-#B2 <- subset(B1,B1[,3] >= 81) # 35*k 
-#B2 <- subset(B1,B1[,3] >= 58) # 25*k  
-#B2 <- subset(B1,B1[,3] >= 28) # 12*k 
-#B2 <- subset(B1,B1[,3] >= 23) # 10*k 
-#B2 <- subset(B1,B1[,3] >= 14) # 6*k 
-#B2 <- subset(B1,B1[,3] >= 7) # 3*k 
+#B2 <- subset(B1,B1[,3] >= 81)  # 35*k 
+#B2 <- subset(B1,B1[,3] >= 58)  # 25*k  
+#B2 <- subset(B1,B1[,3] >= 28)  # 12*k 
+#B2 <- subset(B1,B1[,3] >= 23)  # 10*k 
+#B2 <- subset(B1,B1[,3] >= 14)  # 6*k 
+#B2 <- subset(B1,B1[,3] >= 7)   # 3*k 
 
 #thr_line_seg <- 15 #alternatives: 10,20 [units] ca. 15/k=9.1 pixel (ISPRS1, ISPRS7)
 thr_line_seg <- 15 #alternatives: 10,20 [units] ca. 15/k=6.5 pixel = 1.84m (ISPRS4, ISPRS_DLR10) 
@@ -449,7 +433,6 @@ if (kf < 1) {
 }
 #end of calculation of the scale factor 'kf'
 
-#stop("check of H_para")
 wd <- 10 #width of building [pixels] (alternative: 15) #changed from 10 to n_pix
 #B22 <- subset(B0, round(B0[,4]/kf) >= wd) # minimum length of side (15 pixel= 1.4m) for ISPRS1,ISPRS7
 B22 <- subset(B0, round(B0[,4]/kf) >= wd) # minimum length of side (10 pixel = 2.8m) for ISPRS4,ISPRS_DLR10
@@ -486,7 +469,6 @@ print(B4[1:10,])
 #
 
 #derivation of point clouds for first 10 lines
-#stop("check device")
 
 vec <- 1 : 10
 
@@ -499,7 +481,7 @@ for (n1 in vec) {
   P <- P[1:n_P,]
   write.table(P,file=f, sep="   ")
 } #end for(i in vec)
-#
+
 pc3 <- pc2
 r_max2 <- 1.1 * r_max
 plot(xc,-yc,pch=3,cex=1.5,col="red",asp=1,xlim=c(xc-r_max2,xc+r_max2),ylim=c(-(yc+r_max2),-(yc-r_max2)),main=paste("b ",bnr2,sep=(""))) #large scale
@@ -608,7 +590,6 @@ points(x_m, y_m, pch=16, asp=1, cex=1.0, col="blue")
 
 #plot of ref-line of Hough-trans results onto graph (math-system)
 theta_math <- 180 - B4$theta_angle[lnr_ref]
-#theta_math <- 360 - B4$theta_angle[lnr_ref]
 
 if (theta_math >= 180) {
   theta_math <- theta_math - 180
@@ -633,13 +614,12 @@ if(is.finite(a)) {
   lines(c(ro_l1,ro_l1),c(0,1919),col="red",lty=1,lwd=2,asp=1) #(ISPRS1), orth/th2
 } # end of plotting reference-line
 
-##analyzing the Hough-matrix (B4)
+## analyzing the Hough-matrix (B4)
 
 #search for parallel and orthogonal lines based on reference line (ref) 
 #select ref line, usually the first (longest) line
 #joint search for parallel and orthogonal lines with 'theta_angle' and 'theta_angle-90' degrees
 #minimum length of line segment (wd=lol): 10 pixels
-#stop("manual test")
 
 k13 <- nrow(B4)
 theta_ref <- B4$theta_angle[lnr_ref] #reference line
@@ -680,7 +660,6 @@ while (i < k13) {
 ## generalizing, reduction of matrix, conversion to data frame
 head(B5_2)
 B5_3 <- subset(B5_2,B5_2[,7] >= lol) # length of lines (lol) 
-#>= 10 pixels (=0.9 m) (n_pixel)
 B5_3
 B5_4 <- data.frame(B5_3)
 names(B5_4) <- c("lnr", "theta_index", "ro_index", "n", "theta_angle","ro_pixel","n_pixel")
@@ -832,14 +811,10 @@ while (lnr <= n_lnr) { #plot of lnr_ref
   #
   P <- as.data.frame(P)
   names(P) <- c("idx","x","y")
-  #stop("manual action")
   P_red <- reduce_pointset(P) 
-  #head(P)
   head(P_red)
-  #x_m <- mean(P[,2])
   x_m <- mean(P_red[,2])
   cat("x_m=", x_m,"\n")
-  #y_m <- mean(P[,3])
   y_m <- mean(P_red[,3])
   cat("y_m=", y_m,"\n")
   points((P_red[,2]-orig_x),(P_red[,3]-orig_y), pch=".", asp=1, cex=1.0, col="red") #see 'Plots' (plot)
@@ -1084,7 +1059,7 @@ if (cas == "extr_wd") {
   B5_4e
   #
   
-  ## Find extreme values for orthogonal lines
+  ## find extreme values for orthogonal lines
   vec <- 1 : k15
   B5_4f <- B5_4c
   B5_4f[,1:7] <- 0
@@ -1197,7 +1172,7 @@ if (cas == "4_long") {
   k15 <- length(B5_4c$lnr)
   
   if (k15 < 4) { #test for number of lines
-    #stop("not enough lines - use case = 'extr_wd' !")  
+    stop("not enough lines - use case = 'extr_wd' !")  
   } #end if
   
   ## Search of lines with theta_ref
@@ -1391,7 +1366,7 @@ if (cas == "4_long") {
 } #end cas="4_long"
 #########################################################
 
-##more than 4 orthogonal line segments at the object (case="100_all")
+##more than 4 orthogonal line-segments at the object (case="100_all")
 #automated solution of outline with more than 4 line segments
 #with removal of "shorter_line"
 
@@ -1489,12 +1464,11 @@ if (cas == "100_all") {
   } #end for-loop (large scale)
   
   cat("detected lines are correct?" , "\n") #case: "100_all"
-  answ <- readline("type Y or N: ") ###################### action required
+  answ <- readline("type Y or N: ") # action required
   
   B5_6
   
   if (answ == "N") {
-    #stop("correction of detected lines")
     p_pos <- "cor_det" #correction of detected lines for cas = "100_all" 
     setwd(home_dir2) 
     source(paste("./spObj/spObj_line_detection_v",v_nr,".R",sep = "")) #special object: correction of detected lines
@@ -1537,7 +1511,6 @@ if (cas == "100_all") {
 ##cas: 100_all + addition of non-orthogonal lines 
 
 if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
-  #stop("proceed step by step")
   cat("define minimum size of line segment: 15 pixel (recommended) or 35 (alternativ)","\n")
   n_pix <- readline("type minimm size of line - if demo - type 35: ") #manual input (n_pix=n_pix[m]/pixelsize[m])
   n_pix <- as.integer(n_pix)
@@ -1582,11 +1555,10 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
   lnr_det3
   
   cat("are lines of other orientation part of the object unknown? ", "\n")
-  cat("use scripts #8 and 9# at 'support_line_detection' ", "\n")
+  cat("use scripts #17 at 'support_line_detection' ", "\n")
   
-  # if (proc_mode == "demo" || 
-  #     proc_mode == "auto" ||
-  #     proc_mode == "obj_wise") {
+  #stop("proceed with manual detection of lines by 
+  #    support_line_detection script #17")
     
     vec <- 1 : 26 #max 25 additional lines
     n_nonortholines2 <- 0
@@ -1622,7 +1594,6 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
       } #end if-else
       
     } #end i-loop
-    
     
     lnr_det3
     n_total <- length(lnr_det3)
@@ -1726,7 +1697,6 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
     cat("are the lines correctly identified?","\n") #case="100_all+nonortho"
     cat("if 'auto' -> type: N","\n")
     answ <- readline("type: Y or N: ")
-    #stop("stop")
     
     if (answ == "N") {
         lnr_det3 <- B5_6$lnr
@@ -1745,8 +1715,6 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
     n_ortholines2 <- length(lnr_det5)
     bn_PC <- n_ortholines2
     soph=0 #sequence is difficult to determine
-    
-  #} #end proc_modes "demo", "auto", "obj_wise")  
   
 } #end case= "100_all + nonortho"
 ################################################################################
@@ -1754,7 +1722,6 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
 ##case: non-orthogonal lines only 
 
 if (cas == "nonortho_only") { 
-  #stop("one by one")
   cat("define minimum size of line segment: 15 pixel (recommended) or 35 (alternativ)","\n")
   n_pix <- readline("type minimm size of line - if demo - type 35: ") #manual input (n_pix=n_pix[m]/pixelsize[m])
   n_pix <- as.integer(n_pix)
@@ -1766,46 +1733,9 @@ if (cas == "nonortho_only") {
   #determination of line segments manually
   lnr_det3 <- rep(0,26) #maximal number of line segments - subject of change
   cat("determine nonorthogonal lines ", "\n")
-  cat("use scripts #8 and 9# at 'support_line_detection' ", "\n")
+  cat("use scripts #17 at 'support_line_detection' ", "\n")
   cat("input_mode= ", input_mode,"\n")
   
-  # if (proc_mode == "demo" && input_mode == "single" ||
-  #     proc_mode == "auto" && input_mode == "single"||
-  #     proc_mode == "obj_wise" && input_mode == "single") {
-  #   
-  #   vec <- 1 : 26 #max 25 additional lines (subject of change)
-  #   n_nonortholines2 <- 0
-  #   
-  #   #loop
-  #   for (i in vec) {
-  #     #input of identifiers of non-orthogonal line segments
-  #     #include selected reference line
-  #     #sequence of line-segments, for example anti-clockwise, must be maintained
-  #     #manual input at the console 
-  #     #end of input: type 0
-  #     
-  #     # if (Img_name == "ISPRS4_DLR10") {
-  #     #    cat("if auto -> type x RETURN, type 0 RETURN ", "\n") #update x (object with non-ortholines)
-  #     # }
-  #     
-  #     
-  #     add_nr <- readline("type the label of a non-orthogonal line= ") #manual input at the console
-  #     add_nr <- as.integer(add_nr)
-  #     
-  #     if (add_nr > 0) {
-  #       n_nonortholines2 <-  n_nonortholines2 + 1
-  #       lnr_det3[n_nonortholines2] <- add_nr
-  #     } else { 
-  #       break
-  #     } #end if-else
-  #   } #end i-loop
-  #   
-  #   lnr_det3 <- subset(lnr_det3,lnr_det3 > 0)
-  #   n_total <- length(lnr_det3)
-  #   n_nonortholines2
-  #   #
-  # } #end input_mode = "single"   
-  #   
   ##determination of line segments manually, input_mode = "vector"
     
   if (proc_mode == "demo" && input_mode == "vector" ||
@@ -1814,7 +1744,7 @@ if (cas == "nonortho_only") {
       
       lnr_det3 <- rep(0,26) #maximal number of line segments - subject of change
       cat("determine nonorthogonal lines ", "\n")
-      cat("use scripts #15 & #16 at 'support_line_detection' ", "\n")
+      cat("use scripts #17 at 'support_line_detection' ", "\n")
       cat("input_mode= ", input_mode,"\n")
       
       setwd(home_dir)
@@ -1894,6 +1824,7 @@ if (cas == "nonortho_only") {
     y <- centers_PC[i,3]
     points(x-orig_x,-(y-orig_y_math),pch=16, asp=1, cex=1.5, col="red")
   } #end i-loop
+  
   #end of check-plot
     
   #loop for plotting approximate lines (large scale)
@@ -1932,7 +1863,6 @@ if (cas == "nonortho_only") {
   } #end loop n1
   
   cat("are the lines correctly identified?","\n") #case="nonortho_only"
-  #cat("if 'auto' -> type: N","\n")
   answ <- readline("type: Y or N: ")
     
   if (answ == "N") {
@@ -1945,8 +1875,6 @@ if (cas == "nonortho_only") {
     lnr_det5 <- B5_6R4$lnr
     B5_6 <- B5_6R4
   } #end if
-      
-  #} #end proc modes: "demo", "auto", "obj-wise", "vector"
     
   B5_6
   lnr_det5
@@ -1981,12 +1909,11 @@ if (cas == "nonortho_only") {
   setwd(home_dir)
   fname9 <- paste("./data/",Img_name,"/b",bnr2,"_case.txt", sep="")
   write.table(cas,fname9,row.names = FALSE, col.names = FALSE)
-  #} #end proc modes: "demo", "auto", "obj-wise", "vector"
 
 } #end case = "nonortho_only"
 ################################################################################
 
-##case=non-orthogonal lines only_RDP 
+## case=non-orthogonal lines only_RDP 
 
 if (cas == "nonortho_only_RDP") { 
   
@@ -2025,22 +1952,6 @@ if (cas == "nonortho_only_RDP") {
   nc <- length(levels(Z18)) #nc=number of levels
   cat("nc= ", nc, "\n")
   W <- tiles(tess(image=Z18)) #separation of components
-  
-  # if (nc == 1) { #stop("select data manually at script-line 647 in script 'sequence_of_line.R'")}
-  #   plot(W$'1', col="white",asp=1)  #black building
-  #   w = W$'1'
-  #   plot(w,asp=1)
-  #   #p_pos = "cor_img"
-  # } else {
-  #   p_pos = "cor_img"
-  #   setwd(home_dir2)
-  #   source(paste("./spObj/spObj_line_detection_v",v_nr,".R",sep="")) #selection of W$x
-  #   #plot(w)
-  #   simplified_lines_cor
-  # } #end if-else
-  
-  ##
-  #cat("p_pos= ", p_pos, "\n")
   plot(W$'2', col="white")  #black building
   w = W$'2'
   plot(w)
@@ -2060,7 +1971,7 @@ if (cas == "nonortho_only_RDP") {
   simplified_lines_complete
   lines(simplified_lines_complete, col = "blue", lty = 1, lwd=2,asp=1)
   
-  ## Opret POLYGON
+  ## generate polygon
   coords <- as.matrix(simplified_lines_complete)
   
   if (!all(coords[1, ] == coords[nrow(coords), ])) {
@@ -2172,13 +2083,12 @@ if (cas == "nonortho_only") {
   f5 <- paste("./results/",Img_name,"/man","/b",bnr2,"_intsec_linepair_vertex_coord2.txt",sep="")
   write.table(intsec_linepair_vertex_coord2,f5)
   
-  ##continue by 'plot_results_on_references_v1.4.2'
+  ##continue by 'plot_results_on_references.R'
   setwd(home_dir2)
   source(paste("plot_results_on_references_v",v_nr,".R",sep=""))
-} #end case='nonortho_only'in program line_detection 
+} #end case='nonortho_only'in program 'line_detection.R' 
 
 if (cas == "nonortho_only_RDP") {
-  #stop("continue step by step")
   
   #preparation of auto transformation
   simplified_lines
@@ -2190,11 +2100,10 @@ if (cas == "nonortho_only_RDP") {
   simplified_lines2_df
   dev.set(2)
   par(mai = c(1.02,0.82,0.82,0.42))
-  #plot(simplified_lines2_df, col = "white", pch=3, cex=1, main=paste("b ",bnr2,"- RDP-result", sep=("")), asp=1)
   plot(simplified_lines2_df, col = "white", pch=3, cex=1, main=paste("b ",bnr2,"- RDP-result", sep=("")), asp=1)
   points(simplified_lines2_df$x,simplified_lines2_df$y, type="l", col="blue", lwd=2, lty=1,asp=1)
   
-  ##generation of two scale points
+  ## generation of two scale points
   #max & min in y (RDP)
   y_min_RDP <- min(simplified_lines2_df$y)
   i <- which(simplified_lines2_df[, "y"] == y_min_RDP)
@@ -2405,10 +2314,10 @@ if (cas == "nonortho_only_RDP") {
          -intsec_linepair_vertex_coord2[,4]-orig_y,type ="l",lty=1,lwd=2,col="white")
   display(img_ref,"raster") #display of building vertices in ortho-image (small scale)
   points(intsec_linepair_vertex_coord2[,3],-intsec_linepair_vertex_coord2[,4],type ="l",lty=1,lwd=2,col="green")
-  #continue by program 'plot_results_on_references_v1.4.2'
+  #continue by program 'plot_results_on_references.R'
   setwd(home_dir2)
   source(paste("plot_results_on_references_v",v_nr,".R",sep=""))
-} #end of case = "nonortho_only_RDP" in program 'line_detection' 
+} #end of case = "nonortho_only_RDP" in program 'line_detection.R' 
 
 if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" ||
   cas == "100_all+nonortho") {
@@ -2432,10 +2341,6 @@ if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" ||
        ylim=c(-(yc + r_max2),-(yc - r_max2)), ann = TRUE, axes = TRUE,
        main=paste("b ",bnr2, sep=("")))
   points(pc3$col, -pc3$row, pch=20, asp=1, cex=0.5, col="red")
-  points(xc-mar,-(yc+mar), pch=3, asp=1, cex=1, col="green")
-  points(xc+mar,-(yc+mar), pch=3, asp=1, cex=1, col="green")
-  points(xc-mar,-(yc-mar), pch=3, asp=1, cex=1, col="green")
-  points(xc+mar,-(yc-mar), pch=3, asp=1, cex=1, col="green")
   
   #loop PC plotting
   lnr_det7
