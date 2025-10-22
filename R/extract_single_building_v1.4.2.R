@@ -54,7 +54,7 @@ if (answ == "3") {
 if (proc_mode == "obj_wise") {   
   bnr2 <- readline("type the label of building to be processed: ") #label of building by manual input
   bnr2 <- as.integer(bnr2)
-}
+} #end if proc_mode
 
 if (proc_mode == "auto") { 
   bnr2 <- y_auto[k_y_auto]
@@ -83,7 +83,16 @@ if (part == "no_part") {
   bnr2_orig <- bnr2
 }
 
-cat("label of building to be extracted=", bnr2,"\n") #check if new number is necessary
+if (bnr2 < 10) {
+  attr_lab = "below10"
+} else {
+  if (bnr2 >= 10) {
+    attr_lab = "above10"
+  } 
+} #end if-else
+  
+cat("label of building to be extracted= ", bnr2,"\n") #check if new number is necessary
+cat("attribut of label= ", attr_lab,"\n") #
 
 ##input of enhanced orthoimage
 setwd(home_dir)
