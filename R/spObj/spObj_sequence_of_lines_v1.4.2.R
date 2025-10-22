@@ -119,9 +119,7 @@ if (Img_name == "ISPRS4") {
     w = W$'3'
   } #end b62 - "cor_img"
   
-  ###
-  
-  ##b61
+  #b61
   if (bnr2 == 61 && p_pos == "cor_pos") {  
     #determine new position by 'support_line_detection.R', #6
     #or with angle by 'support_sequence_of_lines.R', #9
@@ -154,11 +152,9 @@ if (Img_name == "ISPRS4") {
     w = W$'3'
   } #end b62 - "cor_img"
   
-  ##end b62
+  #end b62
   
-  ####
-  
-  ##b81
+  #b81
   if (bnr2 == 81 && p_pos == "cor_pos") {  
     #determine new position by 'support_line_detection.R', #6
     #or with angle by 'support_sequence_of_lines.R', #9
@@ -169,7 +165,7 @@ if (Img_name == "ISPRS4") {
     b13_angle_df3 
   } #end b9 "cor_pos"
   
-  ##82
+  #b82
   
   if (bnr2 == 82 && p_pos == "cor_img") {
     plot(W$'3', col="white")  #black building
@@ -192,9 +188,7 @@ if (Img_name == "ISPRS4") {
     b13_angle_df3 
   } #end 82 + "cor_pos"
   
-  ###
-  
-  ##b9
+  #b9
   if (bnr2 == 9 && p_pos == "cor_pos") {  
     #determine new position by 'support_line_detection.R', #6
     #or with angle by 'support_sequence_of_lines.R', #9
@@ -204,21 +198,21 @@ if (Img_name == "ISPRS4") {
     b13_angle_df3 
   } #end b9 "cor_pos"
   
-  ##b102
+  #b102
   
   if (bnr2 == 102 && p_pos == "cor_img") { #filled area is not the object
     plot(W$'3', col="white")  #black building
     w = W$'3'
   } #end b102 - "cor_img"
 
-  ##b103
+  #b103
   
   if (bnr2 == 103 && p_pos == "cor_img") { #filled area is not the object
     plot(W$'3', col="white")  #black building
     w = W$'3'
   } #end b102 - "cor_img"
   
-  ##b103
+  #b103
   
   if (bnr2 == 103 && p_pos == "cor_pos") {  
     b13_angle_df2
@@ -229,9 +223,7 @@ if (Img_name == "ISPRS4") {
     b13_angle_df3
   } #end b103 - "cor_pos"
   
-  ###
-  
-  ##b161
+  #b161
   
   if (bnr2 == 161 && p_pos == "cor_img") { #filled area is not the object
     plot(W$'3', col="white")  #black building
@@ -253,7 +245,7 @@ if (Img_name == "ISPRS4") {
     b13_angle_df3
   } #end b161 - "cor_pos"
   
-  ##162
+  #162
   
   if (bnr2 == 162 && p_pos == "cor_img") { #filled area is not the object
     plot(W$'3', col="white")  #black building
@@ -280,10 +272,9 @@ if (Img_name == "ISPRS4") {
     sequence_seg2 <-sequence_seg
   } #end b162 - "cor_sek"
   
-  ##163
+  #163
   
   if (bnr2 == 163 && p_pos == "cor_pos") {  
-    #stop("manual operation - add position")
     #determine position by 'support_sequence_of_lines.R' #1
     b13_angle_df2
     b13_angle_df3 <- b13_angle_df2
@@ -291,7 +282,7 @@ if (Img_name == "ISPRS4") {
     b13_angle_df3
   } #end b162 - "cor_pos"
   
-  ##b17
+  #b17
   
   if (bnr2 == 17 && p_pos == "cor_img") { #filled area is not the object
     
@@ -308,18 +299,15 @@ if (Img_name == "ISPRS4") {
     b13_angle_df3[3,1:4] <- c(194,NA,319,528) #lnr=194,midpoint is manually determined
     b13_angle_df3
   } #end b162 - "cor_pos"
-  ###
   
 } #end of ISPRS4
-
-####
 
 ##orthoimage ISPRS4
 #classification DLR10
 
 if (Img_name == "ISPRS4_DLR10") {
   
-  ##b32 (b3,"2parts_2")
+  #b32 (b3,"2parts_2")
   
   if (bnr2 == 32 && p_pos == "cor_img") {
     plot(W$'3', col="white")  #black building
@@ -336,7 +324,7 @@ if (Img_name == "ISPRS4_DLR10") {
     b13_angle_df3 <- b13_angle_df2 
   } #end b32 "cor_pos"
   
-  ##b8 
+  #b8 
   
   if (bnr2 == 8 && p_pos == "cor_img") {
     plot(W$'3', col="white")  #black building
@@ -361,14 +349,12 @@ if (Img_name == "ISPRS4_DLR10") {
     sequence_seg2 <-sequence_seg
   } #end b8 - "cor_sek")
   
-  ##b10
+  #b10
   
   if (bnr2 == 10 && p_pos == "cor_pos") {  
     #determine new position by 'support_line_detection.R', #6 & #11
     #or with angle by 'support_sequence_of_lines.R', #9
-    #stop("determine angle")
     b13_angle_df2
-    #b13_angle_df2[10,1:4] <- c(110,NA,102,124) #lnr=110,midpoint is manually determined
     b13_angle_df2[11,1:4] <- c(29,NA,500,260) #lnr=29,midpoint is manually determined
     b13_angle_df2[12,1:4] <- c(1087,NA,522,285) #lnr=1087,midpoint is manually determined
     b13_angle_df2[13,1:4] <- c(8,NA,362,237) #lnr=8,midpoint is manually determined
@@ -376,7 +362,7 @@ if (Img_name == "ISPRS4_DLR10") {
     b13_angle_df3 <- b13_angle_df2
   } #end b10 - "cor_pos"
   
-  ##b12
+  #b12
   
   if (bnr2 == 12 && p_pos == "cor_img") {
     plot(W$'3', col="white")  #black building
@@ -400,10 +386,8 @@ if (Img_name == "ISPRS4_DLR10") {
     sequence_seg2 = c(87,21,546,91,1,6,8,63,123,220)
   } #end b12 - "cor_pos"
   
-  ##b14
+  #b14
   if (bnr2 == 14 && p_pos == "cor_img") {
-    #plot(W$'3', col="white")  #black building
-    #w = W$'3'
     plot(W$'4', col="white")  #black building
     w = W$'4'
   } #end b32 - "cor_img"
@@ -424,7 +408,7 @@ if (Img_name == "ISPRS4_DLR10") {
     b13_angle_df3
   } #end b14 - "cor_pos"
   
-  ##15
+  #15
   
   if (bnr2 == 15 && p_pos == "cor_img") {
     plot(W$'3', col="white")  #black building
@@ -443,7 +427,7 @@ if (Img_name == "ISPRS4_DLR10") {
     b13_angle_df3 <- b13_angle_df2
   } #end b15 - "cor_pos"
   
-  ##17
+  #17
   
   if (bnr2 == 17 && p_pos == "cor_img") {
     plot(W$'3', col="white")  #black building
@@ -461,7 +445,7 @@ if (Img_name == "ISPRS4_DLR10") {
     b13_angle_df3
   } #end b17 - "cor_pos"
   
-  ##21
+  #21
   
   if (bnr2 == 21 && p_pos == "cor_img") {
     plot(W$'3', col="white")  #black building
@@ -485,34 +469,28 @@ if (Img_name == "ISPRS4_DLR10") {
     b13_angle_df3
   } #end b21 - "cor_pos"
   
-  ##221
+  #221
   
   if (bnr2 == 221 && p_pos == "cor_pos" && cas == "100_all+nonortho") {
     #determine new position by 'support_line_detection.R':#6
-    #or with angle by 'support_sequence_of_lines.R', #9
+    #or with angle by 'support_sequence_of_lines.R', #17.
     #stop("manually")
     b13_angle_df2
     b13_angle_df3 <- b13_angle_df2
-    b13_angle_df3[9,1:4] <- c(3,NA,39,595) #lnr=3,midpoint is manually determined
-    b13_angle_df3[3,1:4] <- c(73,NA,64,563) #lnr=73,midpoint is manually determined
-    b13_angle_df3[5,1:4] <- c(181,NA,102,547) #lnr=181,midpoint is manually determined
+    b13_angle_df3[2,1:4] <- c(3,NA,39,595) #lnr=3,midpoint is manually determined
+    b13_angle_df3[8,1:4] <- c(73,NA,64,563) #lnr=73,midpoint is manually determined
+    b13_angle_df3[6,1:4] <- c(181,NA,102,547) #lnr=181,midpoint is manually determined
+    b13_angle_df3
+    
+    ##use of some/all center-points (derived in 'support_line_detection' ##17.)
+    center_pts
+    b13_angle_df3[10,1] <- center_pts$lnr[1] #center point #182
+    b13_angle_df3[10,3] <- center_pts$x[1]
+    b13_angle_df3[10,4] <- center_pts$y[1]
     b13_angle_df3
   } #end b221 - "cor_pos" - "100_all+nonortho"
   
-  
-  # if (bnr2 == 221 && p_pos == "cor_sek" && cas == "100_all+nonortho") { 
-  #   sequence_seg
-  #   sequence_seg <- c(1,7,73,36,181,45,31,91,3,6,625,154,10,21)
-  #   sequence_seg2 <-sequence_seg
-  # } #end b221 - "cor_sek" - "100_all+nonortho"
-  
-  # if (bnr2 == 221 && p_pos == "cor_sek" && cas == "nonortho_only") { 
-  #   sequence_seg
-  #   #sequence_seg <- c(1,6,66,76,191,69,27,84,3,5,916,8,7,150)
-  #   sequence_seg2 <-sequence_seg
-  # } #end b221 - "cor_sek" - "100_all+nonortho"
-  
-  ##b26
+  #b26
   
   if (bnr2 == 26 && p_pos == "cor_img") {
     plot(W$'3', col="white")  #black building
@@ -543,5 +521,5 @@ if (Img_name == "ISPRS4_DLR10") {
   
 } #end of ISPRS4_DLR10
 
-##end of script 'spObj_sequence_of_lines_v1.4.0.R'
+##end of script 'spObj_sequence_of_lines.R'
 ################################################################################
