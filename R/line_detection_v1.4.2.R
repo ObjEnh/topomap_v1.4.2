@@ -965,7 +965,7 @@ cat("case= ", cas, "\n")
 
 if (cas == "extr_wd") {
   k14 <- length(B5_4$lnr)
-  n_pix <- 5 #alternative: 15 [pixel] - new: select minimum length of line segment n_pixel = n_meter/pixel size
+  #n_pix <- 5 #alternative: 15 [pixel] - new: select minimum length of line segment n_pixel = n_meter/pixel size
   wd <- n_pix #length of shortest line segment [pixel] or 15*0.09 = 1.4m (search for small lines)
   B5_4b <- B5_4
   B5_4b[,1:7] <- 0
@@ -1139,10 +1139,10 @@ if (cas == "4_long") {
   #n_pix <- 78 #length of segment (7.0m) alternative
   #n_pix <- 94 #length of segment (8.5m) alternative
   
-  cat("define minimum size of line segment: 35 pixel (recommended) 
-      or 11, 18, 25, 56, 78, 94 (alternatives)","\n")
-  n_pix <- readline("type minimum size of line - if demo - type 35: ") #manual input (n_pix = n_pixel[m]/pixelsize[m])
-  n_pix <- as.integer(n_pix)
+  # cat("define minimum size of line segment: 35 pixel (recommended) 
+  #     or 11, 18, 25, 56, 78, 94 (alternatives)","\n")
+  # n_pix <- readline("type minimum size of line - if demo - type 35: ") #manual input (n_pix = n_pixel[m]/pixelsize[m])
+  # n_pix <- as.integer(n_pix)
   n_meter <-round(n_pix * pixel_size2,1)
   cat("n_pix=",n_pix,"pixels","or", n_meter, "meter","\n")
   wd <- n_pix
@@ -1372,9 +1372,9 @@ if (cas == "4_long") {
 
 if (cas == "100_all") {
   print(B5_4)
-  cat("minimum length of line: 15 pixel (recommended), 10, 35 (alternative)")   #n_pix <- n_meter/pixel_size[m]
-  n_pix <- readline("type minimum length of line [pixel]= ") #manual input 15 (recommended) or 35 (alternativ)
-  n_pix <- as.integer(n_pix)
+  # cat("minimum length of line: 15 pixel (recommended), 10, 35 (alternative)")   #n_pix <- n_meter/pixel_size[m]
+  # n_pix <- readline("type minimum length of line [pixel]= ") #manual input 15 (recommended) or 35 (alternativ)
+  # n_pix <- as.integer(n_pix)
   wd <- n_pix
   thr <- 11 #threshold at search of line (default value: n_pix) new
   cat("n_pix=",n_pix,"pixels","\n")
@@ -1511,9 +1511,9 @@ if (cas == "100_all") {
 ##cas: 100_all + addition of non-orthogonal lines 
 
 if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
-  cat("define minimum size of line segment: 15 pixel (recommended) or 35 (alternativ)","\n")
-  n_pix <- readline("type minimm size of line - if demo - type 35: ") #manual input (n_pix=n_pix[m]/pixelsize[m])
-  n_pix <- as.integer(n_pix)
+  # cat("define minimum size of line segment: 15 pixel (recommended) or 35 (alternativ)","\n")
+  # n_pix <- readline("type minimm size of line - if demo - type 35: ") #manual input (n_pix=n_pix[m]/pixelsize[m])
+  # n_pix <- as.integer(n_pix)
   wd <- n_pix
   thr <- 10 #default value for difference in ro
   cat("n_pix=",n_pix,"pixels","\n")
@@ -1722,9 +1722,9 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
 ##case: non-orthogonal lines only 
 
 if (cas == "nonortho_only") { 
-  cat("define minimum size of line segment: 15 pixel (recommended) or 35 (alternativ)","\n")
-  n_pix <- readline("type minimm size of line - if demo - type 35: ") #manual input (n_pix=n_pix[m]/pixelsize[m])
-  n_pix <- as.integer(n_pix)
+  # cat("define minimum size of line segment: 15 pixel (recommended) or 35 (alternativ)","\n")
+  # n_pix <- readline("type minimm size of line - if demo - type 35: ") #manual input (n_pix=n_pix[m]/pixelsize[m])
+  # n_pix <- as.integer(n_pix)
   wd <- n_pix
   thr <- 10 #default value for difference in ro
   cat("n_pix=",n_pix,"pixels","\n")
@@ -1920,11 +1920,20 @@ if (cas == "nonortho_only_RDP") {
   setwd(home_dir)
   
   if (part != "no_part") {
-    #bnr2_orig <- substr(bnr2,1,2) #bnr2 < 10
-    bnr2_orig <- substr(bnr2,1,3) #bnr2 >= 10
-    bnr2_orig  <- as.integer(bnr2_orig)
-    bnr2 <- bnr2_orig
-  }
+    
+    if(attr_lab == "below10") {  
+      bnr2_orig <- substr(bnr2,1,2) #bnr2 < 10
+      bnr2_orig  <- as.integer(bnr2_orig)
+      bnr2 <- bnr2_orig
+    }
+    
+    if(attr_lab == "above10") {
+      bnr2_orig <- substr(bnr2,1,3) #bnr2 >= 10
+      bnr2_orig  <- as.integer(bnr2_orig)
+      bnr2 <- bnr2_orig
+    }
+    
+  } #end if
   
   b_new <- readImage(paste("./data/",Img_name,"/images/b",bnr2,"_new8.tif",sep = "")) 
   colorMode(b_new) <- Grayscale
