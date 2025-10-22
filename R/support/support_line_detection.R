@@ -274,6 +274,7 @@ if (orig_y < 0) {
    orig_y = 0
 }
 
+dev.set(2)
 img_uds <- img_ref[orig_x : wind_x, abs(orig_y) : wind_y,1:3]
 display(img_uds, method = "raster")
 #display(img_uds,method = "browser") #display enables zooming
@@ -1428,12 +1429,32 @@ for (i in vec3) {
 
 # end of plot line using label
 # end of script ## 16.calculation of vertex labels
+####################################################################
 
 ## 17. automated generation of line numbers (lnr)
 #determination of line-orientation 
 #in orthoimage (large scale) 
 #determination of theta_ind, ro_ind, lnr
+#stop("manual operation")
+#display of orthoimage (large scale)
+#display enlarged ortho_image and PC of building outline
 
+if (orig_x < 0) { #solves problems at edges of orthoimage
+  orig_x = 0
+}
+
+if (orig_y < 0) {
+  orig_y = 0
+}
+
+dev.set(2)
+img_uds <- img_ref[orig_x : wind_x, abs(orig_y) : wind_y,1:3]
+display(img_uds, method = "raster")
+points(xc-orig_x,yc-orig_y,pch=3, asp=1, cex=1.3, col="yellow")
+points(as.integer(pc3$col-orig_x), as.integer(pc3$row-orig_y), 
+       pch=20, asp=1, cex=0.3, col="green")
+
+#measurements
 dir_meas <- locator(2, type="p", pch=3) #measure 2 points on line
 dir_meas
 x_ang <- (dir_meas$y[1] - dir_meas$y[2]) / (dir_meas$x[1] - dir_meas$x[2])
@@ -1451,20 +1472,30 @@ theta_ind # theta_index
 
 cat("theta_ind=", theta_ind, "\n")
 
-if (theta_ind < 90/theta_step) {
-  alph_ind <- theta_ind + as.integer(90/theta_step)
-} else {
-  alph_ind <- theta_ind - as.integer(90/theta_step)
-}
-
-cat("alph_ind=", alph_ind, "\n")
-
 ## calculation of ro_ind using theta_index and one measured point
 theta_ind
-x=round((dir_meas$x[1]+dir_meas$x[2])/2)+orig_x #point (mean, img_system)
-y=round((dir_meas$y[1]+dir_meas$y[2])/2)+orig_y #point (mean, img_system) check!
+x=round(((dir_meas$x[1]+dir_meas$x[2])/2)+orig_x) #point (mean, img_system, small)
+cat("x= ",x,"\n")
+y=round(((dir_meas$y[1]+dir_meas$y[2])/2)+orig_y) #point (mean, img_system, small) check!
+cat("y= ",y,"\n")
+
+#plot in image (large scale)
 points(x-orig_x,y-orig_y,pch=16, asp =1, cex=1,asp=1, col="red") #large scale
-#points(x,y,pch=16, asp =1, cex=1,asp=1, col="red") #large scale
+
+#plot in image (small scale)
+#points(x,y,pch=16, asp =1, cex=1,asp=1, col="red") #small scale
+
+#store center of line in file
+n_nonortholines_max=30
+center_pts <- matrix(ncol=3, nrow=n_nonortholines_max)
+center_pts <- data.frame(center_pts)
+colnames(center_pts) <- c("lnr","x","y")
+center_pts
+ind <- readline("type index: ") #input of index for matrix 'center_pts'
+ind <- as.integer(ind)
+center_pts[ind,2] <- x
+center_pts[ind,3] <- y
+center_pts
 theta_img = (theta_ind - 1) * theta_step 
 theta_math = 180 - theta_img
 theta_math_arc=theta_math/omega
@@ -1478,7 +1509,27 @@ cat("ro_index= ", ro_ind, "\n")
 
 ## search of lines (lnr) with theta_index and plot of line
 
-#manual solution
+##search with theta_ind and ro_ind in B4
+#automated solution
+ro_rg2=3 #range of search
+theta_img_r5 <- (theta_ind - 1)*theta_step
+ro_img_r <- (ro_ind -1)*ro_step +ro_1
+idx <- which(B4$theta_angle == theta_img_r5 & B4$ro_pixel %in% (ro_img_r-ro_rg2):(ro_img_r+ro_rg2))
+if (length(idx) == 0) {
+  idx <- NA_integer_   # force NA if no match
+}
+print(idx)
+i <- idx
+cat("i= ",i,"\n")
+lnr_nonortho <- i
+cat("lnr_nonortho= ",lnr_nonortho,"\n")
+lnr_nonortho
+ind
+center_pts[ind,1] <- lnr_nonortho
+center_pts
+#continue with 'line_detection.R'
+
+##manual solution (if lnr has not been found)
 theta_ind
 thr_line_seg = n_pix/3 #threshold for length of line-segment [pixel]
 ct=0
@@ -1524,6 +1575,8 @@ for (i in vec) {
 
 cat("counts= ",ct,"\n")
 #end search of lines with alph_index
+
+
 
 ##plot of selected line
 lnr <- readline("type line number: ") 
@@ -1575,16 +1628,16 @@ a_img <- (-a)
 coef2 <- c(b2_img,a_img)
 
 if (is.finite(a_img) && is.finite(b2_img)) {
-  abline(coef2, col="white", lty=1, lwd=2, asp=1)
+  abline(coef2, col="blue", lty=1, lwd=2, asp=1)
 } else {
   ro_l1 <- B4$ro_pixel[lnr]
   ro_l3 <- round(ro_l1 - orig_x)
   lines(c(ro_l3,ro_l3),c(0,wind_y-orig_y),col="red",lty=1,lwd=3,asp=1)
 } #end if-else
-
 #
-theta_ind <- readline("type theta_index= ")
-theta_ind <- as.integer(theta_ind)
+
+theta_ind
+ro_ind
 
 ct=0
 vec <- 1 : length(B0[,1])
@@ -1600,25 +1653,18 @@ for (i in vec) {
 } #end search of lines with theta_index
 
 cat("counts= ",ct,"\n")
+#
 
-##alternative solution
-
-##search with theta_ind and ro_ind in B4
-ro_rg2=3 #range of search
-theta_img_r5 <- (theta_ind - 1)*theta_step
-ro_img_r <- (ro_ind -1)*ro_step +ro_1
-idx <- which(B4$theta_angle == theta_img_r5 & B4$ro_pixel %in% (ro_img_r-ro_rg2):(ro_img_r+ro_rg2))
-if (length(idx) == 0) {
-  idx <- NA_integer_   # force NA if no match
+## calculation of alph_ind
+if (theta_ind < 90/theta_step) {
+  alph_ind <- theta_ind + as.integer(90/theta_step)
+} else {
+  alph_ind <- theta_ind - as.integer(90/theta_step)
 }
-print(idx)
-i <- idx
-cat("i= ",i,"\n")
-lnr_nonortho <- i
-cat("lnr_nonortho= ",lnr_nonortho,"\n")
-lnr_nonortho 
 
-#end of script ## 17.
+cat("alph_ind=", alph_ind, "\n")
+
+# end of script ## 17.
 
 ##end of support_line_detection.R
 ################################################################################
