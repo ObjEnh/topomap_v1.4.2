@@ -1528,6 +1528,7 @@ ind
 center_pts[ind,1] <- lnr_nonortho
 center_pts
 #continue with 'line_detection.R'
+##########################################################################
 
 ##manual solution (if lnr has not been found)
 theta_ind
