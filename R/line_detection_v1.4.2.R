@@ -1722,22 +1722,181 @@ if (cas == "100_all+nonortho") { #solution for lines parallel to ref line
 ##case: non-orthogonal lines only 
 
 if (cas == "nonortho_only") { 
-  # cat("define minimum size of line segment: 15 pixel (recommended) or 35 (alternativ)","\n")
-  # n_pix <- readline("type minimm size of line - if demo - type 35: ") #manual input (n_pix=n_pix[m]/pixelsize[m])
-  # n_pix <- as.integer(n_pix)
   wd <- n_pix
   thr <- 10 #default value for difference in ro
   cat("n_pix=",n_pix,"pixels","\n")
   cat("thr=",thr,"pixels","\n")
   
   #determination of line segments manually
-  lnr_det3 <- rep(0,26) #maximal number of line segments - subject of change
+  lnr_det3 <- rep(0,n_nonortholines_max) #maximal number of line segments - subject of change
   cat("determine nonorthogonal lines ", "\n")
   cat("use scripts #17 at 'support_line_detection' ", "\n")
   cat("input_mode= ", input_mode,"\n")
+  #n_nonortholines2
   
-  ##determination of line segments manually, input_mode = "vector"
+  ##determination of line segments manually, input-mode = "single"
+  if (proc_mode == "demo" && input_mode == "single" ||
+      proc_mode == "auto" && input_mode == "single" ||
+      proc_mode == "obj_wise" && input_mode == "single") {
     
+    vec <- 1 : n_nonortholines_max #max number of additional lines (incl. 0)
+    n_ortholines2 <- 0
+    n_nonortholines2 <- 0
+    
+    for (i in vec) {
+      #additional lines by manual input
+      #n_nonortholines2 are the lines which are non-orthogonal 
+      #manual input at the console - if more than one line: repeat, 
+      #if 0 type 0, see "demo"
+      
+      # if (Img_name == "ISPRS7") { 
+      #   cat("if demo -> type 3 RETURN, 4 RETURN, 0 RETURN", "\n")
+      # } 
+      
+      # if (Img_name == "ISPRS4") {
+      #   cat("if demo -> type 1 RETURN, 24 RETURN, 0 RETURN", "\n") #update
+      # }
+      
+      # if (Img_name == "ISPRS4_DLR10") {
+      #    cat("if auto -> type x RETURN, type 0 RETURN ", "\n") #update
+      # }
+      
+      add_nr <- readline("type the label of an additional non-orthogonal line= ") #manual input at the console
+      add_nr <- as.integer(add_nr)
+      add_nr
+      
+      if (add_nr > 0) {
+        n_nonortholines2 <-  n_nonortholines2 + 1
+        lnr_det3[n_ortholines2 + n_nonortholines2] <- add_nr
+      } else { 
+        break
+      } #end if-else
+      
+    } #end i-loop
+    
+    lnr_det3 <- lnr_det3[lnr_det3>0]
+    n_total <- length(lnr_det3)
+    n_ortholines2
+    n_nonortholines2
+    vec_nr <- lnr_det3[(n_ortholines2+1):(n_ortholines2+n_nonortholines2)]
+    vec_nr #additional non-ortholines
+    
+    ## plot image detail
+    display(img_uds, method = "raster")
+    #n_lnr3 <- length(lnr_det3)
+    n_lnr3 <- length(vec_nr)
+    vec3 <- 1 : n_lnr3
+    #
+    centers_PC <- matrix(nrow=n_lnr3, ncol=4)
+    centers_PC[,] <- 0
+    centers_PC
+    
+    ##
+    B5_6 <<- matrix(nrow = n_lnr3, ncol = 7) #make B5_6 to global variable
+    B5_6 <- data.frame(B5_6) 
+    names(B5_6) <- c("lnr","theta_index","ro_index","n","theta_angle","ro_pixel","n_pixel")
+    B5_6[,] <- 0
+    lnr_det3
+    vec_nr <- lnr_det3
+    B5_6$lnr[1:n_nonortholines2] <- lnr_det3
+    B5_6
+    lnr_det5 <- lnr_det3
+    k14 <- max(lnr_det5)
+    i=1
+    
+    #loop
+    for (n1 in lnr_det5) {
+      j = 1
+      while (j <= k14) {
+        #cat("j= ",j,"\n")
+        
+        if (n1 == B4$lnr[j]) {
+          B5_6[i,] <- B4[j,]
+          i = i+1
+          break
+        }  #end if
+        j = j+1
+      } #end loop j
+    } #end of loop n1
+    
+    B5_6
+
+    #loop
+    vec4 <- 1:n_nonortholines2
+    
+    for (n in vec4) {
+      lnr <- lnr_det3[n]
+      cat("lnr= ",lnr,"\n")
+      PC_seg_P_nP <- PC_segment_4(lnr) #call of function
+      P <- PC_seg_P_nP[[1]]
+      n_P <- PC_seg_P_nP[[2]]
+      x_m <- mean(P[,2])
+      y_m <- mean(-P[,3])
+      centers_PC[n,1] <- lnr
+      centers_PC[n,2] <- x_m
+      centers_PC[n,3] <- y_m
+      centers_PC[n,4] <- round(n_P/kf)
+    } #end of for-loop n
+    
+    centers_PC
+    
+    #centers_PC <- centers_PC[1:n_nonortholines2,]
+    
+    ## plot centers of line at image extract
+    
+    #loop
+    for (i in vec4) {
+      cat("i=",i,"\n")
+      points((pc3$col - orig_x),(pc3$row - orig_y), pch='.', asp=1, cex=2, col = "green")
+      points(xc-orig_x,yc-orig_y,pch=3, asp=1, cex=1.3, col="red")
+      x <- centers_PC[i,2]
+      y <- centers_PC[i,3]
+      points(x-orig_x,-(y-orig_y_math),pch=18, asp=1, cex=1.3, col="red")
+    } #end for-loop i
+    
+    #end of check-plot
+    
+    #loop for plotting approximate lines
+    
+    for (n1 in vec4) {
+      browser()
+      display(img_uds, method = "raster")
+      points((pc3$col - orig_x),(pc3$row - orig_y), pch='.', asp=1, cex=2, col = "green")
+      cat("PC_nr=", B5_6$lnr[n1], "\n")
+      theta_angle <- B5_6$theta_angle[n1]
+      theta_math <- (180 - theta_angle) #theta of oriented line
+      x <- centers_PC[n1,2]
+      y <- centers_PC[n1,3]
+      p2<- round(x * cos(theta_math/omega) + y * sin(theta_math/omega))
+      a <- -1/tan(theta_math/omega)
+      b <- round(p2/sin(theta_math/omega))
+      
+      #calculation of intercept for image extract (math_system)
+      y1_math <- a * orig_x + b
+      y1_math <- round(y1_math) #change to math-system
+      orig_y_math <- (-orig_y) #change to math_system
+      b2 <- y1_math - orig_y_math
+      a_img <- -a #change to img-system
+      b2_img <- (-b2)
+      
+      # plotting of lines
+      coef2 <- c(b2_img,a_img)
+      
+      if (is.finite(a_img)) {
+        abline(coef2, col="red", lty=1, lwd=2, asp=1)
+      }  else {
+        ro_l1 <- B4$ro_pixel[lnr]
+        ro_l2 <- ro_l1 + ro_1
+        ro_l3 <- round(ro_l2 - orig_x)
+        lines(c(ro_l3,ro_l3),c(orig_y, (wind_y - orig_y)),col="blue")
+      } #end if-else
+      
+      cat("#","\n")
+    } #end for-loop n1 (large scale)
+    
+  } #end input_mode = "single"
+  
+  ##input_mode = "vector"
   if (proc_mode == "demo" && input_mode == "vector" ||
       proc_mode == "auto" && input_mode == "vector" ||
       proc_mode == "obj_wise" && input_mode == "vector") {
@@ -1756,7 +1915,7 @@ if (cas == "nonortho_only") {
       lnr_det3
       n_total <- length(lnr_det3)
       n_nonortholines2 <- n_total
-  } #end of input_mode = "vector"
+  #} #end of input_mode = "vector"
     
   ##display image detail (large scale)
   display(img_uds, method = "raster")
@@ -1771,6 +1930,7 @@ if (cas == "nonortho_only") {
   B5_6 <- data.frame(B5_6) 
   names(B5_6) <- c("lnr","theta_index","ro_index","n","theta_angle","ro_pixel","n_pixel")
   B5_6[,] <- 0
+  B5_6
   lnr_det3
   vec_nr <- lnr_det3
   B5_6$lnr[1:n_nonortholines2] <- lnr_det3
@@ -1860,7 +2020,9 @@ if (cas == "nonortho_only") {
     } #end if-else
     
     cat("#","\n")
-  } #end loop n1
+    } #end loop n1
+  
+  } #end of input_mode = "vector"
   
   cat("are the lines correctly identified?","\n") #case="nonortho_only"
   answ <- readline("type: Y or N: ")
@@ -1909,6 +2071,10 @@ if (cas == "nonortho_only") {
   setwd(home_dir)
   fname9 <- paste("./data/",Img_name,"/b",bnr2,"_case.txt", sep="")
   write.table(cas,fname9,row.names = FALSE, col.names = FALSE)
+  
+  #continue by program 'plot_results_on_references.R'
+  setwd(home_dir2)
+  source(paste("plot_results_on_references_v",v_nr,".R",sep=""))
 
 } #end case = "nonortho_only"
 ################################################################################
@@ -2095,7 +2261,8 @@ if (cas == "nonortho_only") {
   ##continue by 'plot_results_on_references.R'
   setwd(home_dir2)
   source(paste("plot_results_on_references_v",v_nr,".R",sep=""))
-} #end case='nonortho_only'in program 'line_detection.R' 
+} #end case='nonortho_only'in program 'line_detection.R'
+###########################################################################
 
 if (cas == "nonortho_only_RDP") {
   
@@ -2326,7 +2493,9 @@ if (cas == "nonortho_only_RDP") {
   #continue by program 'plot_results_on_references.R'
   setwd(home_dir2)
   source(paste("plot_results_on_references_v",v_nr,".R",sep=""))
-} #end of case = "nonortho_only_RDP" in program 'line_detection.R' 
+} #end of case = "nonortho_only_RDP" in program 'line_detection.R'
+
+#############################################################################
 
 if (cas == "extr_wd" || cas == "4_long" || cas == "100_all" ||
   cas == "100_all+nonortho") {
