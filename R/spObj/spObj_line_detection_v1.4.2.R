@@ -450,7 +450,7 @@ if (Img_name == "ISPRS4_DLR10") {
     B5_6
     n_B5_6 <- length(B5_6$lnr)
     B5_6R4 <- B5_6
-    B5_6R4 <- B5_6R4[-c(2:n_B5_6),] 
+    #B5_6R4 <- B5_6R4[-c(2:n_B5_6),] #removal of lines
     n_z <- length(B5_6R4$lnr)
     row.names(B5_6R4) <- 1 : n_z
     B5_6R4
