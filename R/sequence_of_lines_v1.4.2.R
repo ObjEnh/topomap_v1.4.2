@@ -1102,66 +1102,26 @@ if (sek == "bdr_follow") {
     points(b13_angle_df4$x_centre[n1],-b13_angle_df4$y_centre[n1], asp=1, pch=20,col="green", cex=1.5)
   }
   
-  ## automated change of direction
-  n_midpts2 <- length(sequence_seg)
-  alph_s = beta_s <- rep(0,n_midpts2)
-  alph_s[1] <- (90 - B5_6$theta_angle[1])
-  alph_s[2] <- (90 - B5_6$theta_angle[2])
-  beta_s[1] <- 180 - (alph_s[2] - alph_s[1])
+  b13_angle_df4
   #
-  alph_s[n_midpts2] <- (90 - B5_6$theta_angle[n_midpts2])
-  beta_s[n_midpts2] <- alph_s[1] - alph_s[n_midpts2]
-  beta_s[n_midpts2]
-
-  if (beta_s[n_midpts2] < 0 ) {
-    sequence_seg_rev <- changeDir(sequence_seg) #function call for change of direction in sequence
-    sequence_seg_rev #reversed sequence
-    sequence_seg <- sequence_seg_rev
+  
+  ## change direction of line segments to counter-clockwise (ccw)
+  ensure_ccw_df <- function(df, x_col = "x_centre", y_col = "y_centre") {
+    area <- sum((df[-1, x_col] + df[-nrow(df), x_col]) *
+                  (df[-1, y_col] - df[-nrow(df), y_col])) / 2
+    print(area)
+    
+    if (area > 0) {
+      df <- df[nrow(df):1, ]
+    }
+    
+    return(df)
   }
   
-  sequence_seg
-  
-  ##manual change of direction in the sequence of line segments
-  # sequence_seg_rev <- rep(NA,n_seq)
-  # b13_angle_df4
-  # 
-  # cat("change of direction in sequence? - type Y or N","\n")
-  # answ6 = readline("answ6= ")
-  # 
-  # if (answ6 == "Y") {
-  #   sequence_seg_rev <- changeDir(sequence_seg) #function call for change of direction in sequence
-  #   sequence_seg_rev #reversed sequence
-  #   sequence_seg <- sequence_seg_rev
-  # }
-  
-  ##re-arrange matrix 'b13_angle_df3' to new sequence
-  b13_angle_df4
-  b13_angle_df5 <- b13_angle_df4
-  b13_angle_df5[,] <- 0
-  sequence_seg
-  vec2 <- 1 : length(sequence_seg)
-  b13_angle_df5$nr_center <- sequence_seg
-  b13_angle_df5
-  b13_angle_df4[,5] <- "new"
-  names(b13_angle_df4)[5] <- "status"
-  n_10 <- length(b13_angle_df4$nr_center)
-  b13_angle_df4
-
-  for (n1 in vec2) {
-    i=1
-
-    while (i <= n_10) {
-      if (b13_angle_df5[n1,1] == b13_angle_df4[i,1] && b13_angle_df4[i,5] != "done"){
-         b13_angle_df5[n1,2:4] <- b13_angle_df4[i,2:4]
-         b13_angle_df4[i,5] <- "done"
-         cat("n1= ",n1,"i= ",i, "\n")
-         break
-      }
-      i <- i+1
-    } #end loop i
-  } #end of for-loop
-  
-  b13_angle_df5
+  b13_angle_df4_ccw <- ensure_ccw_df(b13_angle_df4)
+  b13_angle_df4_ccw
+  row.names(b13_angle_df4_ccw) <- 1 : n_10
+  b13_angle_df5 <- b13_angle_df4_ccw
   
   #plot of midpts
   b13_angle_df5
