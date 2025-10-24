@@ -128,6 +128,7 @@ input_mode <- "single" #input of nonortholines ("single" or "vector")
 n_pix=11 #length of tolerated line-segment [pixel]
 n_pix8=80 #number of pixels of the 8th longest line segment in B8 (parameter 
 #for determination of object type)
+n_nonortholines_max=26 #maximal number of nonortholines 
 thr_d_alph_obj=2 #[degrees], threshold for deviation of rotation angle in 
 #transformation of img-system to man-system
 
@@ -142,6 +143,7 @@ thr_d_alph_obj=2 #[degrees], threshold for deviation of rotation angle in
 # install.packages('nlme')
 # install.packages("RDP")
 # install.packages("smoothr")
+# install.packages("dplyr")
 
 ##loading of libraries 
 setwd(home_dir2)
