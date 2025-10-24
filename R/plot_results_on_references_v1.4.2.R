@@ -349,21 +349,44 @@ if (cas == "nonortho_only") {
   #plot onto orthoimage (large scale)
   display(img_uds,method = "raster")
   lines(intsec_linepair_vertex_coord2[,3]-orig_x, 
-        (-intsec_linepair_vertex_coord2[,4]-orig_y),col="white",asp=1,type="l",lwd=2,lty=1)
+        (-intsec_linepair_vertex_coord2[,4]-orig_y),col="white",asp=1,
+        type="l",lwd=2,lty=1)
   
-  # #plot vertex numbers
-  # n_x <- length(intsec_linepair_vertex_coord$x)
-  # intsec_linepair_vertex_coord[n_x,2] <- 1
-  # 
-  # vec_y <- 1 : n_x
-  # 
-  # for (i in vec_y) {
-  #   #browser()
-  #   cat("i=",i,"\n")
-  #   text(intsec_linepair_vertex_coord[i,3]-orig_x,(intsec_linepair_vertex_coord[i,4]-orig_y),
-  #        labels = intsec_linepair_vertex_coord[i,2],
-  #        pos=2, offset = 0.7, cex = 1, col = "white")
-  # } #end for-loop
+  ## make direction of sequence counter-clockwise (ccw)
+  
+  #function
+  ensure_ccw_df2 <- function(df, x_col = "x", y_col = "y") {
+    area <- sum((df[-1, x_col] + df[-nrow(df), x_col]) *
+                  (df[-1, y_col] - df[-nrow(df), y_col])) / 2
+    print(area)
+    
+    if (area < 0) {
+      df <- df[nrow(df):1, ]
+    }
+    
+    return(df)
+  } #end of function 'ensure_ccw_df2'
+  
+  intsec_linepair_vertex_coord3 <- intsec_linepair_vertex_coord2[-nrow(intsec_linepair_vertex_coord2),]
+  intsec_linepair_vertex_coord3_ccw <- ensure_ccw_df2(intsec_linepair_vertex_coord3)
+  intsec_linepair_vertex_coord3_ccw 
+  row.names(intsec_linepair_vertex_coord3_ccw) <- 1 : nrow(intsec_linepair_vertex_coord3_ccw)
+  intsec_linepair_vertex_coord3_ccw
+  #end of direction of sequence
+  
+  #plot vertex numbers
+  n_x <- length(intsec_linepair_vertex_coord3_ccw$x)
+  #intsec_linepair_vertex_coord3[n_x,2] <- 1
+
+  vec_y <- 1 : n_x
+
+  for (i in vec_y) {
+    #browser()
+    cat("i=",i,"\n")
+    text(intsec_linepair_vertex_coord3_ccw[i,3]-orig_x,(-intsec_linepair_vertex_coord3_ccw[i,4]-orig_y),
+         labels = intsec_linepair_vertex_coord3_ccw[i,2],
+         pos=2, offset = 0.7, cex = 1, col = "white")
+  } #end for-loop
   
   #end of plot of outline with vertex-numbers onto enlarged orthoimage
   
@@ -408,8 +431,12 @@ if (cas == "nonortho_only") {
     setwd(home_dir2)
     source(paste("extract_single_building_v",v_nr,".R",sep = ""))  
   } #end if
-  #end of plotting of results with cas=nonortho_only
+  #end of plotting the results for cas=nonortho_only
   
+  ##storage of coordinates (ccw)
+  setwd(home_dir)
+  f5 <- paste("./results/",Img_name,"/man/b",bnr2,"_intsec_linepair_vertex_coord3_nonortho_only.txt",sep="")
+  write.table(intsec_linepair_vertex_coord3_ccw,f5)
   
   ##processing of other objects (buildings)
   answ2 <- readline("other buildings to process? type Y or N: ")
@@ -509,22 +536,45 @@ if (cas == "nonortho_only_RDP") {
   lines(intsec_linepair_vertex_coord2[,3]-orig_x, 
         (-intsec_linepair_vertex_coord2[,4]-orig_y),col="white",asp=1,type="l",lwd=2,lty=1)
   
-  # ##plot vertex numbers
-  # n_x <- length(intsec_linepair_vertex_coord2$x)
-  # intsec_linepair_vertex_coord2[n_x,2] <- 1
-  # 
-  # vec_y <- 1 : n_x
-  # 
-  # for (i in vec_y) {
-  #   #browser()
-  #   cat("i=",i,"\n")
-  #   text(intsec_linepair_vertex_coord2[i,3]-orig_x,(-intsec_linepair_vertex_coord2[i,4]-orig_y),
-  #        labels = intsec_linepair_vertex_coord2[i,2],
-  #        pos=2, offset = 0.7, cex = 1, col = "white")
-  # } #end for-loop
-  # #end of plot of outline with vertexes-numbers onto enlarged orthoimage
-
+  ## make direction of sequence counter-clockwise (ccw)
   
+  #function
+  ensure_ccw_df <- function(df, x_col = "x", y_col = "y") {
+    area <- sum((df[-1, x_col] + df[-nrow(df), x_col]) *
+                  (df[-1, y_col] - df[-nrow(df), y_col])) / 2
+    print(area)
+    
+    if (area < 0) {
+      df <- df[nrow(df):1, ]
+    }
+    
+    return(df)
+  } #end of function
+  
+  intsec_linepair_vertex_coord3 <- intsec_linepair_vertex_coord2[-nrow(intsec_linepair_vertex_coord2),]
+  intsec_linepair_vertex_coord3_ccw <- ensure_ccw_df(intsec_linepair_vertex_coord3)
+  intsec_linepair_vertex_coord3_ccw 
+  row.names(intsec_linepair_vertex_coord3_ccw) <- 1 : nrow(intsec_linepair_vertex_coord3_ccw)
+  intsec_linepair_vertex_coord3_ccw
+  #end of direction of sequence
+  
+  ##plot vertex-numbers
+  n_x <- length(intsec_linepair_vertex_coord3$x)
+  vec_y <- 1 : n_x
+
+  for (i in vec_y) {
+    cat("i=",i,"\n")
+    text(intsec_linepair_vertex_coord3[i,3]-orig_x,(-intsec_linepair_vertex_coord3[i,4]-orig_y),
+         labels = intsec_linepair_vertex_coord3[i,2],
+         pos=2, offset = 0.7, cex = 1, col = "white")
+  } #end for-loop
+  
+  #end of plot of outline with vertex-numbers onto enlarged orthoimage
+  
+  ##storage of coordinates (ccw)
+  setwd(home_dir)
+  f5 <- paste("./results/",Img_name,"/RDP/b",bnr2,"_intsec_linepair_vertex_coord3.txt",sep="")
+  write.table(intsec_linepair_vertex_coord3,f5)
   cat("does the result agree with the orthoimage (large scale)?","\n")
   
   if (proc_mode == "demo") {
