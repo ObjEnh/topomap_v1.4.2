@@ -23,7 +23,7 @@
 ## 14.generate vertex-labels from digitized coordinates
 ## 15.digitizing of polygon-vertices
 ## 16.calculation of vertex-labels
-## 17.automated generation of line numbers (lnr)
+## 17.automated and manual generation of line numbers (lnr)
 
 ################################################################################
 
@@ -1432,6 +1432,8 @@ for (i in vec3) {
 ####################################################################
 
 ## 17. automated generation of line numbers (lnr)
+
+#first part
 #determination of line-orientation 
 #in orthoimage (large scale) 
 #determination of theta_ind, ro_ind, lnr
@@ -1530,7 +1532,9 @@ center_pts
 #continue with 'line_detection.R'
 ##########################################################################
 
-##manual solution (if lnr has not been found)
+#second part 
+#manual solution (if lnr has not been found using first part of script 17.)
+
 theta_ind
 thr_line_seg = n_pix/3 #threshold for length of line-segment [pixel]
 ct=0
